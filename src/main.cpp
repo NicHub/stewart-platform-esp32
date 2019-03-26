@@ -4,9 +4,10 @@
 
 #include <Arduino.h>
 #include <P19.h>
-#include <Platform.h>
+#include <HexapodKinematics.h>
 #include <ESP32Servo.h>
 #include <ouilogique_Joystick.h>
+#include <WebServerApp.h>
 
 #define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
 
@@ -16,8 +17,8 @@
 
 ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
-Platform stu;    // Stewart platform object.
-Servo servos[6]; // servo objects.
+HexapodKinematics stu; // Stewart platform object.
+Servo servos[6];       // servo objects.
 
 float sp_servo[6]; // servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
 
@@ -123,7 +124,7 @@ void demoMovements2()
 /**
  *
  */
-int demoMovements3()
+void demoMovements3()
 {
     Serial.println("demoMovements3 START");
     const int dval[][6] = {
@@ -186,6 +187,7 @@ void joystickControl()
 
     lastJoyX = joyX;
     lastJoyY = joyY;
+
     Serial.print("\n\njoyX = ");
     Serial.print(joyX);
     Serial.print(" - joyY = ");
@@ -224,13 +226,32 @@ void initSerial()
 /**
  *
  */
+void wsSend()
+{
+    if (!ws.enabled())
+    {
+        Serial.print("PAS DE WEBSOCKET");
+        return;
+    }
+
+    ws.textAll("Plateforme de Stewart");
+    delay(10);
+}
+
+/**
+ *
+ */
 void setup()
 {
     initSerial();
+    scanNetwork();
     setupServos();
-    demoMovements1();
+    setupWebServer();
+
+    // demoMovements1();
     // demoMovements2();
-    // demoMovements3();
+    demoMovements3();
+
 }
 
 /**
@@ -238,5 +259,10 @@ void setup()
  */
 void loop()
 {
+    // Handle web server.
+    ArduinoOTA.handle();
+    wsSend();
+
+    // Handle joystick.
     joystickControl();
 }

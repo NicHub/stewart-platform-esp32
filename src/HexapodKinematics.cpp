@@ -1,29 +1,37 @@
-/*
-   6dof-stewduino
-   Copyright (C) 2018  Philippe Desrosiers
-
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/**
+ *
+ * HexapodKinematics.cpp
+ *
+ * ouilogique.com, 2019
+ *
+ *
+ * Based on https://github.com/xoxota99/stewy
+ *
+ * 6dof-stewduino
+ * Copyright (C) 2018  Philippe Desrosiers
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /*
    Derived from the work of Daniel Waters, https://www.youtube.com/watch?v=1jrP3_1ML9M
 */
 
-#include "Platform.h"
+#include "HexapodKinematics.h"
 #include "Logger.h"
 
-bool Platform::home(float *servoValues) {
+bool HexapodKinematics::home(float *servoValues) {
   return moveTo (servoValues, 0, 0, 0, 0, 0, 0); //HOME position. No rotation, no translation.
 }
 
@@ -31,7 +39,7 @@ bool Platform::home(float *servoValues) {
  * Move to a given sway, surge, heave, pitch, roll and yaw values.
  * We expect pitch, roll and yaw in degrees.
  */
-bool Platform::moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw) {
+bool HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw) {
 
   /*
      TODO:
@@ -129,26 +137,26 @@ bool Platform::moveTo(float *servoValues, int sway, int surge, int heave, float 
 /*
  * Move to a given pitch / roll angle (in degrees)
  */
-bool Platform::moveTo(float *servoValues, float pitch, float roll) {
+bool HexapodKinematics::moveTo(float *servoValues, float pitch, float roll) {
   return moveTo(servoValues, _sp_sway, _sp_surge, _sp_heave, pitch, roll, _sp_yaw);
 }
 
-int Platform::getSway() {
+int HexapodKinematics::getSway() {
   return _sp_sway;
 }
-int Platform::getSurge() {
+int HexapodKinematics::getSurge() {
   return _sp_surge;
 }
-int Platform::getHeave() {
+int HexapodKinematics::getHeave() {
   return _sp_heave;
 }
 
-float Platform::getPitch() {
+float HexapodKinematics::getPitch() {
   return _sp_pitch;
 }
-float Platform::getRoll() {
+float HexapodKinematics::getRoll() {
   return _sp_roll;
 }
-float Platform::getYaw() {
+float HexapodKinematics::getYaw() {
   return _sp_yaw;
 }
