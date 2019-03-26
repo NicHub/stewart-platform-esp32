@@ -72,7 +72,7 @@ void setServo(int i, int angle)
     }
     else
     {
-        Serial.printf("setServo: Invalid value '%.2f' specified for servo #%d. Valid range is %d to %d degrees.\n", val, i, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        Serial.printf("setServo: Invalid value '%d' specified for servo #%d. Valid range is %d to %d degrees.\n", val, i, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
     }
 }
 
