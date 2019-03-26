@@ -7,7 +7,6 @@
 #include <HexapodKinematics.h>
 #include <ESP32Servo.h>
 #include <ouilogique_Joystick.h>
-#include <WebServerApp.h>
 
 #define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
 
@@ -104,6 +103,7 @@ void demoMovements1()
         delay(100);
     }
     stu.home(sp_servo);
+    Serial.println("demoMovements1 DONE");
 }
 
 /**
@@ -119,6 +119,7 @@ void demoMovements2()
         updateServos();
         delay(500);
     }
+    Serial.println("demoMovements2 DONE");
 }
 
 /**
@@ -212,7 +213,7 @@ void joystickControl()
 /**
  *
  */
-void initSerial()
+void setupSerial()
 {
     Serial.begin(115200);
     Serial.print("\n\n##########################");
@@ -226,32 +227,13 @@ void initSerial()
 /**
  *
  */
-void wsSend()
-{
-    if (!ws.enabled())
-    {
-        Serial.print("PAS DE WEBSOCKET");
-        return;
-    }
-
-    ws.textAll("Plateforme de Stewart");
-    delay(10);
-}
-
-/**
- *
- */
 void setup()
 {
-    initSerial();
-    scanNetwork();
+    setupSerial();
     setupServos();
-    setupWebServer();
-
-    // demoMovements1();
+    demoMovements1();
     // demoMovements2();
-    demoMovements3();
-
+    // demoMovements3();
 }
 
 /**
@@ -259,10 +241,6 @@ void setup()
  */
 void loop()
 {
-    // Handle web server.
-    ArduinoOTA.handle();
-    wsSend();
-
     // Handle joystick.
     joystickControl();
 }
