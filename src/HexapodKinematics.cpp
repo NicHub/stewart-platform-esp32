@@ -2,7 +2,8 @@
  *
  * HexapodKinematics.cpp
  *
- * ouilogique.com, 2019
+ * ouilogique.com
+ * March 2019
  *
  *
  * Based on https://github.com/xoxota99/stewy

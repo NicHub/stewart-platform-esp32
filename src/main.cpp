@@ -1,8 +1,11 @@
 /**
  *
- * stewart-platform-microclub
+ * Stewart Platform on ESP32
  *
- * ouilogique.com, 2019
+ * Kinematics from xoxota99: https://github.com/xoxota99/stewy
+ *
+ * ouilogique.com
+ * March 2019
  *
  */
 
