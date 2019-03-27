@@ -1,5 +1,9 @@
 /**
- * stewy-simple
+ *
+ * stewart-platform-microclub
+ *
+ * ouilogique.com, 2019
+ *
  */
 
 #include <Arduino.h>
@@ -76,7 +80,9 @@ void setServo(int i, int angle)
     }
 }
 
-//Initialize servo interface, sweep all six servos from MIN to MAX, to MID, to ensure they're all physically working.
+/**
+ *
+ */
 void setupServos()
 {
     for (int i = 0; i < 6; i++)
@@ -102,7 +108,7 @@ void demoMovements1()
         updateServos();
         delay(100);
     }
-    stu.home(sp_servo);
+    // stu.home(sp_servo);
     Serial.println("demoMovements1 DONE");
 }
 
@@ -179,35 +185,85 @@ void joystickControl()
 {
     int16_t joyX = joystick.getX();
     int16_t joyY = joystick.getY();
+    int16_t joyZ = joystick.getZ();
     static int16_t lastJoyX = 0;
     static int16_t lastJoyY = 0;
+    static int16_t lastJoyZ = 0;
 
     delay(10);
-    if (joyX == lastJoyX && joyY == lastJoyY)
+    bool joyStill;
+    joyStill = ((joyX == lastJoyX) && (joyY == lastJoyY) && (joyZ == lastJoyZ));
+    if (joyStill)
+    {
         return;
+    }
+    if (joyZ != 0)
+    {
+        const int wait = 1000;
+        do
+        {
+#if false
+        stu.moveTo(sp_servo, MIN_SWAY, 0, 0, 0, 0, 0);
+        updateServos();
+        delay(wait);
+        stu.moveTo(sp_servo, MAX_SWAY, 0, 0, 0, 0, 0);
+        updateServos();
+        delay(wait);
 
-    lastJoyX = joyX;
-    lastJoyY = joyY;
+        stu.moveTo(sp_servo, 0, MIN_SURGE, 0, 0, 0, 0);
+        updateServos();
+        delay(wait);
+        stu.moveTo(sp_servo, 0, MAX_SURGE, 0, 0, 0, 0);
+        updateServos();
+        delay(wait);
+#endif
 
-    Serial.print("\n\njoyX = ");
+            stu.moveTo(sp_servo, 0, 0, MIN_HEAVE, 0, 0, 0);
+            updateServos();
+            delay(wait);
+            stu.moveTo(sp_servo, 0, 0, MAX_HEAVE, 0, 0, 0);
+            updateServos();
+            delay(wait);
+
+        } while (joystick.getZ() == 0);
+        while (joystick.getZ() == 1)
+        {
+        }
+    }
+
+    Serial.print("\n\njoyX     = ");
     Serial.print(joyX);
-    Serial.print(" - joyY = ");
-    Serial.println(joyY);
+    Serial.print(" | joyY     = ");
+    Serial.print(joyY);
+    Serial.print(" | joyZ     = ");
+    Serial.println(joyZ);
 
-    Serial.print("\n\nlastJoyX = ");
+    Serial.print("lastJoyX = ");
     Serial.print(lastJoyX);
-    Serial.print(" - lastJoyY = ");
-    Serial.println(lastJoyY);
+    Serial.print(" | lastJoyY = ");
+    Serial.print(lastJoyY);
+    Serial.print(" | lastJoyZ = ");
+    Serial.println(lastJoyZ);
 
-    Serial.print("\n\njoyX == lastJoyX ");
-    Serial.print(joyX == lastJoyX);
-    Serial.print("\n\njoyY == lastJoyY ");
+    Serial.print("getRawX = ");
+    Serial.print(joystick.getRawX());
+    Serial.print(" | getRawY = ");
+    Serial.println(joystick.getRawY());
+
+    Serial.print("joyX == lastJoyX = ");
+    Serial.println(joyX == lastJoyX);
+    Serial.print("joyY == lastJoyY = ");
     Serial.println(joyY == lastJoyY);
-    Serial.print("\n\n(joyX == lastJoyX && joyY == lastJoyY) ");
-    Serial.println((joyX == lastJoyX && joyY == lastJoyY));
+
+    Serial.print("joyStill = ");
+    Serial.println(joyStill);
 
     stu.moveTo(sp_servo, joyX, joyY, 0, 0, 0, 0);
     updateServos();
+
+    lastJoyX = joyX;
+    lastJoyY = joyY;
+    lastJoyZ = joyZ;
 }
 
 /**
@@ -227,13 +283,36 @@ void setupSerial()
 /**
  *
  */
+void setupJoystick()
+{
+    Serial.print("millis = ");
+    Serial.print(millis());
+    Serial.print(" | getRawValueMidX = ");
+    Serial.print(joystick.getRawValueMidX());
+    Serial.print(" | getRawValueMidY = ");
+    Serial.println(joystick.getRawValueMidY());
+
+    joystick.calibrate();
+
+    Serial.print("millis = ");
+    Serial.print(millis());
+    Serial.print(" | getRawValueMidX = ");
+    Serial.print(joystick.getRawValueMidX());
+    Serial.print(" | getRawValueMidY = ");
+    Serial.println(joystick.getRawValueMidY());
+}
+
+/**
+ *
+ */
 void setup()
 {
     setupSerial();
     setupServos();
-    demoMovements1();
+    setupJoystick();
+    // demoMovements1();
     // demoMovements2();
-    // demoMovements3();
+    demoMovements3();
 }
 
 /**

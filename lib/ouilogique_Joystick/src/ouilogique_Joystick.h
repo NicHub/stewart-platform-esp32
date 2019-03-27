@@ -3,23 +3,6 @@
 
 #include <Arduino.h>
 
-#define ANALOG_READ_MIN 0
-#define ANALOG_READ_MAX 4095
-#define OUT_MIN -40
-#define OUT_MID 0
-#define OUT_MAX 40
-#define RAWVALUEMIDX 1703
-#define RAWVALUEMINX ANALOG_READ_MIN
-#define RAWVALUEMAXX ANALOG_READ_MAX
-#define RAWVALUEMIDY 1686
-#define RAWVALUEMINY ANALOG_READ_MIN
-#define RAWVALUEMAXY ANALOG_READ_MAX
-#define DEADBAND 100
-#define DEADBANDMINX RAWVALUEMIDX - DEADBAND
-#define DEADBANDMAXX RAWVALUEMIDX + DEADBAND
-#define DEADBANDMINY RAWVALUEMIDY - DEADBAND
-#define DEADBANDMAXY RAWVALUEMIDY + DEADBAND
-
 class ouilogique_Joystick
 {
   public:
@@ -29,11 +12,30 @@ class ouilogique_Joystick
     int16_t getX();
     int16_t getY();
     bool getZ();
+    void calibrate();
+    int16_t getRawValueMidX();
+    int16_t getRawValueMidY();
 
   private:
     uint8_t pinX;
     uint8_t pinY;
     uint8_t pinZ;
+    int16_t ANALOG_READ_MIN = 0;
+    int16_t ANALOG_READ_MAX = 4095; // 12 bits
+    int16_t OUT_MIN = -40;
+    int16_t OUT_MID = 0;
+    int16_t OUT_MAX = 40;
+    int16_t RAWVALUEMINX = ANALOG_READ_MIN;
+    int16_t RAWVALUEMAXX = ANALOG_READ_MAX;
+    int16_t RAWVALUEMIDX = (RAWVALUEMAXX - RAWVALUEMINX) / 2;
+    int16_t RAWVALUEMINY = ANALOG_READ_MIN;
+    int16_t RAWVALUEMAXY = ANALOG_READ_MAX;
+    int16_t RAWVALUEMIDY = (RAWVALUEMAXY - RAWVALUEMINY) / 2;
+    int16_t DEADBAND = 200;
+    int16_t DEADBANDMINX = RAWVALUEMIDX - DEADBAND;
+    int16_t DEADBANDMAXX = RAWVALUEMIDX + DEADBAND;
+    int16_t DEADBANDMINY = RAWVALUEMIDY - DEADBAND;
+    int16_t DEADBANDMAXY = RAWVALUEMIDY + DEADBAND;
 };
 
 #endif
