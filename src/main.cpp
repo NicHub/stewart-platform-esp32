@@ -192,48 +192,54 @@ void joystickControl()
     static int16_t lastJoyX = 0;
     static int16_t lastJoyY = 0;
     static int16_t lastJoyZ = 0;
+    static uint8_t joyMode = 0;
+    static const uint8_t nbJoyMode = 3;
 
-    delay(10);
+    // Exit if joystick X, Y and Z did not change.
     bool joyStill;
     joyStill = ((joyX == lastJoyX) && (joyY == lastJoyY) && (joyZ == lastJoyZ));
     if (joyStill)
     {
+        // Don’t check the joystick states too fast.
+        // This is needed to remove noise.
+        delay(10);
         return;
     }
+
+    // Change joystick mode if button pressed.
     if (joyZ != 0)
     {
-        const int wait = 1000;
-        do
-        {
-#if false
-        stu.moveTo(sp_servo, MIN_SWAY, 0, 0, 0, 0, 0);
-        updateServos();
-        delay(wait);
-        stu.moveTo(sp_servo, MAX_SWAY, 0, 0, 0, 0, 0);
-        updateServos();
-        delay(wait);
-
-        stu.moveTo(sp_servo, 0, MIN_SURGE, 0, 0, 0, 0);
-        updateServos();
-        delay(wait);
-        stu.moveTo(sp_servo, 0, MAX_SURGE, 0, 0, 0, 0);
-        updateServos();
-        delay(wait);
-#endif
-
-            stu.moveTo(sp_servo, 0, 0, MIN_HEAVE, 0, 0, 0);
-            updateServos();
-            delay(wait);
-            stu.moveTo(sp_servo, 0, 0, MAX_HEAVE, 0, 0, 0);
-            updateServos();
-            delay(wait);
-
-        } while (joystick.getZ() == 0);
-        while (joystick.getZ() == 1)
+        joyMode = (joyMode + 1) % nbJoyMode;
+        // Debounce.
+        while (joystick.getZ())
         {
         }
+        delay(250);
+        return;
     }
 
+    // Move according to joyMode.
+    // TODO: Remember the previous joyMode positions when
+    // changing joyMode instead of setting them to 0.
+    if (joyMode == 0)
+        // X, Y
+        stu.moveTo(sp_servo, joyX, joyY, 0, 0, 0, 0);
+    else if (joyMode == 1)
+        // Z, tiltZ
+        stu.moveTo(sp_servo, 0, 0, joyY, 0, 0, joyX);
+    else if (joyMode == 2)
+        // tilt X, tilt Y
+        stu.moveTo(sp_servo, 0, 0, 0, joyX, joyY, 0);
+
+    updateServos();
+
+    // Record last joystick values.
+    lastJoyX = joyX;
+    lastJoyY = joyY;
+    lastJoyZ = joyZ;
+
+#if false
+    // Send joystick info to serial.
     Serial.print("\n\njoyX     = ");
     Serial.print(joyX);
     Serial.print(" | joyY     = ");
@@ -261,12 +267,9 @@ void joystickControl()
     Serial.print("joyStill = ");
     Serial.println(joyStill);
 
-    stu.moveTo(sp_servo, joyX, joyY, 0, 0, 0, 0);
-    updateServos();
-
-    lastJoyX = joyX;
-    lastJoyY = joyY;
-    lastJoyZ = joyZ;
+    Serial.print("joyMode = ");
+    Serial.println(joyMode);
+#endif
 }
 
 /**
@@ -296,6 +299,9 @@ void setupJoystick()
     Serial.println(joystick.getRawValueMidY());
 
     joystick.calibrate();
+    delay(10);
+    stu.moveTo(sp_servo, 0, 0, 0, 0, 0, 0);
+    updateServos();
 
     Serial.print("millis = ");
     Serial.print(millis());
@@ -315,7 +321,7 @@ void setup()
     setupJoystick();
     // demoMovements1();
     // demoMovements2();
-    demoMovements3();
+    // demoMovements3();
 }
 
 /**
