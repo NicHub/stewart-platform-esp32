@@ -90,7 +90,7 @@ void setupServos()
 {
     for (int i = 0; i < 6; i++)
     {
-        servos[i].attach(SERVO_PINS[i]);
+        servos[i].attach(SERVO_PINS[i], SERVO_MIN_US, SERVO_MAX_US);
         setServo(i, SERVO_MIN_ANGLE);
     }
     updateServos();
