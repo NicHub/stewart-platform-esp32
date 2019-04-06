@@ -17,34 +17,36 @@
 
 #define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
 
+// Joystick
 #define X_PIN 26
 #define Y_PIN 12
 #define Z_PIN 32
-
 ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
-HexapodKinematics stu; // Stewart platform object.
-Servo servos[6];       // servo objects.
-
-float sp_servo[6]; // servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+// Stewart Platform
+HexapodKinematics hk; // Stewart platform object.
+Servo servos[6];      // servo objects.
+float sp_servo[6];    // servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
 
 float _toUs(int value)
 {
     return map(value, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE, SERVO_MIN_US, SERVO_MAX_US);
 }
 
-//Set servo values to the angles represented by the setpoints in sp_servo[].
-//DOES: Apply trim values.
-//DOES: Automatically reverse signal for reversed servos.
-//DOES: Write signals to the physical servos.
+/**
+ * Set servo values to the angles represented by the setpoints in sp_servo[].
+ * DOES: Apply trim values.
+ * DOES: Automatically reverse signal for reversed servos.
+ * DOES: Write signals to the physical servos.
+ */
 void updateServos()
 {
     static float sValues[6];
 
     for (int i = 0; i < 6; i++)
     {
-        //sp_servo holds a value between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-        //apply reverse.
+        // sp_servo holds a value between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+        // apply reverse.
         float val = sp_servo[i];
         if (SERVO_REVERSE[i])
         {
@@ -64,11 +66,13 @@ void updateServos()
     }
 }
 
-// Calculates and assigns values to sp_servo.
-// DOES: Ignore out-of-range values. These will generate a warning on the serial monitor.
-// DOES NOT: Apply servo trim values.
-// DOES NOT: Automatically reverse signal for reversed servos.
-// DOES NOT: digitally write a signal to any servo. Writing is done in updateServos();
+/**
+ * Calculates and assigns values to sp_servo.
+ * DOES: Ignore out-of-range values. These will generate a warning on the serial monitor.
+ * DOES NOT: Apply servo trim values.
+ * DOES NOT: Automatically reverse signal for reversed servos.
+ * DOES NOT: digitally write a signal to any servo. Writing is done in updateServos();
+ */
 void setServo(int i, int angle)
 {
     int val = angle;
@@ -91,7 +95,7 @@ void setupServos()
     for (int i = 0; i < 6; i++)
     {
         servos[i].attach(SERVO_PINS[i], SERVO_MIN_US, SERVO_MAX_US);
-        setServo(i, SERVO_MIN_ANGLE);
+        setServo(i, SERVO_MID_ANGLE);
     }
     updateServos();
     delay(500);
@@ -111,7 +115,7 @@ void demoMovements1()
         updateServos();
         delay(100);
     }
-    // stu.home(sp_servo);
+    // hk.home(sp_servo);
     Serial.println("demoMovements1 DONE");
 }
 
@@ -124,7 +128,7 @@ void demoMovements2()
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        stu.moveTo(sp_servo, cnt, 0, 0, 0, 0, 0);
+        hk.moveTo(sp_servo, cnt, 0, 0, 0, 0, 0);
         updateServos();
         delay(500);
     }
@@ -174,11 +178,27 @@ void demoMovements3()
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        stu.moveTo(sp_servo, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
+        hk.moveTo(sp_servo, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
         updateServos();
         delay(1000);
     }
     Serial.println("demoMovements3 DONE");
+}
+
+/**
+ *
+ */
+void demoMovements4()
+{
+    setServo(0, SERVO_MIN_ANGLE);
+    setServo(1, SERVO_MIN_ANGLE);
+    setServo(2, SERVO_MIN_ANGLE);
+    setServo(3, SERVO_MIN_ANGLE);
+    setServo(4, SERVO_MAX_ANGLE + 1);
+    setServo(5, SERVO_MAX_ANGLE + 1);
+    updateServos();
+
+    Serial.println("demoMovements4 DONE");
 }
 
 /**
@@ -223,13 +243,13 @@ void joystickControl()
     // changing joyMode instead of setting them to 0.
     if (joyMode == 0)
         // X, Y
-        stu.moveTo(sp_servo, joyX, joyY, 0, 0, 0, 0);
+        hk.moveTo(sp_servo, joyX, joyY, 0, 0, 0, 0);
     else if (joyMode == 1)
         // Z, tiltZ
-        stu.moveTo(sp_servo, 0, 0, joyY, 0, 0, joyX);
+        hk.moveTo(sp_servo, 0, 0, joyY, 0, 0, joyX);
     else if (joyMode == 2)
         // tilt X, tilt Y
-        stu.moveTo(sp_servo, 0, 0, 0, joyX, joyY, 0);
+        hk.moveTo(sp_servo, 0, 0, 0, joyX, joyY, 0);
 
     updateServos();
 
@@ -300,7 +320,7 @@ void setupJoystick()
 
     joystick.calibrate();
     delay(10);
-    stu.moveTo(sp_servo, 0, 0, 0, 0, 0, 0);
+    hk.moveTo(sp_servo, 0, 0, 0, 0, 0, 0);
     updateServos();
 
     Serial.print("millis = ");
@@ -322,6 +342,7 @@ void setup()
     // demoMovements1();
     // demoMovements2();
     // demoMovements3();
+    // demoMovements4();
 }
 
 /**

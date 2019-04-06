@@ -1,12 +1,12 @@
 /**
+ * HexapodKinematics
  *
- * HexapodKinematics.cpp
- *
- * ouilogique.com
+ * Based on https://github.com/xoxota99/stewy
+ * Derived from the work of Daniel Waters, https://www.youtube.com/watch?v=1jrP3_1ML9M
+ * Modified by ouilogique.com
  * March 2019
  *
  *
- * Based on https://github.com/xoxota99/stewy
  *
  * 6dof-stewduino
  * Copyright (C) 2018  Philippe Desrosiers
@@ -23,17 +23,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-
-/*
-   Derived from the work of Daniel Waters, https://www.youtube.com/watch?v=1jrP3_1ML9M
-*/
 
 #include "HexapodKinematics.h"
 #include "Logger.h"
 
 bool HexapodKinematics::home(float *servoValues) {
-  return moveTo (servoValues, 0, 0, 0, 0, 0, 0); //HOME position. No rotation, no translation.
+  return moveTo (servoValues, 0, 0, 0, 0, 0, 0); // HOME position. No rotation, no translation.
 }
 
 /*
@@ -78,26 +75,26 @@ bool HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int heav
 
     d2 = pow(pivot_x - B_COORDS[i][0], 2) + pow(pivot_y - B_COORDS[i][1], 2) + pow(pivot_z, 2);
 
-    //Geometry shenanigans
+    // Geometry shenanigans
     k = d2 - (pow(ROD_LENGTH, 2) - pow(ARM_LENGTH, 2));
     l = 2 * ARM_LENGTH * pivot_z;
     m = 2 * ARM_LENGTH * (cos(THETA_S[i]) * (pivot_x - B_COORDS[i][0]) + sin(THETA_S[i]) * (pivot_y - B_COORDS[i][1]));
     servo_rad = asin(k / sqrt(l * l + m * m)) - atan(m / l);
-    //convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE
+    // convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE
     servo_deg = map(degrees(servo_rad),-90,90,SERVO_MIN_ANGLE,SERVO_MAX_ANGLE);
 
-    if (sqrt(d2) > (ARM_LENGTH + ROD_LENGTH) //the required virtual arm length is longer than physically possible
-        || abs(k / (sqrt(l * l + m * m))) >= 1) { //some other bad stuff happened.
-      //bad juju.
+    if (sqrt(d2) > (ARM_LENGTH + ROD_LENGTH) // the required virtual arm length is longer than physically possible
+        || abs(k / (sqrt(l * l + m * m))) >= 1) { // some other bad stuff happened.
+      // bad juju.
       Logger::error("Asymptotic condition at i=%d",i);
       Logger::info("abs(k/(sqrt(l*l+m*m))) = %.2f",abs(k / (sqrt(l * l + m * m))));
       Logger::info("sqrt(d2)>(ARM_LENGTH+ROD_LENGTH) = %s",(sqrt(d2) > (ARM_LENGTH + ROD_LENGTH)) ? "true" : "false");
 
 #ifdef SLAM
-      servo_deg = SERVO_MAX_ANGLE;  //BUG: Not correct. servo_deg should be one of SERVO_MAX_ANGLE or SERVO_MIN_ANGLE. need to figure out which one, rather than assuming SERVO_MAX_ANGLE.
+      servo_deg = SERVO_MAX_ANGLE;  // BUG: Not correct. servo_deg should be one of SERVO_MAX_ANGLE or SERVO_MIN_ANGLE. need to figure out which one, rather than assuming SERVO_MAX_ANGLE.
 #else
       // bOk = false;
-      //do nothing with this servo. We assume that it's current position is "close enough" (Not sure this is safe, but so far it works).
+      // do nothing with this servo. We assume that it's current position is "close enough" (Not sure this is safe, but so far it works).
       servo_deg=servoValues[i];
 #endif
       break;
@@ -118,15 +115,15 @@ bool HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int heav
     _sp_roll = roll;
     _sp_yaw = yaw;
 
-    //scale values by aggro.
+    // scale values by aggro.
     for (int i = 0; i < 6; i++) {
-      int diff = servoValues[i]-SERVO_MID_ANGLE;
+      int diff = servoValues[i] - SERVO_MID_ANGLE;
 
       servoValues[i] = SERVO_MID_ANGLE + (diff * AGGRO);
       servoValues[i] = constrain(servoValues[i],SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
       }
   } else {
-    //reset back to old values.
+    // reset back to old values.
     for (int i = 0; i < 6; i++) {
       servoValues[i] = oldValues[i];
     }

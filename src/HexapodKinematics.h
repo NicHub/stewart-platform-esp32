@@ -1,14 +1,12 @@
-#ifndef __HEXAPODKINEMATICS_H__
-#define __HEXAPODKINEMATICS_H__
 /**
+ * HexapodKinematics
  *
- * HexapodKinematics.cpp
- *
- * ouilogique.com
+ * Based on https://github.com/xoxota99/stewy
+ * Derived from the work of Daniel Waters, https://www.youtube.com/watch?v=1jrP3_1ML9M
+ * Modified by ouilogique.com
  * March 2019
  *
  *
- * Based on https://github.com/xoxota99/stewy
  *
  * 6dof-stewduino
  * Copyright (C) 2018  Philippe Desrosiers
@@ -28,14 +26,13 @@
  *
  */
 
-/*
-Derived from the work of Daniel Waters, https://www.youtube.com/watch?v=1jrP3_1ML9M
-*/
+#ifndef __HEXAPODKINEMATICS_H__
+#define __HEXAPODKINEMATICS_H__
+#include "HexapodKinematicsConfig.h"
 
-#include "config.h"
-
-//==============================================================================
-
+/**
+ *
+ */
 class HexapodKinematics
 {
 

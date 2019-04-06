@@ -24,3 +24,8 @@ ctrl + alt + s
 In terminal, run:
 
     platformio run --target uploadfs
+
+
+## Problème WiFi
+
+ESP32 Brownout detector was triggered
