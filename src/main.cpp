@@ -11,7 +11,7 @@
 
 #include <Arduino.h>
 #include <P19.h>
-#include <HexapodKinematics.h>
+#include <main.h>
 #include <ESP32Servo.h>
 #include <ouilogique_Joystick.h>
 
@@ -53,14 +53,14 @@ void updateServos()
             val = SERVO_MIN_ANGLE + (SERVO_MAX_ANGLE - val);
         }
 
-        //translate angle to pulse width
+        // translate angle to pulse width
         val = _toUs(val);
 
         if (val != sValues[i])
         {
-            //don't write to the servo if you don't have to.
+            // don't write to the servo if you don't have to.
             sValues[i] = val;
-            Serial.printf("SRV: s%d = %.2f + %d (value + trim)\n", i, val, SERVO_TRIM[i]);
+            // Serial.printf("SRV: s%d = %.2f + %d (value + trim)\n", i, val, SERVO_TRIM[i]);
             servos[i].writeMicroseconds((int)constrain(val + SERVO_TRIM[i], SERVO_MIN_US, SERVO_MAX_US));
         }
     }
@@ -295,20 +295,6 @@ void joystickControl()
 /**
  *
  */
-void setupSerial()
-{
-    Serial.begin(115200);
-    Serial.print("\n\n##########################");
-    Serial.print("\nCOMPILATION DATE AND TIME:\n");
-    Serial.print(__DATE__);
-    Serial.print("\n");
-    Serial.print(__TIME__);
-    Serial.print("\n##########################\n\n");
-}
-
-/**
- *
- */
 void setupJoystick()
 {
     Serial.print("millis = ");
@@ -334,6 +320,25 @@ void setupJoystick()
 /**
  *
  */
+void serialControl()
+{
+    String message = "";
+    if (serialRead(&message))
+    {
+        Serial.print("message = ");
+        Serial.println(message);
+        int sway = message.toInt();
+        sway = sway % 30;
+        Serial.print("sway = ");
+        Serial.println(sway);
+        hk.moveTo(sp_servo, sway, 0, 0, 0, 0, 0);
+        updateServos();
+    }
+}
+
+/**
+ *
+ */
 void setup()
 {
     setupSerial();
@@ -341,7 +346,7 @@ void setup()
     setupJoystick();
     // demoMovements1();
     // demoMovements2();
-    demoMovements3();
+    // demoMovements3();
     // demoMovements4();
 }
 
@@ -350,5 +355,11 @@ void setup()
  */
 void loop()
 {
+# if ENABLE_JOYSTICK_READ
     joystickControl();
+#endif
+
+#if ENABLE_SERIAL_READ
+    serialControl();
+#endif
 }
