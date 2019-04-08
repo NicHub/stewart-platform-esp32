@@ -258,7 +258,7 @@ void joystickControl()
     lastJoyY = joyY;
     lastJoyZ = joyZ;
 
-#if false
+#if SEND_JOYSTICK_INFO_TO_SERIAL
     // Send joystick info to serial.
     Serial.print("\n\njoyX     = ");
     Serial.print(joyX);
@@ -341,7 +341,7 @@ void setup()
     setupJoystick();
     // demoMovements1();
     // demoMovements2();
-    // demoMovements3();
+    demoMovements3();
     // demoMovements4();
 }
 
@@ -350,6 +350,5 @@ void setup()
  */
 void loop()
 {
-    // Handle joystick.
     joystickControl();
 }
