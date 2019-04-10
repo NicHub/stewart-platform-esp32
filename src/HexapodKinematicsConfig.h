@@ -49,8 +49,8 @@
 // const int SERVO_REVERSE[6] = {0, 1, 0, 1, 0, 1};
 const int SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0}; // Attention le premier moteur n’est pas du même type que les autres c’est pourquoi il est inversé.
 
-#define SERVO_MIN_ANGLE     0
-#define SERVO_MAX_ANGLE   180
+#define SERVO_MIN_ANGLE      0 // These values don’t seem to be taken into account correctly.
+#define SERVO_MAX_ANGLE    180 // These values don’t seem to be taken into account correctly.
 const int SERVO_MID_ANGLE = SERVO_MIN_ANGLE + (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE) / 2;
 
 #define SERVO_MIN_US      600 // default  500 (library 4744/ESP32Servo)

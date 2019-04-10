@@ -101,6 +101,26 @@ void setupServos()
     delay(500);
 }
 
+
+/**
+ *
+ */
+void shake()
+{
+    int shakeZ = 6;
+    for(int shake = 0; shake < 10; shake++)
+    {
+        delay(60);
+        hk.moveTo(sp_servo, 0, 0, shakeZ, 0, 0, 0);
+        updateServos();
+        shakeZ = -shakeZ;
+    }
+
+    delay(200);
+    hk.home(sp_servo);
+    updateServos();
+}
+
 /**
  *
  */
@@ -199,6 +219,43 @@ void demoMovements4()
     updateServos();
 
     Serial.println("demoMovements4 DONE");
+}
+
+/**
+ *
+ */
+void demoMovements5(int nb_turn = 1)
+{
+    // Move in circle in the horizontal plane.
+
+    Serial.println("demoMovements5 START");
+
+    const int16_t nb_points = 90;
+    const double radius = 55; // max 55 when flat
+    const double angleInc = TWO_PI / nb_points;
+    double angle = 0;
+    int dval[nb_points][6];
+    for(int16_t angleID = 0; angleID < nb_points; angleID++)
+    {
+        dval[angleID][0] = (int)(radius * sin(angle));
+        dval[angleID][1] = (int)(radius * cos(angle));
+        dval[angleID][2] = 0;
+        dval[angleID][3] = 0;
+        dval[angleID][4] = 0;
+        dval[angleID][5] = 0;
+        angle += angleInc;
+    }
+
+    for (int turn = 0; turn < nb_turn; turn++)
+    {
+        for (int16_t cnt = 0; cnt < nb_points; cnt++)
+        {
+            hk.moveTo(sp_servo, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
+            updateServos();
+            delay(8);
+        }
+    }
+    Serial.println("demoMovements5 DONE");
 }
 
 /**
@@ -348,6 +405,8 @@ void setup()
     // demoMovements2();
     // demoMovements3();
     // demoMovements4();
+    demoMovements5(20);
+    shake();
 }
 
 /**
