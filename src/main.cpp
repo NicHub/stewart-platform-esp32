@@ -43,8 +43,8 @@ ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
 // Stewart Platform
 HexapodKinematics hk;      // Stewart platform object.
-Servo servos[NB_SERVOS];   // servo objects.
-float sp_servo[NB_SERVOS]; // servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+float sp_servo[NB_SERVOS]; // Servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+Servo servos[NB_SERVOS];   // Servo objects.
 
 float _toUs(int value)
 {
@@ -78,25 +78,23 @@ void updateServos(int8_t movOK)
 
     static float sValues[NB_SERVOS];
 
-    for (int i = 0; i < NB_SERVOS; i++)
+    for (int sid = 0; sid < NB_SERVOS; sid++)
     {
         // sp_servo holds a value between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-        // apply reverse.
-        float val = sp_servo[i];
-        if (SERVO_REVERSE[i])
+        // Apply reverse.
+        float val = sp_servo[sid];
+        if (SERVO_REVERSE[sid])
         {
             val = SERVO_MIN_ANGLE + (SERVO_MAX_ANGLE - val);
         }
 
-        // translate angle to pulse width
+        // Translate angle to pulse width.
         val = _toUs(val);
 
-        if (val != sValues[i])
+        if (val != sValues[sid])
         {
-            // don't write to the servo if you don't have to.
-            sValues[i] = val;
-            // Serial.printf("SRV: s%d = %.2f + %d (value + trim)\n", i, val, SERVO_TRIM[i]);
-            servos[i].writeMicroseconds((int)constrain(val + SERVO_TRIM[i], SERVO_MIN_US, SERVO_MAX_US));
+            sValues[sid] = val;
+            servos[sid].writeMicroseconds((int)constrain(val + SERVO_TRIM[sid], SERVO_MIN_US, SERVO_MAX_US));
         }
     }
 }
@@ -108,17 +106,17 @@ void updateServos(int8_t movOK)
  * DOES NOT: Automatically reverse signal for reversed servos.
  * DOES NOT: digitally write a signal to any servo. Writing is done in updateServos();
  */
-void setServo(int i, int angle)
+void setServo(int sid, int angle)
 {
     int val = angle;
     if (val >= SERVO_MIN_ANGLE && val <= SERVO_MAX_ANGLE)
     {
-        sp_servo[i] = val;
-        Serial.printf("setServo %d - %.2f degrees\n", i, sp_servo[i]);
+        sp_servo[sid] = val;
+        Serial.printf("setServo %d - %.2f degrees\n", sid, sp_servo[sid]);
     }
     else
     {
-        Serial.printf("setServo: Invalid value '%d' specified for servo #%d. Valid range is %d to %d degrees.\n", val, i, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        Serial.printf("setServo: Invalid value '%d' specified for servo #%d. Valid range is %d to %d degrees.\n", val, sid, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
     }
 }
 
@@ -127,10 +125,10 @@ void setServo(int i, int angle)
  */
 void setupServos()
 {
-    for (int i = 0; i < NB_SERVOS; i++)
+    for (int sid = 0; sid < NB_SERVOS; sid++)
     {
-        servos[i].attach(SERVO_PINS[i], SERVO_MIN_US, SERVO_MAX_US);
-        setServo(i, SERVO_MID_ANGLE);
+        servos[sid].attach(SERVO_PINS[sid], SERVO_MIN_US, SERVO_MAX_US);
+        setServo(sid, SERVO_MID_ANGLE);
     }
     updateServos(true);
     delay(500);
@@ -162,9 +160,9 @@ void demoMovements1()
 {
     for (int pos = SERVO_MIN_ANGLE; pos < SERVO_MAX_ANGLE; pos += 4)
     {
-        for (int i = 0; i < NB_SERVOS; i++)
+        for (int sid = 0; sid < NB_SERVOS; sid++)
         {
-            setServo(i, pos);
+            setServo(sid, pos);
         }
         updateServos(true);
         delay(100);

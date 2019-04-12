@@ -33,9 +33,12 @@
 
 #include "HexapodKinematics.h"
 
+/**
+ * HOME position. No translation, no rotation.
+ */
 int8_t HexapodKinematics::home(float *servoValues)
 {
-    return moveTo(servoValues, 0, 0, 0, 0, 0, 0); // HOME position. No rotation, no translation.
+    return moveTo(servoValues, 0, 0, 0, 0, 0, 0);
 }
 
 /**
@@ -45,16 +48,14 @@ int8_t HexapodKinematics::home(float *servoValues)
  * Returns = 0 if OK
  * Returns > 0 if Warning
  * Returns < 0 if Error
+ *
+ * TODO:
+ * 1) Understand the “geometry shenanigans” below (k, l, m values).
+ * 2) optimize so we don’t run through this loop if we know we’re already at the desired setpoint(s).
+ *
  */
 int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw)
 {
-
-    /*
-     TODO:
-     1) Understand the "geometry shenanigans" below (k, l, m values).
-     2) optimize so we don't run through this loop if we know we're already at the desired setpoint(s).
-  */
-
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
         k, l, m,                      // Intermediate values.
@@ -72,33 +73,33 @@ int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int he
            sy = sin(radians(yaw));
 
     // Save old values.
-    for (int i = 0; i < NB_SERVOS; i++)
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        oldValues[i] = servoValues[i];
+        oldValues[sid] = servoValues[sid];
     }
 
     // Assume everything will be OK.
     int8_t movOK = 0;
 
     // Compute new values.
-    for (int i = 0; i < NB_SERVOS; i++)
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        pivot_x = P_COORDS[i][0] * cr * cy + P_COORDS[i][1] * (sp * sr * cr - cp * sy) + sway;
-        pivot_y = P_COORDS[i][0] * cr * sy + P_COORDS[i][1] * (cp * cy + sp * sr * sy) + surge;
-        pivot_z = -P_COORDS[i][0] * sr + P_COORDS[i][1] * sp * cr + Z_HOME + heave;
+        pivot_x = P_COORDS[sid][0] * cr * cy + P_COORDS[sid][1] * (sp * sr * cr - cp * sy) + sway;
+        pivot_y = P_COORDS[sid][0] * cr * sy + P_COORDS[sid][1] * (cp * cy + sp * sr * sy) + surge;
+        pivot_z = -P_COORDS[sid][0] * sr + P_COORDS[sid][1] * sp * cr + Z_HOME + heave;
 
-        d2 = pow(pivot_x - B_COORDS[i][0], 2) + pow(pivot_y - B_COORDS[i][1], 2) + pow(pivot_z, 2);
+        d2 = pow(pivot_x - B_COORDS[sid][0], 2) + pow(pivot_y - B_COORDS[sid][1], 2) + pow(pivot_z, 2);
 
         // Geometry stuff.
         k = d2 - (pow(ROD_LENGTH, 2) - pow(ARM_LENGTH, 2));
         l = 2 * ARM_LENGTH * pivot_z;
-        m = 2 * ARM_LENGTH * (cos(THETA_S[i]) * (pivot_x - B_COORDS[i][0]) + sin(THETA_S[i]) * (pivot_y - B_COORDS[i][1]));
+        m = 2 * ARM_LENGTH * (cos(THETA_S[sid]) * (pivot_x - B_COORDS[sid][0]) + sin(THETA_S[sid]) * (pivot_y - B_COORDS[sid][1]));
         servo_rad = asin(k / sqrt(l * l + m * m)) - atan(m / l);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
         servo_deg = map(degrees(servo_rad), -90, 90, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
-        // Is the required virtual arm length longer than physically possible ?
+        // Is the required virtual arm length longer than physically possible?
         bool armLengthNOK = sqrt(d2) > (ARM_LENGTH + ROD_LENGTH);
 
         // Other bad stuff.
@@ -133,7 +134,7 @@ int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int he
             servo_deg = SERVO_MIN_ANGLE;
         }
 
-        servoValues[i] = servo_deg;
+        servoValues[sid] = servo_deg;
     }
 
     if (movOK >= 0)
@@ -147,20 +148,19 @@ int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int he
         _sp_yaw = yaw;
 
         // Scale values by aggro.
-        for (int i = 0; i < NB_SERVOS; i++)
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            int diff = servoValues[i] - SERVO_MID_ANGLE;
-
-            servoValues[i] = SERVO_MID_ANGLE + (diff * AGGRO);
-            servoValues[i] = constrain(servoValues[i], SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+            int diff = servoValues[sid] - SERVO_MID_ANGLE;
+            servoValues[sid] = SERVO_MID_ANGLE + (diff * AGGRO);
+            servoValues[sid] = constrain(servoValues[sid], SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
         }
     }
     else
     {
         // Reset back to old values if something went wrong.
-        for (int i = 0; i < NB_SERVOS; i++)
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            servoValues[i] = oldValues[i];
+            servoValues[sid] = oldValues[sid];
         }
     }
 
@@ -175,28 +175,10 @@ int8_t HexapodKinematics::moveTo(float *servoValues, float pitch, float roll)
     return moveTo(servoValues, _sp_sway, _sp_surge, _sp_heave, pitch, roll, _sp_yaw);
 }
 
-int HexapodKinematics::getSway()
-{
-    return _sp_sway;
-}
-int HexapodKinematics::getSurge()
-{
-    return _sp_surge;
-}
-int HexapodKinematics::getHeave()
-{
-    return _sp_heave;
-}
+int HexapodKinematics::getSway() { return _sp_sway; }
+int HexapodKinematics::getSurge() { return _sp_surge; }
+int HexapodKinematics::getHeave() { return _sp_heave; }
 
-float HexapodKinematics::getPitch()
-{
-    return _sp_pitch;
-}
-float HexapodKinematics::getRoll()
-{
-    return _sp_roll;
-}
-float HexapodKinematics::getYaw()
-{
-    return _sp_yaw;
-}
+float HexapodKinematics::getPitch() { return _sp_pitch; }
+float HexapodKinematics::getRoll() { return _sp_roll; }
+float HexapodKinematics::getYaw() { return _sp_yaw; }
