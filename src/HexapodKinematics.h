@@ -1,15 +1,20 @@
 /**
- * HexapodKinematics
+ * S T E W A R T    P L A T F O R M    O N    E S P 3 2
  *
- * Based on https://github.com/xoxota99/stewy
- * Derived from the work of Daniel Waters, https://www.youtube.com/watch?v=1jrP3_1ML9M
- * Modified by ouilogique.com
+ * Based on
+ * 6dof-stewduino
+ * Copyright (C) 2018  Philippe Desrosiers
+ * https://github.com/xoxota99/stewy
+ *
+ * Derived from the work of Daniel Waters
+ * https://www.youtube.com/watch?v=1jrP3_1ML9M
+ *
+ * Modified by Nicolas Jeanmonod
+ * ouilogique.com
  * March 2019
  *
  *
- *
- * 6dof-stewduino
- * Copyright (C) 2018  Philippe Desrosiers
+ * Copyright (C) 2019  Nicolas Jeanmonod
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +27,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 #ifndef __HEXAPODKINEMATICS_H__
 #define __HEXAPODKINEMATICS_H__
 #include "HexapodKinematicsConfig.h"
+
+#define NB_SERVOS 6
 
 /**
  *
@@ -47,9 +54,9 @@ class HexapodKinematics
         _sp_yaw = 0;     // yaw (z) in radians
 
   public:
-    bool home(float *servoValues);
-    bool moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw);
-    bool moveTo(float *servoValues, float pitch, float roll);
+    int8_t home(float *servoValues);
+    int8_t moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw);
+    int8_t moveTo(float *servoValues, float pitch, float roll);
 
     int getSway();
     int getSurge();
