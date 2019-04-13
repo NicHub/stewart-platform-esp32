@@ -42,9 +42,9 @@
 ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
 // Stewart Platform
-HexapodKinematics hk;      // Stewart platform object.
-float sp_servo[NB_SERVOS]; // Servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-Servo servos[NB_SERVOS];   // Servo objects.
+HexapodKinematics hk;       // Stewart platform object.
+double sp_servo[NB_SERVOS]; // Servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+Servo servos[NB_SERVOS];    // Servo objects.
 
 float _toUs(int value)
 {
@@ -116,7 +116,7 @@ void setServo(int sid, int angle)
     }
     else
     {
-        Serial.printf("setServo: Invalid value '%d' specified for servo #%d. Valid range is %d to %d degrees.\n", val, sid, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        Serial.printf("setServo: Invalid value '%d' specified for servo #%d. Valid range is %f to %f degrees.\n", val, sid, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
     }
 }
 
@@ -139,7 +139,8 @@ void setupServos()
  */
 void shake()
 {
-    int shakeZ = 6;
+    Serial.println("shake START");
+    double shakeZ = 1;
     int8_t movOK = -1;
     for (int shake = 0; shake < 10; shake++)
     {
@@ -149,8 +150,11 @@ void shake()
         shakeZ = -shakeZ;
     }
     delay(200);
+    Serial.println("shake DONE");
+    Serial.println("home START");
     hk.home(sp_servo);
     updateServos(true);
+    Serial.println("home DONE");
 }
 
 /**
@@ -194,7 +198,7 @@ void demoMovements2()
 void demoMovements3()
 {
     Serial.println("demoMovements3 START");
-    const int dval[][NB_SERVOS] = {
+    const double dval[][NB_SERVOS] = {
         //sway
         {MAX_SWAY, 0, 0, 0, 0, 0},
         {MIN_SWAY, 0, 0, 0, 0, 0},
@@ -265,7 +269,7 @@ void demoMovements5(int nb_turn = 1)
     Serial.println("demoMovements5 START");
 
     const int16_t nb_points = 90;
-    const double radius = 55; // max 55 when flat
+    const double radius = 25;
     const double angleInc = TWO_PI / nb_points;
     double angle = 0;
     int dval[nb_points][NB_SERVOS];
@@ -427,6 +431,28 @@ void serialControl()
         int8_t movOK = -1;
         movOK = hk.moveTo(sp_servo, sway, 0, 0, 0, 0, 0);
         updateServos(movOK);
+    }
+}
+
+/**
+ *
+ */
+void printJointAndServoAxisCoord()
+{
+    Serial.println("P_COORDS");
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.print(P_COORDS[sid][0]);
+        Serial.print("  ");
+        Serial.println(P_COORDS[sid][1]);
+    }
+
+    Serial.println("\nB_COORDS");
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.print(B_COORDS[sid][0]);
+        Serial.print("  ");
+        Serial.println(B_COORDS[sid][1]);
     }
 }
 

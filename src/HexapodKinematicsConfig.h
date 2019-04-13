@@ -34,19 +34,23 @@
 #ifndef __HEXAPODKINEMATICSCONFIG_H__
 #define __HEXAPODKINEMATICSCONFIG_H__
 
+#ifndef PLATFORMIO
+#include "../desktop_app/test.h"
+#endif
+
 #define NB_SERVOS 6
 
 // Which servos are reversed. 1 = reversed, 0 = normal.
 // !! First servo is of another type, that’s why it is set to 0 !!
-const int SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
+const uint8_t SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
 
-#define SERVO_MIN_ANGLE 0   // These values don’t seem to be taken into account correctly.
-#define SERVO_MAX_ANGLE 180 // These values don’t seem to be taken into account correctly.
-const int SERVO_MID_ANGLE = SERVO_MIN_ANGLE + (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE) / 2;
+const double SERVO_MIN_ANGLE = 0.0;   // These values don’t seem to be taken into account correctly.
+const double SERVO_MAX_ANGLE = 180.0; // These values don’t seem to be taken into account correctly.
+const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
 
 #define SERVO_MIN_US 600  // default  500 (library 4744/ESP32Servo)
 #define SERVO_MAX_US 2300 // default 2500 (library 4744/ESP32Servo)
-const int SERVO_MID_US = SERVO_MIN_US + (SERVO_MAX_US - SERVO_MIN_US) / 2;
+const int SERVO_MID_US = (SERVO_MIN_US + SERVO_MAX_US) / 2;
 
 const int SERVO_TRIM[] = { // trim values, in microseconds, AFTER reversing
     0,
@@ -70,52 +74,63 @@ const int SERVO_PINS[] = { // pin numbers for each servo signal.
   different than what's defined here. These are just the absolute maximums under
   ideal conditions (eg: max for roll when pitch is zero).
 */
+const double MIN_SWAY = -40;
+const double MAX_SWAY = 40;
+const double SWAY_BAND = MAX_SWAY - MIN_SWAY;
 
-#define MIN_PITCH -20
-#define MAX_PITCH 23
-const int PITCH_BAND = MAX_PITCH - MIN_PITCH;
+const double MIN_SURGE = -40;
+const double MAX_SURGE = 40;
+const double SURGE_BAND = MAX_SURGE - MIN_SURGE;
 
-#define MIN_ROLL -23
-#define MAX_ROLL 20
-const int ROLL_BAND = MAX_ROLL - MIN_ROLL;
+const double MIN_HEAVE = -20;
+const double MAX_HEAVE = 20;
+const double HEAVE_BAND = MAX_HEAVE - MIN_HEAVE;
 
-#define MIN_YAW -69
-#define MAX_YAW 69
-const int YAW_BAND = MAX_YAW - MIN_YAW;
+const double MIN_PITCH = -19;
+const double MAX_PITCH = 19;
+const double PITCH_BAND = MAX_PITCH - MIN_PITCH;
 
-#define MIN_SWAY -55
-#define MAX_SWAY 55
-const int SWAY_BAND = MAX_SWAY - MIN_SWAY;
+const double MIN_ROLL = -19;
+const double MAX_ROLL = 19;
+const double ROLL_BAND = MAX_ROLL - MIN_ROLL;
 
-#define MIN_SURGE -70
-#define MAX_SURGE 55
-const int SURGE_BAND = MAX_SURGE - MIN_SURGE;
+const double MIN_YAW = -27;
+const double MAX_YAW = 27;
+const double YAW_BAND = MAX_YAW - MIN_YAW;
 
-#define MIN_HEAVE -22
-#define MAX_HEAVE 25
-const int HEAVE_BAND = MAX_HEAVE - MIN_HEAVE;
 
 /*
 * ======== Platform / Servo Settings ==========
 */
 
 // Geometry of the platform.
+#define GEOMETRY_SET 0
 
-#define THETA_P_DEG 45.25                // Platform joint angle (degrees) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes
-#define THETA_B_DEG 24.5                 // Base Servo pinion angle (degrees) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes
-#define THETA_P (THETA_P_DEG * PI / 180) // Theta P, in radians
-#define THETA_B (THETA_B_DEG * PI / 180) // Theta B, in radians
-#define P_RAD 50                         // Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
-#define B_RAD 80.2                       // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
-#define ARM_LENGTH 25                    // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
-#define ROD_LENGTH 155                   // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-#define Z_HOME 148                       // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints.
+#if GEOMETRY_SET == 0
+// Original set
+const double THETA_P = radians(45.25); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
+const double THETA_B = radians(24.5);  // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
+const double P_RAD = 50;               // Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
+const double B_RAD = 80.2;             // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
+const double ARM_LENGTH = 25.0;        // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
+const double ROD_LENGTH = 155.0;       // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
+const double Z_HOME = 148.0;           // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints.
+#elif GEOMETRY_SET == 1
+// New set
+const double THETA_P = radians(49.1); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
+const double THETA_B = radians(26.0); // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
+const double P_RAD = 99.55 / 2;       // Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
+const double B_RAD = 138.13 / 2;      // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
+const double ARM_LENGTH = 15.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
+const double ROD_LENGTH = 140.0;      // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
+const double Z_HOME = 130.0;          // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints.
+#endif
 
 /*
   Prescalar to the output of the platform IK solution for each servo.
   NOTE: Even with aggro, the solution will never fall outside the range of
   [SERVO_ANGLE_MIN .. SERVO_ANGLE_MAX]
 */
-#define AGGRO 1.5F
+const double AGGRO = 1.5;
 
 #endif // __HEXAPODKINEMATICSCONFIG_H__

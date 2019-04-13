@@ -34,7 +34,7 @@
 #ifndef __HEXAPODKINEMATICS_H__
 #define __HEXAPODKINEMATICS_H__
 
-#ifdef ESP32
+#ifdef PLATFORMIO
 #include <Arduino.h>
 #endif
 
@@ -59,30 +59,22 @@
 #define AXIS3 AXIS1
 
 /*
-   Absolute angle that the servo arm plane of rotation is at (degrees), from the world-X axis.
+   Absolute angle that the servo arm plane of rotation is at, from the world-X axis.
  */
-const double THETA_S_DEG[6] = {
-    -60,
-    120,
-    180,
-    0,
-    60,
-    -120};
-
-const double THETA_S[6] = { //Servo arm angle (radians)
-    radians(THETA_S_DEG[0]),
-    radians(THETA_S_DEG[1]),
-    radians(THETA_S_DEG[2]),
-    radians(THETA_S_DEG[3]),
-    radians(THETA_S_DEG[4]),
-    radians(THETA_S_DEG[5])};
+const double THETA_S[NB_SERVOS] = {
+    radians(-60),
+    radians(120),
+    radians(180),
+    radians(0),
+    radians(60),
+    radians(-120)};
 
 /*
    XY cartesian coordinates of the platform joints, based on the polar
-   coordinates (platform radius P_RAD, radial axis AXIS[1|2\3], and offset THETA_P.
+   coordinates (platform radius P_RAD, radial axis AXIS[1|2|3], and offset THETA_P.
    These coordinates are in the plane of the platform itself.
  */
-const double P_COORDS[6][2] = {
+const double P_COORDS[NB_SERVOS][2] = {
     {P_RAD * cos(AXIS1 + THETA_P), P_RAD *sin(AXIS1 + THETA_P)},
     {P_RAD * cos(AXIS1 - THETA_P), P_RAD *sin(AXIS1 - THETA_P)},
     {P_RAD * cos(AXIS2 + THETA_P), P_RAD *sin(AXIS2 + THETA_P)},
@@ -92,10 +84,10 @@ const double P_COORDS[6][2] = {
 
 /*
    XY cartesian coordinates of the servo centers, based on the polar
-   coordinates (base radius B_RAD, radial axis AXIS[1|2\3], and offset THETA_B.
+   coordinates (base radius B_RAD, radial axis AXIS[1|2|3], and offset THETA_B.
    These coordinates are in the plane of the base itself.
  */
-const double B_COORDS[6][2] = {
+const double B_COORDS[NB_SERVOS][2] = {
     {B_RAD * cos(AXIS1 + THETA_B), B_RAD *sin(AXIS1 + THETA_B)},
     {B_RAD * cos(AXIS1 - THETA_B), B_RAD *sin(AXIS1 - THETA_B)},
     {B_RAD * cos(AXIS2 + THETA_B), B_RAD *sin(AXIS2 + THETA_B)},
@@ -103,34 +95,36 @@ const double B_COORDS[6][2] = {
     {-B_RAD * cos(AXIS3 - THETA_B), B_RAD *sin(AXIS3 - THETA_B)},
     {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
 
+double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
+
 /**
  *
  */
 class HexapodKinematics
 {
 
-private:
-  // Setpoints (internal state)
-  int _sp_sway = 0,  // sway (x) in mm
-      _sp_surge = 0, // surge (y) in mm
-      _sp_heave = 0; // heave (z) in mm
+  private:
+    // Setpoints (internal state)
+    double _sp_sway = 0, // sway (x) in mm
+        _sp_surge = 0,   // surge (y) in mm
+        _sp_heave = 0;   // heave (z) in mm
 
-  float _sp_pitch = 0, // pitch (x) in radians
-      _sp_roll = 0,    // roll (y) in radians
-      _sp_yaw = 0;     // yaw (z) in radians
+    double _sp_pitch = 0, // pitch (x) in radians
+        _sp_roll = 0,     // roll (y) in radians
+        _sp_yaw = 0;      // yaw (z) in radians
 
-public:
-  int8_t home(float *servoValues);
-  int8_t moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw);
-  int8_t moveTo(float *servoValues, float pitch, float roll);
+  public:
+    int8_t home(double *servoValues);
+    int8_t moveTo(double *servoValues, double sway, double surge, double heave, double pitch, double roll, double yaw);
+    int8_t moveTo(double *servoValues, double pitch, double roll);
 
-  int getSway();
-  int getSurge();
-  int getHeave();
+    double getSway();
+    double getSurge();
+    double getHeave();
 
-  float getPitch();
-  float getRoll();
-  float getYaw();
+    double getPitch();
+    double getRoll();
+    double getYaw();
 };
 
 #endif //__HEXAPODKINEMATICS_H__

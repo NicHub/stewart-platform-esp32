@@ -34,9 +34,17 @@
 #include "HexapodKinematics.h"
 
 /**
+ *
+ */
+double mapDouble(double x, double in_min, double in_max, double out_min, double out_max)
+{
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+/**
  * HOME position. No translation, no rotation.
  */
-int8_t HexapodKinematics::home(float *servoValues)
+int8_t HexapodKinematics::home(double *servoValues)
 {
     return moveTo(servoValues, 0, 0, 0, 0, 0, 0);
 }
@@ -54,15 +62,23 @@ int8_t HexapodKinematics::home(float *servoValues)
  * 2) optimize so we don’t run through this loop if we know we’re already at the desired setpoint(s).
  *
  */
-int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int heave, float pitch, float roll, float yaw)
+int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge, double heave, double pitch, double roll, double yaw)
 {
+    // Constrain input values.
+    sway = constrain(sway, MIN_SWAY, MAX_SWAY);
+    surge = constrain(surge, MIN_SURGE, MAX_SURGE);
+    heave = constrain(heave, MIN_HEAVE, MAX_HEAVE);
+    pitch = constrain(pitch, MIN_PITCH, MAX_PITCH);
+    roll = constrain(roll, MIN_ROLL, MAX_ROLL);
+    yaw = constrain(yaw, MIN_YAW, MAX_YAW);
+
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
         k, l, m,                      // Intermediate values.
         servo_rad,                    // Angle (radians) to turn each servo.
         servo_deg;                    // Angle (in degrees) to turn each servo.
 
-    float oldValues[NB_SERVOS];
+    double oldValues[NB_SERVOS];
 
     // Intermediate values, to avoid recalculating SIN / COS.
     double cr = cos(radians(roll)),
@@ -97,7 +113,7 @@ int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int he
         servo_rad = asin(k / sqrt(l * l + m * m)) - atan(m / l);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-        servo_deg = map(degrees(servo_rad), -90, 90, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        servo_deg = mapDouble(degrees(servo_rad), -90.0, 90.0, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
         // Is the required virtual arm length longer than physically possible?
         bool armLengthNOK = sqrt(d2) > (ARM_LENGTH + ROD_LENGTH);
@@ -150,7 +166,7 @@ int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int he
         // Scale values by aggro.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            int diff = servoValues[sid] - SERVO_MID_ANGLE;
+            double diff = servoValues[sid] - SERVO_MID_ANGLE;
             servoValues[sid] = SERVO_MID_ANGLE + (diff * AGGRO);
             servoValues[sid] = constrain(servoValues[sid], SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
         }
@@ -170,15 +186,15 @@ int8_t HexapodKinematics::moveTo(float *servoValues, int sway, int surge, int he
 /*
  * Move to a given pitch / roll angle (in degrees)
  */
-int8_t HexapodKinematics::moveTo(float *servoValues, float pitch, float roll)
+int8_t HexapodKinematics::moveTo(double *servoValues, double pitch, double roll)
 {
     return moveTo(servoValues, _sp_sway, _sp_surge, _sp_heave, pitch, roll, _sp_yaw);
 }
 
-int HexapodKinematics::getSway() { return _sp_sway; }
-int HexapodKinematics::getSurge() { return _sp_surge; }
-int HexapodKinematics::getHeave() { return _sp_heave; }
+double HexapodKinematics::getSway() { return _sp_sway; }
+double HexapodKinematics::getSurge() { return _sp_surge; }
+double HexapodKinematics::getHeave() { return _sp_heave; }
 
-float HexapodKinematics::getPitch() { return _sp_pitch; }
-float HexapodKinematics::getRoll() { return _sp_roll; }
-float HexapodKinematics::getYaw() { return _sp_yaw; }
+double HexapodKinematics::getPitch() { return _sp_pitch; }
+double HexapodKinematics::getRoll() { return _sp_roll; }
+double HexapodKinematics::getYaw() { return _sp_yaw; }
