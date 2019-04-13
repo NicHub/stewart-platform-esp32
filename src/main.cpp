@@ -42,9 +42,9 @@
 ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
 // Stewart Platform
-HexapodKinematics hk;       // Stewart platform object.
-double sp_servo[NB_SERVOS]; // Servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-Servo servos[NB_SERVOS];    // Servo objects.
+HexapodKinematics hk;           // Stewart platform object.
+double servo_angles[NB_SERVOS]; // Servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+Servo servos[NB_SERVOS];        // Servo objects.
 
 float _toUs(int value)
 {
@@ -52,7 +52,7 @@ float _toUs(int value)
 }
 
 /**
- * Set servo values to the angles represented by the setpoints in sp_servo[].
+ * Set servo values to the angles represented by the setpoints in servo_angles[].
  * DOES: Apply trim values.
  * DOES: Automatically reverse signal for reversed servos.
  * DOES: Write signals to the physical servos.
@@ -80,9 +80,9 @@ void updateServos(int8_t movOK)
 
     for (int sid = 0; sid < NB_SERVOS; sid++)
     {
-        // sp_servo holds a value between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+        // servo_angles holds a value between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
         // Apply reverse.
-        float val = sp_servo[sid];
+        float val = servo_angles[sid];
         if (SERVO_REVERSE[sid])
         {
             val = SERVO_MIN_ANGLE + (SERVO_MAX_ANGLE - val);
@@ -100,7 +100,7 @@ void updateServos(int8_t movOK)
 }
 
 /**
- * Calculates and assigns values to sp_servo.
+ * Calculates and assigns values to servo_angles.
  * DOES: Ignore out-of-range values. These will generate a warning on the serial monitor.
  * DOES NOT: Apply servo trim values.
  * DOES NOT: Automatically reverse signal for reversed servos.
@@ -111,8 +111,8 @@ void setServo(int sid, int angle)
     int val = angle;
     if (val >= SERVO_MIN_ANGLE && val <= SERVO_MAX_ANGLE)
     {
-        sp_servo[sid] = val;
-        Serial.printf("setServo %d - %.2f degrees\n", sid, sp_servo[sid]);
+        servo_angles[sid] = val;
+        Serial.printf("setServo %d - %.2f degrees\n", sid, servo_angles[sid]);
     }
     else
     {
@@ -145,14 +145,14 @@ void shake()
     for (int shake = 0; shake < 10; shake++)
     {
         delay(60);
-        movOK = hk.moveTo(sp_servo, 0, 0, shakeZ, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, 0, 0, shakeZ, 0, 0, 0);
         updateServos(movOK);
         shakeZ = -shakeZ;
     }
     delay(200);
     Serial.println("shake DONE");
     Serial.println("home START");
-    hk.home(sp_servo);
+    hk.home(servo_angles);
     updateServos(true);
     Serial.println("home DONE");
 }
@@ -171,7 +171,7 @@ void demoMovements1()
         updateServos(true);
         delay(100);
     }
-    // hk.home(sp_servo);
+    // hk.home(servo_angles);
     Serial.println("demoMovements1 DONE");
 }
 
@@ -185,7 +185,7 @@ void demoMovements2()
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        movOK = hk.moveTo(sp_servo, cnt, 0, 0, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, cnt, 0, 0, 0, 0, 0);
         updateServos(movOK);
         delay(500);
     }
@@ -236,7 +236,7 @@ void demoMovements3()
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        movOK = hk.moveTo(sp_servo, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
+        movOK = hk.calcServoAngles(servo_angles, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
         updateServos(movOK);
         delay(1000);
     }
@@ -288,7 +288,7 @@ void demoMovements5(int nb_turn = 1)
     {
         for (int16_t cnt = 0; cnt < nb_points; cnt++)
         {
-            movOK = hk.moveTo(sp_servo, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
+            movOK = hk.calcServoAngles(servo_angles, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
             updateServos(movOK);
             delay(8);
         }
@@ -339,13 +339,13 @@ void joystickControl()
     int8_t movOK = -1;
     if (joyMode == 0)
         // X, Y
-        movOK = hk.moveTo(sp_servo, joyX, joyY, 0, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, joyX, joyY, 0, 0, 0, 0);
     else if (joyMode == 1)
         // Z, tiltZ
-        movOK = hk.moveTo(sp_servo, 0, 0, joyY, 0, 0, joyX);
+        movOK = hk.calcServoAngles(servo_angles, 0, 0, joyY, 0, 0, joyX);
     else if (joyMode == 2)
         // tilt X, tilt Y
-        movOK = hk.moveTo(sp_servo, 0, 0, 0, joyX, joyY, 0);
+        movOK = hk.calcServoAngles(servo_angles, 0, 0, 0, joyX, joyY, 0);
 
     updateServos(movOK);
 
@@ -402,7 +402,7 @@ void setupJoystick()
 
     joystick.calibrate();
     delay(10);
-    hk.home(sp_servo);
+    hk.home(servo_angles);
     updateServos(true);
 
     Serial.print("millis = ");
@@ -429,7 +429,7 @@ void serialControl()
         Serial.println(sway);
 
         int8_t movOK = -1;
-        movOK = hk.moveTo(sp_servo, sway, 0, 0, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, sway, 0, 0, 0, 0, 0);
         updateServos(movOK);
     }
 }
@@ -442,17 +442,17 @@ void printJointAndServoAxisCoord()
     Serial.println("P_COORDS");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(P_COORDS[sid][0]);
+        Serial.print(hk.P_COORDS[sid][0]);
         Serial.print("  ");
-        Serial.println(P_COORDS[sid][1]);
+        Serial.println(hk.P_COORDS[sid][1]);
     }
 
     Serial.println("\nB_COORDS");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(B_COORDS[sid][0]);
+        Serial.print(hk.B_COORDS[sid][0]);
         Serial.print("  ");
-        Serial.println(B_COORDS[sid][1]);
+        Serial.println(hk.B_COORDS[sid][1]);
     }
 }
 
@@ -464,10 +464,6 @@ void setup()
     setupSerial();
     setupServos();
     setupJoystick();
-    // demoMovements1();
-    // demoMovements2();
-    // demoMovements3();
-    // demoMovements4();
     demoMovements5(5);
     shake();
 }

@@ -36,7 +36,7 @@
 /**
  *
  */
-double mapDouble(double x, double in_min, double in_max, double out_min, double out_max)
+double HexapodKinematics::mapDouble(double x, double in_min, double in_max, double out_min, double out_max)
 {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -44,9 +44,9 @@ double mapDouble(double x, double in_min, double in_max, double out_min, double 
 /**
  * HOME position. No translation, no rotation.
  */
-int8_t HexapodKinematics::home(double *servoValues)
+int8_t HexapodKinematics::home(double *servo_angles)
 {
-    return moveTo(servoValues, 0, 0, 0, 0, 0, 0);
+    return calcServoAngles(servo_angles, 0, 0, 0, 0, 0, 0);
 }
 
 /**
@@ -62,7 +62,7 @@ int8_t HexapodKinematics::home(double *servoValues)
  * 2) optimize so we don’t run through this loop if we know we’re already at the desired setpoint(s).
  *
  */
-int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge, double heave, double pitch, double roll, double yaw)
+int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, double surge, double heave, double pitch, double roll, double yaw)
 {
     // Constrain input values.
     sway = constrain(sway, MIN_SWAY, MAX_SWAY);
@@ -91,7 +91,7 @@ int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge,
     // Save old values.
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        oldValues[sid] = servoValues[sid];
+        oldValues[sid] = servo_angles[sid];
     }
 
     // Assume everything will be OK.
@@ -113,7 +113,7 @@ int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge,
         servo_rad = asin(k / sqrt(l * l + m * m)) - atan(m / l);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-        servo_deg = mapDouble(degrees(servo_rad), -90.0, 90.0, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        servo_deg = this->mapDouble(degrees(servo_rad), -90.0, 90.0, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
         // Is the required virtual arm length longer than physically possible?
         bool armLengthNOK = sqrt(d2) > (ARM_LENGTH + ROD_LENGTH);
@@ -150,7 +150,7 @@ int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge,
             servo_deg = SERVO_MIN_ANGLE;
         }
 
-        servoValues[sid] = servo_deg;
+        servo_angles[sid] = servo_deg;
     }
 
     if (movOK >= 0)
@@ -166,9 +166,9 @@ int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge,
         // Scale values by aggro.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            double diff = servoValues[sid] - SERVO_MID_ANGLE;
-            servoValues[sid] = SERVO_MID_ANGLE + (diff * AGGRO);
-            servoValues[sid] = constrain(servoValues[sid], SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+            double diff = servo_angles[sid] - SERVO_MID_ANGLE;
+            servo_angles[sid] = SERVO_MID_ANGLE + (diff * AGGRO);
+            servo_angles[sid] = constrain(servo_angles[sid], SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
         }
     }
     else
@@ -176,7 +176,7 @@ int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge,
         // Reset back to old values if something went wrong.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            servoValues[sid] = oldValues[sid];
+            servo_angles[sid] = oldValues[sid];
         }
     }
 
@@ -186,15 +186,14 @@ int8_t HexapodKinematics::moveTo(double *servoValues, double sway, double surge,
 /*
  * Move to a given pitch / roll angle (in degrees)
  */
-int8_t HexapodKinematics::moveTo(double *servoValues, double pitch, double roll)
+int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double pitch, double roll)
 {
-    return moveTo(servoValues, _sp_sway, _sp_surge, _sp_heave, pitch, roll, _sp_yaw);
+    return calcServoAngles(servo_angles, _sp_sway, _sp_surge, _sp_heave, pitch, roll, _sp_yaw);
 }
 
 double HexapodKinematics::getSway() { return _sp_sway; }
 double HexapodKinematics::getSurge() { return _sp_surge; }
 double HexapodKinematics::getHeave() { return _sp_heave; }
-
 double HexapodKinematics::getPitch() { return _sp_pitch; }
 double HexapodKinematics::getRoll() { return _sp_roll; }
 double HexapodKinematics::getYaw() { return _sp_yaw; }

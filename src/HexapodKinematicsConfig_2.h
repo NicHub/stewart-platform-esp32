@@ -34,10 +34,6 @@
 #ifndef __HEXAPODKINEMATICSCONFIG_H__
 #define __HEXAPODKINEMATICSCONFIG_H__
 
-#ifndef PLATFORMIO
-#include "../hexapod_app/hexapod_app.h"
-#endif
-
 /*
  * ======== SERVO SETTINGS ==========
  */
@@ -73,7 +69,6 @@ const int SERVO_PINS[] = {
     14,
     33,
     25};
-
 
 /*
  * ======== GEOMETRY SETTINGS ==========

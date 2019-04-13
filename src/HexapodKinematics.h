@@ -34,10 +34,14 @@
 #ifndef __HEXAPODKINEMATICS_H__
 #define __HEXAPODKINEMATICS_H__
 
+// This library can be compiled for ESP32 or for a desktop application.
 #ifdef PLATFORMIO
 #include <Arduino.h>
+#else
+#include "../hexapod_app/hexapod_app.h"
 #endif
 
+// Choose configuration file.
 #define HEXAPOD_CONFIG 1
 #if HEXAPOD_CONFIG == 1
 #include "HexapodKinematicsConfig_1.h"
@@ -45,90 +49,97 @@
 #include "HexapodKinematicsConfig_2.h"
 #endif
 
-/*
-   There are three axes of symmetry (AXIS1, AXIS2, AXIS3). Looking down on the
-   platform from above (along the Y axis), with 0 degrees being the X-positive line, and traveling
-   in a CC direction, these are at 30 degrees, 120 degrees, and 240 degrees. All
-   the polar coordinates of pivot points, servo centers, etc. are calculated based on
-   an axis, and an offset angle (positive or negative theta) from the axis.
- */
-
-#define AXIS1 (PI / 6)  //  30 degrees.
-#define AXIS2 (-PI / 2) // -90 degrees.
-/*
-   NOTE: We make an assumption of mirror symmetry for AXIS3 along the Y axis.
-   That is, AXIS1 is at (e.g.) 30 degrees, and AXIS3 will be at 120 degrees
-   We account for this by negating the value of x-coordinates generated based
-   on this axis later on. This is potentially messy, and should maybe be refactored.
- */
-#define AXIS3 AXIS1
-
-/*
-   Absolute angle that the servo arm plane of rotation is at, from the world-X axis.
- */
-const double THETA_S[NB_SERVOS] = {
-    radians(-60),
-    radians(120),
-    radians(180),
-    radians(0),
-    radians(60),
-    radians(-120)};
-
-/*
-   XY cartesian coordinates of the platform joints, based on the polar
-   coordinates (platform radius P_RAD, radial axis AXIS[1|2|3], and offset THETA_P.
-   These coordinates are in the plane of the platform itself.
- */
-const double P_COORDS[NB_SERVOS][2] = {
-    {P_RAD * cos(AXIS1 + THETA_P), P_RAD *sin(AXIS1 + THETA_P)},
-    {P_RAD * cos(AXIS1 - THETA_P), P_RAD *sin(AXIS1 - THETA_P)},
-    {P_RAD * cos(AXIS2 + THETA_P), P_RAD *sin(AXIS2 + THETA_P)},
-    {-P_RAD * cos(AXIS2 + THETA_P), P_RAD *sin(AXIS2 + THETA_P)},
-    {-P_RAD * cos(AXIS3 - THETA_P), P_RAD *sin(AXIS3 - THETA_P)},
-    {-P_RAD * cos(AXIS3 + THETA_P), P_RAD *sin(AXIS3 + THETA_P)}};
-
-/*
-   XY cartesian coordinates of the servo centers, based on the polar
-   coordinates (base radius B_RAD, radial axis AXIS[1|2|3], and offset THETA_B.
-   These coordinates are in the plane of the base itself.
- */
-const double B_COORDS[NB_SERVOS][2] = {
-    {B_RAD * cos(AXIS1 + THETA_B), B_RAD *sin(AXIS1 + THETA_B)},
-    {B_RAD * cos(AXIS1 - THETA_B), B_RAD *sin(AXIS1 - THETA_B)},
-    {B_RAD * cos(AXIS2 + THETA_B), B_RAD *sin(AXIS2 + THETA_B)},
-    {-B_RAD * cos(AXIS2 + THETA_B), B_RAD *sin(AXIS2 + THETA_B)},
-    {-B_RAD * cos(AXIS3 - THETA_B), B_RAD *sin(AXIS3 - THETA_B)},
-    {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
-
-double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
-
 /**
  *
  */
 class HexapodKinematics
 {
   private:
-    // Setpoints (internal state)
-    double _sp_sway = 0, // sway (x) in mm
-        _sp_surge = 0,   // surge (y) in mm
-        _sp_heave = 0;   // heave (z) in mm
-
-    double _sp_pitch = 0, // pitch (x) in radians
-        _sp_roll = 0,     // roll (y) in radians
-        _sp_yaw = 0;      // yaw (z) in radians
+    // Setpoints (internal states)
+    double
+        _sp_sway = 0,  // sway (x) in mm
+        _sp_surge = 0, // surge (y) in mm
+        _sp_heave = 0, // heave (z) in mm
+        _sp_pitch = 0, // pitch (x) in radians
+        _sp_roll = 0,  // roll (y) in radians
+        _sp_yaw = 0;   // yaw (z) in radians
 
   public:
-    int8_t home(double *servoValues);
-    int8_t moveTo(double *servoValues, double sway, double surge, double heave, double pitch, double roll, double yaw);
-    int8_t moveTo(double *servoValues, double pitch, double roll);
-
+    /*
+     * ======== MAIN FUNCTIONS ==========
+     */
+    HexapodKinematics(){};
+    int8_t home(double *servo_angles);
+    int8_t calcServoAngles(double *servo_angles, double sway, double surge, double heave, double pitch, double roll, double yaw);
+    int8_t calcServoAngles(double *servo_angles, double pitch, double roll);
     double getSway();
     double getSurge();
     double getHeave();
-
     double getPitch();
     double getRoll();
     double getYaw();
+
+    /*
+     * ======== HELPER FUNCTION ==========
+     */
+    double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
+
+    /*
+     * ======== PRECALCULATED GEOMETRY ==========
+     */
+
+    /*
+     * There are three axes of symmetry (AXIS1, AXIS2, AXIS3). Looking down on the
+     * platform from above (along the Y axis), with 0 degrees being the X-positive line, and traveling
+     * in a CC direction, these are at 30 degrees, 120 degrees, and 240 degrees. All
+     * the polar coordinates of pivot points, servo centers, etc. are calculated based on
+     * an axis, and an offset angle (positive or negative theta) from the axis.
+     *
+     * NOTE: We make an assumption of mirror symmetry for AXIS3 along the Y axis.
+     * That is, AXIS1 is at (e.g.) 30 degrees, and AXIS3 will be at 120 degrees
+     * We account for this by negating the value of x-coordinates generated based
+     * on this axis later on. This is potentially messy, and should maybe be refactored.
+     */
+    const double AXIS1 = PI / 6;  //  30 degrees.
+    const double AXIS2 = -PI / 2; // -90 degrees.
+    const double AXIS3 = AXIS1;
+
+    /*
+     * Absolute angle that the servo arm plane of rotation is at, from the world-X axis.
+     */
+    const double THETA_S[NB_SERVOS] = {
+        radians(-60),
+        radians(120),
+        radians(180),
+        radians(0),
+        radians(60),
+        radians(-120)};
+
+    /*
+     * XY cartesian coordinates of the platform joints, based on the polar
+     * coordinates (platform radius P_RAD, radial axis AXIS[1|2|3], and offset THETA_P.
+     * These coordinates are in the plane of the platform itself.
+     */
+    const double P_COORDS[NB_SERVOS][2] = {
+        {P_RAD * cos(AXIS1 + THETA_P), P_RAD *sin(AXIS1 + THETA_P)},
+        {P_RAD * cos(AXIS1 - THETA_P), P_RAD *sin(AXIS1 - THETA_P)},
+        {P_RAD * cos(AXIS2 + THETA_P), P_RAD *sin(AXIS2 + THETA_P)},
+        {-P_RAD * cos(AXIS2 + THETA_P), P_RAD *sin(AXIS2 + THETA_P)},
+        {-P_RAD * cos(AXIS3 - THETA_P), P_RAD *sin(AXIS3 - THETA_P)},
+        {-P_RAD * cos(AXIS3 + THETA_P), P_RAD *sin(AXIS3 + THETA_P)}};
+
+    /*
+     * XY cartesian coordinates of the servo centers, based on the polar
+     * coordinates (base radius B_RAD, radial axis AXIS[1|2|3], and offset THETA_B.
+     * These coordinates are in the plane of the base itself.
+     */
+    const double B_COORDS[NB_SERVOS][2] = {
+        {B_RAD * cos(AXIS1 + THETA_B), B_RAD *sin(AXIS1 + THETA_B)},
+        {B_RAD * cos(AXIS1 - THETA_B), B_RAD *sin(AXIS1 - THETA_B)},
+        {B_RAD * cos(AXIS2 + THETA_B), B_RAD *sin(AXIS2 + THETA_B)},
+        {-B_RAD * cos(AXIS2 + THETA_B), B_RAD *sin(AXIS2 + THETA_B)},
+        {-B_RAD * cos(AXIS3 - THETA_B), B_RAD *sin(AXIS3 - THETA_B)},
+        {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
 };
 
 #endif //__HEXAPODKINEMATICS_H__
