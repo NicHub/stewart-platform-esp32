@@ -38,7 +38,7 @@
 #include <Arduino.h>
 #endif
 
-#define HEXAPOD_CONFIG 2
+#define HEXAPOD_CONFIG 1
 #if HEXAPOD_CONFIG == 1
 #include "HexapodKinematicsConfig_1.h"
 #elif HEXAPOD_CONFIG == 2
