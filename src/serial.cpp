@@ -16,6 +16,8 @@ void setupSerial()
     Serial.print(__DATE__);
     Serial.print("\n");
     Serial.print(__TIME__);
+    Serial.print("\nHEXAPOD_CONFIG = ");
+    Serial.print(HEXAPOD_CONFIG);
     Serial.print("\n##########################\n\n");
 }
 

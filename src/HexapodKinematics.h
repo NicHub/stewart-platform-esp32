@@ -38,7 +38,12 @@
 #include <Arduino.h>
 #endif
 
-#include "HexapodKinematicsConfig.h"
+#define HEXAPOD_CONFIG 2
+#if HEXAPOD_CONFIG == 1
+#include "HexapodKinematicsConfig_1.h"
+#elif HEXAPOD_CONFIG == 2
+#include "HexapodKinematicsConfig_2.h"
+#endif
 
 /*
    There are three axes of symmetry (AXIS1, AXIS2, AXIS3). Looking down on the
@@ -102,7 +107,6 @@ double mapDouble(double x, double in_min, double in_max, double out_min, double 
  */
 class HexapodKinematics
 {
-
   private:
     // Setpoints (internal state)
     double _sp_sway = 0, // sway (x) in mm

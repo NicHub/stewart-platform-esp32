@@ -140,7 +140,7 @@ void setupServos()
 void shake()
 {
     Serial.println("shake START");
-    double shakeZ = 1;
+    double shakeZ = MIN_HEAVE;
     int8_t movOK = -1;
     for (int shake = 0; shake < 10; shake++)
     {
@@ -264,12 +264,12 @@ void demoMovements4()
  */
 void demoMovements5(int nb_turn = 1)
 {
-    // Move in circle in the horizontal plane.
+    // Move in circles in the horizontal plane.
 
     Serial.println("demoMovements5 START");
 
     const int16_t nb_points = 90;
-    const double radius = 25;
+    const double radius = MAX_SWAY;
     const double angleInc = TWO_PI / nb_points;
     double angle = 0;
     int dval[nb_points][NB_SERVOS];
@@ -468,7 +468,7 @@ void setup()
     // demoMovements2();
     // demoMovements3();
     // demoMovements4();
-    demoMovements5(2);
+    demoMovements5(5);
     shake();
 }
 
