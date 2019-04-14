@@ -43,7 +43,7 @@ int main()
 {
      ofstream angle_file;
 
-     angle_file.open("angles.txt");
+     angle_file.open("../doc/angles.txt");
 
      angle_file << "\nSTEWART PLATFORM\n\n";
      angle_file << "COMPILATION DATE AND TIME\n";
