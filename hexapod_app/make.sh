@@ -9,4 +9,5 @@ g++                              \
     hexapod_app.cpp              \
     -o hexapod_app               \
     -std=c++11                   \
-    && ./hexapod_app
+    && ./hexapod_app             \
+    && cat angles.txt

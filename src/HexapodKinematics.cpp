@@ -44,9 +44,9 @@ double HexapodKinematics::mapDouble(double x, double in_min, double in_max, doub
 /**
  * HOME position. No translation, no rotation.
  */
-int8_t HexapodKinematics::home(double *servo_angles)
+int8_t HexapodKinematics::home(servo_t *servo_val)
 {
-    return calcServoAngles(servo_angles, 0, 0, 0, 0, 0, 0);
+    return calcServoAngles(servo_val, 0, 0, 0, 0, 0, 0);
 }
 
 /**
@@ -62,7 +62,9 @@ int8_t HexapodKinematics::home(double *servo_angles)
  * 2) optimize so we don’t run through this loop if we know we’re already at the desired setpoint(s).
  *
  */
-int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, double surge, double heave, double pitch, double roll, double yaw)
+int8_t HexapodKinematics::calcServoAngles(servo_t *servo_val,
+                                          double sway, double surge, double heave,
+                                          double pitch, double roll, double yaw)
 {
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
@@ -153,19 +155,26 @@ int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, dou
         _sp_yaw = yaw;
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            servo_angles[sid] = new_servo_angles[sid];
+            // Apply reverse.
+            if (SERVO_REVERSE[sid])
+            {
+                servo_val[sid].rad = SERVO_MIN_ANGLE + SERVO_MAX_ANGLE - new_servo_angles[sid];
+            }
+            else
+            {
+                servo_val[sid].rad = new_servo_angles[sid];
+            }
+
+            // Convert angle to pulse width.
+            servo_val[sid].pwm = this->mapDouble(servo_val[sid].rad,
+                                                     SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
+                                                     SERVO_MIN_US, SERVO_MAX_US);
+            servo_val[sid].pwm += SERVO_TRIM[sid];
+            servo_val[sid].pwm = (int)constrain(servo_val[sid].pwm, SERVO_MIN_US, SERVO_MAX_US);
         }
     }
 
     return movOK;
-}
-
-/*
- * Move to a given pitch / roll angle (in radians)
- */
-int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double pitch, double roll)
-{
-    return calcServoAngles(servo_angles, _sp_sway, _sp_surge, _sp_heave, pitch, roll, _sp_yaw);
 }
 
 double HexapodKinematics::getSway() { return _sp_sway; }

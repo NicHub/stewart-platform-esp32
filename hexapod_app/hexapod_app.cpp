@@ -3,97 +3,93 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
+#include <string>
 #include "HexapodKinematics.h"
 
 using namespace std;
 
 int main()
 {
-    cout << "\nSTEWART PLATFORM\n\n";
-    cout << "COMPILATION DATE AND TIME\n";
-    cout << __DATE__ << endl;
-    cout << __TIME__ << endl;
-    cout << endl;
+     ofstream angle_file;
 
-    HexapodKinematics hk;           // Stewart platform object.
-    double servo_angles[NB_SERVOS]; // Servo setpoints in degrees, between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-    int movOK = -1;
+     angle_file.open("angles.txt");
 
-    const double MAX_TR = 10;
-    const double INC_TR = 2 * MAX_TR;
-    const double MAX_RT = radians(9);
-    const double INC_RT = 2 * MAX_RT;
+     angle_file << "\nSTEWART PLATFORM\n\n";
+     angle_file << "COMPILATION DATE AND TIME\n";
+     angle_file << __DATE__ << endl;
+     angle_file << __TIME__ << endl;
+     angle_file << endl;
 
-    const uint8_t SMALL_WIDTH = 6;
-    const uint8_t LARGE_WIDTH = 17;
-    const uint8_t ALL_WIDTH = 149;
+     HexapodKinematics hk; // Stewart platform object.
+     servo_t servo_val[NB_SERVOS];
+     int movOK = -1;
 
-    cout << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SWAY"
-         << " ";
-    cout << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SURGE"
-         << " ";
-    cout << fixed << setw(SMALL_WIDTH) << setfill(' ') << "HEAVE"
-         << " ";
-    cout << fixed << setw(SMALL_WIDTH) << setfill(' ') << "PITCH"
-         << " ";
-    cout << fixed << setw(SMALL_WIDTH) << setfill(' ') << "ROLL"
-         << " ";
-    cout << fixed << setw(SMALL_WIDTH) << setfill(' ') << "YAW"
-         << " ";
-    cout << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 1"
-         << " ";
-    cout << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 2"
-         << " ";
-    cout << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 3"
-         << " ";
-    cout << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 4"
-         << " ";
-    cout << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 5"
-         << " ";
-    cout << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 6"
-         << " ";
-    cout << endl;
-    cout << fixed << setw(ALL_WIDTH) << setfill('=') << "";
-    cout << endl;
+     const double MAX_TR = 10;
+     const double INC_TR = 2 * MAX_TR;
+     const double MAX_RT = radians(9);
+     const double INC_RT = 2 * MAX_RT;
 
-    for (double sway = -MAX_TR; sway <= MAX_TR; sway += INC_TR)
-    {
-        for (double surge = -MAX_TR; surge <= MAX_TR; surge += INC_TR)
-        {
-            for (double heave = -MAX_TR; heave <= MAX_TR; heave += INC_TR)
-            {
-                for (double pitch = -MAX_RT; pitch <= MAX_RT; pitch += INC_RT)
-                {
-                    for (double roll = -MAX_RT; roll <= MAX_RT; roll += INC_RT)
+     const uint8_t SMALL_WIDTH = 7;
+     const uint8_t LARGE_WIDTH = 17;
+     const uint8_t ALL_WIDTH = 144;
+
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SWAY";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SURGE";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "HEAVE";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "PITCH";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "ROLL";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "YAW";
+     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 1";
+     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 2";
+     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 3";
+     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 4";
+     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 5";
+     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 6";
+
+     angle_file << endl;
+     angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "";
+     angle_file << endl;
+
+     for (double sway = -MAX_TR; sway <= MAX_TR; sway += INC_TR)
+     {
+          for (double surge = -MAX_TR; surge <= MAX_TR; surge += INC_TR)
+          {
+               for (double heave = -MAX_TR; heave <= MAX_TR; heave += INC_TR)
+               {
+                    for (double pitch = -MAX_RT; pitch <= MAX_RT; pitch += INC_RT)
                     {
-                        for (double yaw = -MAX_RT; yaw <= MAX_RT; yaw += INC_RT)
-                        {
-                            movOK = hk.calcServoAngles(servo_angles, sway, surge, heave, pitch, roll, yaw);
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << sway << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << surge << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << heave << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(pitch) << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(roll) << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(yaw) << " ";
-                            if (movOK == 0)
-                            {
-                                for (uint8_t id = 0; id < NB_SERVOS; id++)
-                                {
-                                    cout << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_angles[id]) << " ";
-                                }
-                            }
-                            if (movOK > 0)
-                            {
-                                cout << "MAX/MIN  " << movOK;
-                            }
+                         for (double roll = -MAX_RT; roll <= MAX_RT; roll += INC_RT)
+                         {
+                              for (double yaw = -MAX_RT; yaw <= MAX_RT; yaw += INC_RT)
+                              {
+                                   movOK = hk.calcServoAngles(servo_val, sway, surge, heave, pitch, roll, yaw);
+                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << sway;
+                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << surge;
+                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << heave;
+                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(pitch);
+                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(roll);
+                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(yaw);
+                                   if (movOK == 0)
+                                   {
+                                        for (uint8_t id = 0; id < NB_SERVOS; id++)
+                                        {
+                                             angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_val[id].rad);
+                                        }
+                                   }
+                                   if (movOK > 0)
+                                   {
+                                        angle_file << " movOK = " << movOK;
+                                   }
 
-                            cout << endl;
-                        }
+                                   angle_file << endl;
+                              }
+                         }
                     }
-                }
-            }
-        }
-    }
-    return 0;
+               }
+          }
+     }
+     angle_file.close();
+     return 0;
 }
