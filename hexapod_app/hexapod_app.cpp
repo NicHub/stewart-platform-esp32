@@ -35,6 +35,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#define HEXAPOD_CONFIG 2
 #include "HexapodKinematics.h"
 
 using namespace std;
@@ -49,6 +50,7 @@ int main()
      angle_file << "COMPILATION DATE AND TIME\n";
      angle_file << __DATE__ << endl;
      angle_file << __TIME__ << endl;
+     angle_file << "HEXAPOD_CONFIG = " << HEXAPOD_CONFIG << endl;
      angle_file << endl;
 
      HexapodKinematics hk; // Stewart platform object.
@@ -62,7 +64,7 @@ int main()
 
      const uint8_t SMALL_WIDTH = 7;
      const uint8_t LARGE_WIDTH = 17;
-     const uint8_t ALL_WIDTH = 144;
+     const uint8_t ALL_WIDTH = 151;
 
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SWAY";
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SURGE";
@@ -70,6 +72,7 @@ int main()
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "PITCH";
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "ROLL";
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "YAW";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "movOK";
      angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 1";
      angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 2";
      angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 3";
@@ -100,18 +103,19 @@ int main()
                                    angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(pitch);
                                    angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(roll);
                                    angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(yaw);
-                                   if (movOK == 0)
+
+                                   if (movOK != 0)
+                                        angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << movOK;
+                                   else
+                                        angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << " ";
+
+                                   if (movOK >= 0)
                                    {
                                         for (uint8_t id = 0; id < NB_SERVOS; id++)
                                         {
                                              angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_angles[id].rad);
                                         }
                                    }
-                                   if (movOK > 0)
-                                   {
-                                        angle_file << " movOK = " << movOK;
-                                   }
-
                                    angle_file << endl;
                               }
                          }
