@@ -74,7 +74,7 @@ void testCalculations()
 }
 
 /**
- * Set servo values to the angles represented by the setpoints in servo_angles[].
+ * Set servo values to the angles in servo_angles[].
  */
 void updateServos(int8_t movOK)
 {
@@ -256,17 +256,21 @@ void demoMovements2(uint8_t nb_turn = 1)
  */
 void joystickControl()
 {
-    double joyX = joystick.getX();
-    double joyY = joystick.getY();
-    double joyZ = joystick.getZ();
+    static double joyX = 0;
+    static double joyY = 0;
+    static double joyZ = 0;
     static double lastJoyX = 0;
     static double lastJoyY = 0;
     static double lastJoyZ = 0;
     static uint8_t joyMode = 0;
-    static const uint8_t nbJoyMode = 1;
+    static const uint8_t nbJoyMode = 3;
+
+    joyX = joystick.getX();
+    joyY = joystick.getY();
+    joyZ = joystick.getZ();
 
     // Exit if joystick X, Y and Z did not change.
-    bool joyStill;
+    static bool joyStill;
     joyStill = ((joyX == lastJoyX) && (joyY == lastJoyY) && (joyZ == lastJoyZ));
     if (joyStill)
     {
@@ -280,6 +284,8 @@ void joystickControl()
     if (joyZ != 0)
     {
         joyMode = (joyMode + 1) % nbJoyMode;
+        Serial.print("JOYSTICK MODE = ");
+        Serial.println(joyMode);
 
         // Set new limits.
         if (joyMode == 0)
@@ -293,15 +299,23 @@ void joystickControl()
         while (joystick.getZ())
         {
         }
-        delay(250);
 
+        // Blink.
+        for (uint8_t cnt = 0; cnt < 3; cnt++)
+        {
+            SET_LED;
+            delay(20);
+            CLEAR_LED;
+            delay(100);
+        }
         return;
     }
 
     // Move according to joyMode.
     // TODO: Remember the previous joyMode positions when
     // changing joyMode instead of setting them to 0.
-    int8_t movOK = -1;
+    static int8_t movOK;
+    movOK = -1;
     if (joyMode == 0)
         // X, Y
         movOK = hk.calcServoAngles(servo_angles, {joyX, joyY, 0, 0, 0, 0});

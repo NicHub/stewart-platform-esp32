@@ -36,7 +36,9 @@
 /**
  *
  */
-double HexapodKinematics::mapDouble(double x, double in_min, double in_max, double out_min, double out_max)
+double HexapodKinematics::mapDouble(double x,
+                                    double in_min, double in_max,
+                                    double out_min, double out_max)
 {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
@@ -91,20 +93,36 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
     // Compute new values.
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        pivot_x = P_COORDS[sid][0] * cr * cy + P_COORDS[sid][1] * (sp * sr * cr - cp * sy) + coord.sway;
-        pivot_y = P_COORDS[sid][0] * cr * sy + P_COORDS[sid][1] * (cp * cy + sp * sr * sy) + coord.surge;
-        pivot_z = -P_COORDS[sid][0] * sr + P_COORDS[sid][1] * sp * cr + Z_HOME + coord.heave;
+        pivot_x = P_COORDS[sid][0] * cr * cy +
+                  P_COORDS[sid][1] * (sp * sr * cr - cp * sy) +
+                  coord.sway;
+        pivot_y = P_COORDS[sid][0] * cr * sy +
+                  P_COORDS[sid][1] * (cp * cy + sp * sr * sy) +
+                  coord.surge;
+        pivot_z = -P_COORDS[sid][0] * sr +
+                  P_COORDS[sid][1] * sp * cr +
+                  Z_HOME +
+                  coord.heave;
 
-        d2 = pow(pivot_x - B_COORDS[sid][0], 2) + pow(pivot_y - B_COORDS[sid][1], 2) + pow(pivot_z, 2);
+        d2 = (pivot_x - B_COORDS[sid][0]) * (pivot_x - B_COORDS[sid][0]) +
+             (pivot_y - B_COORDS[sid][1]) * (pivot_y - B_COORDS[sid][1]) +
+             pivot_z * pivot_z;
 
         // Geometry stuff.
-        k = d2 - (pow(ROD_LENGTH, 2) - pow(ARM_LENGTH, 2));
+        k = d2 -
+            (ROD_LENGTH * ROD_LENGTH) +
+            (ARM_LENGTH * ARM_LENGTH);
         l = 2 * ARM_LENGTH * pivot_z;
-        m = 2 * ARM_LENGTH * (cos(THETA_S[sid]) * (pivot_x - B_COORDS[sid][0]) + sin(THETA_S[sid]) * (pivot_y - B_COORDS[sid][1]));
+        m = 2 * ARM_LENGTH *
+            (cos(THETA_S[sid]) * (pivot_x - B_COORDS[sid][0]) +
+             sin(THETA_S[sid]) * (pivot_y - B_COORDS[sid][1]));
+
         servo_rad = asin(k / sqrt(l * l + m * m)) - atan(m / l);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-        servo_rad = this->mapDouble(servo_rad, -HALF_PI, HALF_PI, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        servo_rad = this->mapDouble(servo_rad,
+                                    -HALF_PI, HALF_PI,
+                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
         // Test if the required virtual arm length is longer than physically possible.
         bool armLengthNOK = sqrt(d2) > (ARM_LENGTH + ROD_LENGTH);
@@ -159,10 +177,12 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
         _sp_yaw = coord.yaw;
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            // Apply reverse.
+            // Apply reverse if needed.
             if (SERVO_REVERSE[sid])
             {
-                servo_angles[sid].rad = SERVO_MIN_ANGLE + SERVO_MAX_ANGLE - new_servo_angles[sid];
+                servo_angles[sid].rad = SERVO_MIN_ANGLE +
+                                        SERVO_MAX_ANGLE -
+                                        new_servo_angles[sid];
             }
             else
             {
@@ -174,7 +194,8 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
                                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
                                                    SERVO_MIN_US, SERVO_MAX_US);
             servo_angles[sid].pw += SERVO_TRIM[sid];
-            servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw, SERVO_MIN_US, SERVO_MAX_US);
+            servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw,
+                                                  SERVO_MIN_US, SERVO_MAX_US);
         }
     }
 
