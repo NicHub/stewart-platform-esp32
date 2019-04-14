@@ -1,5 +1,5 @@
 /**
- * S T E W A R T    P L A T F O R M    O N    E S P 3 2
+ * S T E W A R T    P L A T F O R M    O N    E S P 1 2
  *
  * Based on
  * 6dof-stewduino
@@ -7,7 +7,7 @@
  * https://github.com/xoxota99/stewy
  *
  * Derived from the work of Daniel Waters
- * https://www.youtube.com/watch?v=1jrP3_1ML9M
+ * https://www.youtube.com/watch?v=1jrP1_1ML9M
  *
  * Modified by Nicolas Jeanmonod
  * ouilogique.com
@@ -18,7 +18,7 @@
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation, either version 1 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -33,13 +33,13 @@
 
 #include <main.h>
 
-// Joystick
+// Joystick.
 static ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
-// Stewart Platform
-static HexapodKinematics hk; // Stewart platform object.
-static servo_t servo_angles[NB_SERVOS];
-static Servo servos[NB_SERVOS]; // Servo objects.
+// Stewart Platform.
+static HexapodKinematics hk;            // Stewart platform object.
+static servo_t servo_angles[NB_SERVOS]; // Servo angles.
+static Servo servos[NB_SERVOS];         // Servo objects.
 
 /**
  *
@@ -75,9 +75,6 @@ void testCalculations()
 
 /**
  * Set servo values to the angles represented by the setpoints in servo_angles[].
- * DOES: Apply trim values.
- * DOES: Automatically reverse signal for reversed servos.
- * DOES: Write signals to the physical servos.
  */
 void updateServos(int8_t movOK)
 {
@@ -98,7 +95,7 @@ void updateServos(int8_t movOK)
     }
 
     // Write to servos.
-    for (int sid = 0; sid < NB_SERVOS; sid++)
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
         servos[sid].writeMicroseconds(servo_angles[sid].pw);
     }
@@ -111,7 +108,7 @@ void updateServos(int8_t movOK)
  */
 void setupServos()
 {
-    for (int sid = 0; sid < NB_SERVOS; sid++)
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
         servos[sid].attach(SERVO_PINS[sid], SERVO_MIN_US, SERVO_MAX_US);
     }
@@ -148,7 +145,7 @@ void shake()
     updateServos(movOK);
 
     delay(wait);
-    for (int shake = 0; shake < 10; shake++)
+    for (uint8_t shake = 0; shake < 10; shake++)
     {
         delay(60);
         movOK = hk.calcServoAngles(servo_angles, {0, 0, shakeZ, 0, 0, 0});
@@ -174,27 +171,10 @@ void shake()
 /**
  *
  */
-void demoMovements2()
+void demoMovements1()
 {
-    int8_t movOK = -1;
-    for (double cnt = 0; cnt < 50; cnt += 5)
-    {
-        Serial.print("cnt = ");
-        Serial.println(cnt);
-        movOK = hk.calcServoAngles(servo_angles, {cnt, 0, 0, 0, 0, 0});
-        updateServos(movOK);
-        delay(500);
-    }
-    Serial.println("demoMovements2 DONE");
-}
-
-/**
- *
- */
-void demoMovements3()
-{
-    Serial.println("demoMovements3 START");
-    const double dval[][NB_SERVOS] = {
+    Serial.println("demoMovements1 START");
+    const platform_t coords[] = {
         // sway
         {SWAY_MAX, 0, 0, 0, 0, 0},
         {SWAY_MIN, 0, 0, 0, 0, 0},
@@ -225,55 +205,50 @@ void demoMovements3()
         {0, 0, 0, 0, 0, YAW_MIN},
         {0, 0, 0, 0, 0, 0}};
 
-    int ccount = (int)sizeof(dval) / sizeof(dval[0]);
-
     int8_t movOK = -1;
-    for (int cnt = 0; cnt < ccount; cnt++)
+    for (uint8_t cnt = 0; cnt < COUNT_OF(coords); cnt++)
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        movOK = hk.calcServoAngles(servo_angles, {dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]});
+        movOK = hk.calcServoAngles(servo_angles, coords[cnt]);
         updateServos(movOK);
         delay(1000);
     }
-    Serial.println("demoMovements3 DONE");
+    Serial.println("demoMovements1 DONE");
 }
 
 /**
  *
  */
-void demoMovements5(int nb_turn = 1)
+void demoMovements2(uint8_t nb_turn = 1)
 {
     // Move in circles in the horizontal plane.
 
-    Serial.println("demoMovements5 START");
+    Serial.println("demoMovements2 START");
 
-    const int16_t nb_points = 90;
+    const uint8_t nb_points = 90;
     const double radius = SWAY_MAX;
     const double angleInc = TWO_PI / nb_points;
     double angle = 0;
-    double dval[nb_points][NB_SERVOS];
-    for (int16_t angleID = 0; angleID < nb_points; angleID++)
+    platform_t coords[nb_points];
+    for (uint8_t angleID = 0; angleID < nb_points; angleID++)
     {
-        dval[angleID][0] = (int)(radius * sin(angle));
-        dval[angleID][1] = (int)(radius * cos(angle));
-        dval[angleID][2] = 0;
-        dval[angleID][3] = 0;
-        dval[angleID][4] = 0;
-        dval[angleID][5] = 0;
+        coords[angleID] = {(radius * sin(angle)),
+                           (radius * cos(angle)),
+                           0, 0, 0, 0};
         angle += angleInc;
     }
     int8_t movOK = -1;
-    for (int turn = 0; turn < nb_turn; turn++)
+    for (uint8_t turn = 0; turn < nb_turn; turn++)
     {
-        for (int16_t cnt = 0; cnt < nb_points; cnt++)
+        for (uint8_t cnt = 0; cnt < nb_points; cnt++)
         {
-            movOK = hk.calcServoAngles(servo_angles, {dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]});
+            movOK = hk.calcServoAngles(servo_angles, coords[cnt]);
             updateServos(movOK);
             delay(8);
         }
     }
-    Serial.println("demoMovements5 DONE");
+    Serial.println("demoMovements2 DONE");
 }
 
 /**
@@ -288,7 +263,7 @@ void joystickControl()
     static double lastJoyY = 0;
     static double lastJoyZ = 0;
     static uint8_t joyMode = 0;
-    static const uint8_t nbJoyMode = 3;
+    static const uint8_t nbJoyMode = 1;
 
     // Exit if joystick X, Y and Z did not change.
     bool joyStill;
@@ -415,7 +390,7 @@ void serialControl()
         Serial.print("message = ");
         Serial.println(message);
         int sway = message.toInt();
-        sway = sway % 30;
+        sway = sway % 10;
         Serial.print("sway = ");
         Serial.println(sway);
 
@@ -456,9 +431,8 @@ void setup()
     setupServos();
     setupJoystick();
     setupGPIO();
-    demoMovements5(2);
+    demoMovements2(5);
     shake();
-    testCalculations();
 }
 
 /**

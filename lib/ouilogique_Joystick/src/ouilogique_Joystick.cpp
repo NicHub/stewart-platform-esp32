@@ -102,7 +102,7 @@ int16_t ouilogique_Joystick::getRawY()
 double ouilogique_Joystick::getX()
 {
     double rawValue = analogRead(pinX);
-    double value;
+    double value = 0;
     if (rawValue >= dead_band_min_x && rawValue <= dead_band_max_x)
         value = out_mid_x;
     else if (rawValue >= raw_value_mid_x)
@@ -118,7 +118,7 @@ double ouilogique_Joystick::getX()
 double ouilogique_Joystick::getY()
 {
     double rawValue = analogRead(pinY);
-    double value;
+    double value = 0;
     if (rawValue >= dead_band_min_y && rawValue <= dead_band_max_y)
         value = out_mid_y;
     else if (rawValue >= raw_value_mid_y)
