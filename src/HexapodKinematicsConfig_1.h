@@ -42,18 +42,18 @@
 
 // Which servos are reversed. 1 = reversed, 0 = normal.
 // !! First servo is of another type, that’s why it is set to 0 !!
-const uint8_t SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
+const int8_t SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
 
-const double SERVO_MIN_ANGLE = 0.0;   // These values don’t seem to be taken into account correctly.
-const double SERVO_MAX_ANGLE = 180.0; // These values don’t seem to be taken into account correctly.
+const double SERVO_MIN_ANGLE = radians(0.0);   // These values don’t seem to be taken into account correctly.
+const double SERVO_MAX_ANGLE = radians(180.0); // These values don’t seem to be taken into account correctly.
 const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
 
-const int SERVO_MIN_US = 600;  // default  500 (library 4744/ESP32Servo)
-const int SERVO_MAX_US = 2300; // default 2500 (library 4744/ESP32Servo)
-const int SERVO_MID_US = (SERVO_MIN_US + SERVO_MAX_US) / 2;
+const double SERVO_MIN_US = 600;  // default  500 (library 4744/ESP32Servo)
+const double SERVO_MAX_US = 2300; // default 2500 (library 4744/ESP32Servo)
+const double SERVO_MID_US = (SERVO_MIN_US + SERVO_MAX_US) / 2;
 
 // Trim values, in microseconds, AFTER reversing
-const int SERVO_TRIM[] = {
+const double SERVO_TRIM[] = {
     0,
     20,
     0,
@@ -81,29 +81,35 @@ const int SERVO_PINS[] = {
   ideal conditions (eg: max for roll when pitch is zero).
 */
 
-const double MIN_SWAY = -40;
-const double MAX_SWAY = 40;
-const double SWAY_BAND = MAX_SWAY - MIN_SWAY;
+const double SWAY_MIN = -33;
+const double SWAY_MAX = 33;
+const double SWAY_MID = (SWAY_MAX + SWAY_MIN) / 2;
+const double SWAY_BAND = SWAY_MAX - SWAY_MIN;
 
-const double MIN_SURGE = -40;
-const double MAX_SURGE = 40;
-const double SURGE_BAND = MAX_SURGE - MIN_SURGE;
+const double SURGE_MIN = -33;
+const double SURGE_MAX = 33;
+const double SURGE_MID = (SURGE_MAX + SURGE_MIN) / 2;
+const double SURGE_BAND = SURGE_MAX - SURGE_MIN;
 
-const double MIN_HEAVE = -15;
-const double MAX_HEAVE = 20;
-const double HEAVE_BAND = MAX_HEAVE - MIN_HEAVE;
+const double HEAVE_MIN = -15;
+const double HEAVE_MAX = 15;
+const double HEAVE_MID = (HEAVE_MAX + HEAVE_MIN) / 2;
+const double HEAVE_BAND = HEAVE_MAX - HEAVE_MIN;
 
-const double MIN_PITCH = -19;
-const double MAX_PITCH = 19;
-const double PITCH_BAND = MAX_PITCH - MIN_PITCH;
+const double PITCH_MIN = radians(-17);
+const double PITCH_MAX = radians(17);
+const double PITCH_MID = (PITCH_MAX + PITCH_MIN) / 2;
+const double PITCH_BAND = PITCH_MAX - PITCH_MIN;
 
-const double MIN_ROLL = -19;
-const double MAX_ROLL = 19;
-const double ROLL_BAND = MAX_ROLL - MIN_ROLL;
+const double ROLL_MIN = radians(-17);
+const double ROLL_MAX = radians(17);
+const double ROLL_MID = (ROLL_MAX + ROLL_MIN) / 2;
+const double ROLL_BAND = ROLL_MAX - ROLL_MIN;
 
-const double MIN_YAW = -27;
-const double MAX_YAW = 27;
-const double YAW_BAND = MAX_YAW - MIN_YAW;
+const double YAW_MIN = radians(-30);
+const double YAW_MAX = radians(30);
+const double YAW_MID = (YAW_MAX + YAW_MIN) / 2;
+const double YAW_BAND = YAW_MAX - YAW_MIN;
 
 const double THETA_P = radians(45.25); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
 const double THETA_B = radians(24.5);  // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.

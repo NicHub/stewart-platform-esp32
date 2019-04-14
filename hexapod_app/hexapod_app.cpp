@@ -22,7 +22,7 @@ int main()
 
     const double MAX_TR = 10;
     const double INC_TR = 2 * MAX_TR;
-    const double MAX_RT = 9;
+    const double MAX_RT = radians(9);
     const double INC_RT = 2 * MAX_RT;
 
     const uint8_t SMALL_WIDTH = 6;
@@ -73,14 +73,14 @@ int main()
                             cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << sway << " ";
                             cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << surge << " ";
                             cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << heave << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << pitch << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << roll << " ";
-                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << yaw << " ";
+                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(pitch) << " ";
+                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(roll) << " ";
+                            cout << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(yaw) << " ";
                             if (movOK == 0)
                             {
                                 for (uint8_t id = 0; id < NB_SERVOS; id++)
                                 {
-                                    cout << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id] << " ";
+                                    cout << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_angles[id]) << " ";
                                 }
                             }
                             if (movOK > 0)

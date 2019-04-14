@@ -42,7 +42,9 @@
 #endif
 
 // Choose configuration file.
+#ifndef HEXAPOD_CONFIG
 #define HEXAPOD_CONFIG 1
+#endif
 #if HEXAPOD_CONFIG == 1
 #include "HexapodKinematicsConfig_1.h"
 #elif HEXAPOD_CONFIG == 2

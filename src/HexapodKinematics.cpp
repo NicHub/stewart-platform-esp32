@@ -51,7 +51,7 @@ int8_t HexapodKinematics::home(double *servo_angles)
 
 /**
  * Move to a given sway, surge, heave, pitch, roll and yaw values.
- * We expect pitch, roll and yaw in degrees.
+ * We expect pitch, roll and yaw in radians.
  *
  * Returns = 0 if OK
  * Returns > 0 if Warning
@@ -64,35 +64,20 @@ int8_t HexapodKinematics::home(double *servo_angles)
  */
 int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, double surge, double heave, double pitch, double roll, double yaw)
 {
-    // Constrain input values.
-    sway = constrain(sway, MIN_SWAY, MAX_SWAY);
-    surge = constrain(surge, MIN_SURGE, MAX_SURGE);
-    heave = constrain(heave, MIN_HEAVE, MAX_HEAVE);
-    pitch = constrain(pitch, MIN_PITCH, MAX_PITCH);
-    roll = constrain(roll, MIN_ROLL, MAX_ROLL);
-    yaw = constrain(yaw, MIN_YAW, MAX_YAW);
-
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
         k, l, m,                      // Intermediate values.
-        servo_rad,                    // Angle (radians) to turn each servo.
-        servo_deg;                    // Angle (in degrees) to turn each servo.
+        servo_rad;                    // Angle (radians) to turn each servo.
 
-    double oldValues[NB_SERVOS];
+    double new_servo_angles[NB_SERVOS];
 
     // Intermediate values, to avoid recalculating SIN / COS.
-    double cr = cos(radians(roll)),
-           cp = cos(radians(pitch)),
-           cy = cos(radians(yaw)),
-           sr = sin(radians(roll)),
-           sp = sin(radians(pitch)),
-           sy = sin(radians(yaw));
-
-    // Save old values.
-    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
-    {
-        oldValues[sid] = servo_angles[sid];
-    }
+    double cr = cos(roll),
+           cp = cos(pitch),
+           cy = cos(yaw),
+           sr = sin(roll),
+           sp = sin(pitch),
+           sy = sin(yaw);
 
     // Assume everything will be OK.
     int8_t movOK = 0;
@@ -113,7 +98,7 @@ int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, dou
         servo_rad = asin(k / sqrt(l * l + m * m)) - atan(m / l);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
-        servo_deg = this->mapDouble(degrees(servo_rad), -90.0, 90.0, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        servo_rad = this->mapDouble(servo_rad, -HALF_PI, HALF_PI, SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
 
         // Is the required virtual arm length longer than physically possible?
         bool armLengthNOK = sqrt(d2) > (ARM_LENGTH + ROD_LENGTH);
@@ -137,20 +122,24 @@ int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, dou
             break;
         }
 
+        // Scale values by aggro.
+        servo_rad = SERVO_MID_ANGLE + (servo_rad - SERVO_MID_ANGLE) * AGGRO;
+
         // Limit to SERVO_MAX_ANGLE.
-        if (servo_deg > SERVO_MAX_ANGLE)
+        if (servo_rad > SERVO_MAX_ANGLE)
         {
             movOK += 1;
-            servo_deg = SERVO_MAX_ANGLE;
-        }
-        // Limit to SERVO_MIN_ANGLE.
-        else if (servo_deg < SERVO_MIN_ANGLE)
-        {
-            movOK += 10;
-            servo_deg = SERVO_MIN_ANGLE;
+            servo_rad = SERVO_MAX_ANGLE;
         }
 
-        servo_angles[sid] = servo_deg;
+        // Limit to SERVO_MIN_ANGLE.
+        else if (servo_rad < SERVO_MIN_ANGLE)
+        {
+            movOK += 10;
+            servo_rad = SERVO_MIN_ANGLE;
+        }
+
+        new_servo_angles[sid] = servo_rad;
     }
 
     if (movOK >= 0)
@@ -162,21 +151,9 @@ int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, dou
         _sp_pitch = pitch;
         _sp_roll = roll;
         _sp_yaw = yaw;
-
-        // Scale values by aggro.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            double diff = servo_angles[sid] - SERVO_MID_ANGLE;
-            servo_angles[sid] = SERVO_MID_ANGLE + (diff * AGGRO);
-            servo_angles[sid] = constrain(servo_angles[sid], SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
-        }
-    }
-    else
-    {
-        // Reset back to old values if something went wrong.
-        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
-        {
-            servo_angles[sid] = oldValues[sid];
+            servo_angles[sid] = new_servo_angles[sid];
         }
     }
 
@@ -184,7 +161,7 @@ int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double sway, dou
 }
 
 /*
- * Move to a given pitch / roll angle (in degrees)
+ * Move to a given pitch / roll angle (in radians)
  */
 int8_t HexapodKinematics::calcServoAngles(double *servo_angles, double pitch, double roll)
 {

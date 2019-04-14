@@ -37,3 +37,12 @@
 #include <serial.h>
 #include <ESP32Servo.h>
 #include <ouilogique_Joystick.h>
+
+#define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
+#define SET_LED digitalWrite(LED_BUILTIN, LOW);
+#define CLEAR_LED digitalWrite(LED_BUILTIN, HIGH);
+
+// Joystick
+#define X_PIN 26
+#define Y_PIN 12
+#define Z_PIN 32
