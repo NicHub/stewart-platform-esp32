@@ -37,9 +37,9 @@
 static ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
 
 // Stewart Platform
-static HexapodKinematics hk;                // Stewart platform object.
-static servo_t servo_val[NB_SERVOS];
-static Servo servos[NB_SERVOS];             // Servo objects.
+static HexapodKinematics hk; // Stewart platform object.
+static servo_t servo_angles[NB_SERVOS];
+static Servo servos[NB_SERVOS]; // Servo objects.
 
 /**
  *
@@ -49,7 +49,7 @@ void printServoAngles()
     Serial.print("\nSERVO_ANGLES = ");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(degrees(servo_val[sid].rad));
+        Serial.print(degrees(servo_angles[sid].rad));
         Serial.print(" ");
     }
     Serial.print("\n");
@@ -60,15 +60,15 @@ void printServoAngles()
  */
 void testCalculations()
 {
-    hk.calcServoAngles(servo_val, 0, 0, 0, 0, 0, 0);
+    hk.calcServoAngles(servo_angles, {0, 0, 0, 0, 0, 0});
     Serial.print("\n0, 0, 0, 0, 0, 0 ");
     printServoAngles();
 
-    hk.calcServoAngles(servo_val, 0, 0, HEAVE_MAX, 0, 0, 0);
+    hk.calcServoAngles(servo_angles, {0, 0, HEAVE_MAX, 0, 0, 0});
     Serial.print("\n0, 0, HEAVE_MAX, 0, 0, 0");
     printServoAngles();
 
-    hk.calcServoAngles(servo_val, 0, 0, HEAVE_MIN, 0, 0, 0);
+    hk.calcServoAngles(servo_angles, {0, 0, HEAVE_MIN, 0, 0, 0});
     Serial.print("\n0, 0, HEAVE_MIN, 0, 0, 0");
     printServoAngles();
 }
@@ -100,7 +100,7 @@ void updateServos(int8_t movOK)
     // Write to servos.
     for (int sid = 0; sid < NB_SERVOS; sid++)
     {
-        servos[sid].writeMicroseconds(servo_val[sid].pwm);
+        servos[sid].writeMicroseconds(servo_angles[sid].pw);
     }
 
     CLEAR_LED;
@@ -115,7 +115,7 @@ void setupServos()
     {
         servos[sid].attach(SERVO_PINS[sid], SERVO_MIN_US, SERVO_MAX_US);
     }
-    int8_t movOK = hk.home(servo_val);
+    int8_t movOK = hk.home(servo_angles);
     updateServos(movOK);
     delay(500);
 }
@@ -140,32 +140,32 @@ void shake()
     const uint32_t wait = 200;
 
     delay(wait);
-    movOK = hk.calcServoAngles(servo_val, 0, 0, HEAVE_MAX, 0, 0, 0);
+    movOK = hk.calcServoAngles(servo_angles, {0, 0, HEAVE_MAX, 0, 0, 0});
     updateServos(movOK);
 
     delay(wait);
-    movOK = hk.calcServoAngles(servo_val, 0, 0, HEAVE_MIN, 0, 0, 0);
+    movOK = hk.calcServoAngles(servo_angles, {0, 0, HEAVE_MIN, 0, 0, 0});
     updateServos(movOK);
 
     delay(wait);
     for (int shake = 0; shake < 10; shake++)
     {
         delay(60);
-        movOK = hk.calcServoAngles(servo_val, 0, 0, shakeZ, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, {0, 0, shakeZ, 0, 0, 0});
         updateServos(movOK);
         shakeZ = -shakeZ;
     }
 
     delay(wait);
-    movOK = hk.calcServoAngles(servo_val, 0, 0, HEAVE_MAX, 0, 0, 0);
+    movOK = hk.calcServoAngles(servo_angles, {0, 0, HEAVE_MAX, 0, 0, 0});
     updateServos(movOK);
 
     delay(wait);
-    movOK = hk.calcServoAngles(servo_val, 0, 0, HEAVE_MIN, 0, 0, 0);
+    movOK = hk.calcServoAngles(servo_angles, {0, 0, HEAVE_MIN, 0, 0, 0});
     updateServos(movOK);
 
     delay(wait);
-    movOK = hk.home(servo_val);
+    movOK = hk.home(servo_angles);
     updateServos(movOK);
 
     Serial.println("shake DONE");
@@ -177,11 +177,11 @@ void shake()
 void demoMovements2()
 {
     int8_t movOK = -1;
-    for (size_t cnt = 0; cnt < 50; cnt += 5)
+    for (double cnt = 0; cnt < 50; cnt += 5)
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        movOK = hk.calcServoAngles(servo_val, cnt, 0, 0, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, {cnt, 0, 0, 0, 0, 0});
         updateServos(movOK);
         delay(500);
     }
@@ -232,7 +232,7 @@ void demoMovements3()
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        movOK = hk.calcServoAngles(servo_val, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
+        movOK = hk.calcServoAngles(servo_angles, {dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]});
         updateServos(movOK);
         delay(1000);
     }
@@ -252,7 +252,7 @@ void demoMovements5(int nb_turn = 1)
     const double radius = SWAY_MAX;
     const double angleInc = TWO_PI / nb_points;
     double angle = 0;
-    int dval[nb_points][NB_SERVOS];
+    double dval[nb_points][NB_SERVOS];
     for (int16_t angleID = 0; angleID < nb_points; angleID++)
     {
         dval[angleID][0] = (int)(radius * sin(angle));
@@ -268,7 +268,7 @@ void demoMovements5(int nb_turn = 1)
     {
         for (int16_t cnt = 0; cnt < nb_points; cnt++)
         {
-            movOK = hk.calcServoAngles(servo_val, dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]);
+            movOK = hk.calcServoAngles(servo_angles, {dval[cnt][0], dval[cnt][1], dval[cnt][2], dval[cnt][3], dval[cnt][4], dval[cnt][5]});
             updateServos(movOK);
             delay(8);
         }
@@ -329,13 +329,13 @@ void joystickControl()
     int8_t movOK = -1;
     if (joyMode == 0)
         // X, Y
-        movOK = hk.calcServoAngles(servo_val, joyX, joyY, 0, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, {joyX, joyY, 0, 0, 0, 0});
     else if (joyMode == 1)
         // Z, tiltZ
-        movOK = hk.calcServoAngles(servo_val, 0, 0, joyY, 0, 0, joyX);
+        movOK = hk.calcServoAngles(servo_angles, {0, 0, joyY, 0, 0, joyX});
     else if (joyMode == 2)
         // tilt X, tilt Y
-        movOK = hk.calcServoAngles(servo_val, 0, 0, 0, joyX, joyY, 0);
+        movOK = hk.calcServoAngles(servo_angles, {0, 0, 0, joyX, joyY, 0});
 
     updateServos(movOK);
 
@@ -393,7 +393,7 @@ void setupJoystick()
     joystick.calibrate();
     delay(10);
     joystick.setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
-    int8_t movOK = hk.home(servo_val);
+    int8_t movOK = hk.home(servo_angles);
     updateServos(movOK);
 
     Serial.print("millis = ");
@@ -420,7 +420,7 @@ void serialControl()
         Serial.println(sway);
 
         int8_t movOK = -1;
-        movOK = hk.calcServoAngles(servo_val, sway, 0, 0, 0, 0, 0);
+        movOK = hk.calcServoAngles(servo_angles, {(double)sway, 0, 0, 0, 0, 0});
         updateServos(movOK);
     }
 }
