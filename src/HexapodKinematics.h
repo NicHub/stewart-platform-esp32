@@ -42,20 +42,22 @@
 #endif
 
 // Choose configuration file.
-#ifndef HEXAPOD_CONFIG
 #define HEXAPOD_CONFIG 1
-#endif
+
 #if HEXAPOD_CONFIG == 1
 #include "HexapodKinematicsConfig_1.h"
 #elif HEXAPOD_CONFIG == 2
 #include "HexapodKinematicsConfig_2.h"
+#elif HEXAPOD_CONFIG == 3
+#include "HexapodKinematicsConfig_3.h"
 #endif
 
 // servo_t
 typedef struct
 {
-  double rad; // Servo angle in radian.
-  int pw;     // Servo pulse width in µs.
+  double rad;   // Servo angle in radian.
+  int pw;       // Servo pulse width in µs.
+  double debug; // Used for debug.
 } servo_t;
 
 // Platform coordinates.

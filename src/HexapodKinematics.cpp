@@ -93,6 +93,7 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
     // Compute new values.
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
+        // Coordinates of platform joints (pivots) after movement.
         pivot_x = P_COORDS[sid][0] * cr * cy +
                   P_COORDS[sid][1] * (sp * sr * cr - cp * sy) +
                   coord.sway;

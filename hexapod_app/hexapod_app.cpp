@@ -31,21 +31,74 @@
  *
  */
 
+// USER CHOICES
+
+// Number of intervals
+const int nb_intervals = 1;
+
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <string>
-#define HEXAPOD_CONFIG 2
 #include "HexapodKinematics.h"
 
 using namespace std;
 
+// Variables.
+HexapodKinematics hk; // Stewart platform object.
+servo_t servo_angles[NB_SERVOS];
+int movOK = -1;
+ofstream angle_file;
+
+// Print dimensions
+const uint8_t SMALL_WIDTH = 7;
+const uint8_t LARGE_WIDTH = 17;
+const uint8_t ALL_WIDTH = 151;
+
+void calcAndPrintResults(platform_t coords)
+{
+     movOK = hk.calcServoAngles(servo_angles, coords);
+     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.sway;
+     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.surge;
+     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.heave;
+     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.pitch);
+     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.roll);
+     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.yaw);
+
+     if (movOK != 0)
+          angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << movOK;
+     else
+          angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << " ";
+
+     if (movOK >= 0)
+     {
+          for (uint8_t id = 0; id < NB_SERVOS; id++)
+          {
+#define WHAT_TO_PRINT 1
+#if WHAT_TO_PRINT == 1
+               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_angles[id].rad);
+#elif WHAT_TO_PRINT == 2
+               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].pw;
+#elif WHAT_TO_PRINT == 3
+               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].debug;
+#endif
+          }
+     }
+     angle_file << endl;
+}
+
 int main()
 {
-     ofstream angle_file;
+     // Prepare file for output.
+     stringstream ss;
+     string file_name_str;
+     ss << "../doc/angles_config_" << HEXAPOD_CONFIG << ".txt";
+     file_name_str = ss.str();
+     char *fname = &file_name_str[0u];
+     angle_file.open(fname);
 
-     angle_file.open("../doc/angles.txt");
-
+     // Write file header.
      angle_file << "\nSTEWART PLATFORM\n\n";
      angle_file << "COMPILATION DATE AND TIME\n";
      angle_file << __DATE__ << endl;
@@ -53,19 +106,7 @@ int main()
      angle_file << "HEXAPOD_CONFIG = " << HEXAPOD_CONFIG << endl;
      angle_file << endl;
 
-     HexapodKinematics hk; // Stewart platform object.
-     servo_t servo_angles[NB_SERVOS];
-     int movOK = -1;
-
-     const double MAX_TR = 10;
-     const double INC_TR = 2 * MAX_TR;
-     const double MAX_RT = radians(9);
-     const double INC_RT = 2 * MAX_RT;
-
-     const uint8_t SMALL_WIDTH = 7;
-     const uint8_t LARGE_WIDTH = 17;
-     const uint8_t ALL_WIDTH = 151;
-
+     // Print column titles.
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SWAY";
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "SURGE";
      angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "HEAVE";
@@ -80,49 +121,45 @@ int main()
      angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 5";
      angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 6";
 
+     // Print separator.
      angle_file << endl;
-     angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "";
-     angle_file << endl;
+     angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "" << endl;
 
-     for (double sway = -MAX_TR; sway <= MAX_TR; sway += INC_TR)
+     // 0
+     calcAndPrintResults({0, 0, 0, 0, 0, 0});
+     calcAndPrintResults({0, 0, HEAVE_MAX, 0, 0, 0});
+     calcAndPrintResults({0, 0, HEAVE_MIN, 0, 0, 0});
+     angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "" << endl;
+
+     // Compute and print angles in the respective min/max ranges.
+     for (double sway = SWAY_MIN; sway <= SWAY_MAX; sway += (SWAY_MAX - SWAY_MIN) / nb_intervals)
      {
-          for (double surge = -MAX_TR; surge <= MAX_TR; surge += INC_TR)
+          for (double surge = SURGE_MIN; surge <= SURGE_MAX; surge += (SURGE_MAX - SURGE_MIN) / nb_intervals)
           {
-               for (double heave = -MAX_TR; heave <= MAX_TR; heave += INC_TR)
+               for (double heave = HEAVE_MIN; heave <= HEAVE_MAX; heave += (HEAVE_MAX - HEAVE_MIN) / nb_intervals)
                {
-                    for (double pitch = -MAX_RT; pitch <= MAX_RT; pitch += INC_RT)
+                    for (double pitch = PITCH_MIN; pitch <= PITCH_MAX; pitch += (PITCH_MAX - PITCH_MIN) / nb_intervals)
                     {
-                         for (double roll = -MAX_RT; roll <= MAX_RT; roll += INC_RT)
+                         for (double roll = ROLL_MIN; roll <= ROLL_MAX; roll += (ROLL_MAX - ROLL_MIN) / nb_intervals)
                          {
-                              for (double yaw = -MAX_RT; yaw <= MAX_RT; yaw += INC_RT)
+                              for (double yaw = ROLL_MIN; yaw <= ROLL_MAX; yaw += (ROLL_MAX - ROLL_MIN) / nb_intervals)
                               {
-                                   movOK = hk.calcServoAngles(servo_angles, {sway, surge, heave, pitch, roll, yaw});
-                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << sway;
-                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << surge;
-                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << heave;
-                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(pitch);
-                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(roll);
-                                   angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(yaw);
-
-                                   if (movOK != 0)
-                                        angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << movOK;
-                                   else
-                                        angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << " ";
-
-                                   if (movOK >= 0)
-                                   {
-                                        for (uint8_t id = 0; id < NB_SERVOS; id++)
-                                        {
-                                             angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_angles[id].rad);
-                                        }
-                                   }
-                                   angle_file << endl;
+                                   calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
                               }
                          }
                     }
                }
           }
      }
+
+     // Done.
      angle_file.close();
+
+     // Reopen and print results in the console.
+     freopen(fname, "rb", stdin);
+     string line;
+     while (getline(cin, line))
+          cout << line << endl;
+
      return 0;
 }

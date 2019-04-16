@@ -46,10 +46,37 @@ static Servo servos[NB_SERVOS];         // Servo objects.
  */
 void printServoAngles()
 {
-    Serial.print("\nSERVO_ANGLES = ");
+    Serial.print("\nSERVO COORD        = ");
+    Serial.print(hk.getSway());
+    Serial.print(" ");
+    Serial.print(hk.getSurge());
+    Serial.print(" ");
+    Serial.print(hk.getHeave());
+    Serial.print(" ");
+    Serial.print(hk.getPitch());
+    Serial.print(" ");
+    Serial.print(hk.getRoll());
+    Serial.print(" ");
+    Serial.print(hk.getYaw());
+
+    Serial.print("\nSERVO_ANGLES (rad) = ");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
         Serial.print(degrees(servo_angles[sid].rad));
+        Serial.print(" ");
+    }
+
+    Serial.print("\nSERVO_ANGLES (pwm) = ");
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.print(servo_angles[sid].pw);
+        Serial.print(" ");
+    }
+
+    Serial.print("\nSERVO_ANGLES (debug) = ");
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.print(servo_angles[sid].debug);
         Serial.print(" ");
     }
     Serial.print("\n");
@@ -99,6 +126,11 @@ void updateServos(int8_t movOK)
     {
         servos[sid].writeMicroseconds(servo_angles[sid].pw);
     }
+
+    // Sometimes the servos go crazy and rotate to their
+    // limits even they are not told to do so.
+    // Let’s add a delay to see if it solves this problem.
+    delay(10);
 
     CLEAR_LED;
 }
@@ -245,7 +277,7 @@ void demoMovements2(uint8_t nb_turn = 1)
         {
             movOK = hk.calcServoAngles(servo_angles, coords[cnt]);
             updateServos(movOK);
-            delay(8);
+            // delay(8);
         }
     }
     Serial.println("demoMovements2 DONE");
@@ -439,14 +471,38 @@ void printJointAndServoAxisCoord()
 /**
  *
  */
+void testNaN()
+{
+    int8_t movOK;
+    platform_t coords[] = {
+        {-33.0, 11.0, -15.0, 17.0, -5.7, 5.7},
+        {-33.0, 11.0, -15.0, 5.7, 17.0, 17.0}};
+    for (uint8_t coord_id = 0; coord_id < COUNT_OF(coords); coord_id++)
+    {
+        movOK = hk.calcServoAngles(servo_angles, coords[coord_id]);
+        printServoAngles();
+        Serial.print("movOK = ");
+        Serial.println(movOK);
+    }
+}
+
+/**
+ *
+ */
 void setup()
 {
     setupSerial();
     setupServos();
     setupJoystick();
     setupGPIO();
-    demoMovements2(5);
+    demoMovements2(1);
     shake();
+    testNaN();
+    testCalculations();
+    platform_t coords = {0, 0, HEAVE_MAX, 0, 0, 0};
+    int8_t movOK = hk.calcServoAngles(servo_angles, coords);
+    printServoAngles();
+    updateServos(movOK);
 }
 
 /**
