@@ -58,16 +58,12 @@ int8_t HexapodKinematics::home(servo_t *servo_angles)
  * coord : a struct containing sway, surge, heave in mm and pitch, roll and yaw in radians.
  *
  * OUTPUT
- * servo_angles : an array of struct containing the angles in radians and in pwm.
+ * servo_angles : an array of struct containing the angles in radians and in pulse width (PWM).
  *
  * RETURNS
  * Returns = 0 if OK
  * Returns > 0 if Warning
  * Returns < 0 if Error
- *
- * TODO:
- * 1) Understand the “geometry shenanigans” below (k, l, m values).
- * 2) Optimize so we don’t run through this loop if we know we’re already at the desired setpoint(s).
  *
  */
 int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coord)
@@ -172,7 +168,7 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
         return movOK;
     }
 
-    // Update position coordinates.
+    // Update platform coordinates.
     _sp_sway = coord.sway;
     _sp_surge = coord.surge;
     _sp_heave = coord.heave;
@@ -199,7 +195,11 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
         servo_angles[sid].pw = this->mapDouble(servo_angles[sid].rad,
                                                SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
                                                SERVO_MIN_US, SERVO_MAX_US);
+
+        // Apply trim values.
         servo_angles[sid].pw += SERVO_TRIM[sid];
+
+        // Constrain PW to min/max.
         servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw,
                                               SERVO_MIN_US, SERVO_MAX_US);
     }
