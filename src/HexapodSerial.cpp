@@ -1,13 +1,11 @@
+#include <HexapodSerial.h>
+
+extern HexapodKinematics hk;            // Stewart platform object.
+extern servo_t servo_angles[NB_SERVOS]; // Servo angles.
+
 /**
- * serial.cpp
- *
- * ouilogique.com
- * april 2019
  *
  */
-
-#include <main.h>
-
 void setupSerial()
 {
     Serial.begin(BAUD_RATE);
@@ -21,6 +19,9 @@ void setupSerial()
     Serial.print("\n##########################\n\n");
 }
 
+/**
+ *
+ */
 bool serialRead(String *message)
 {
     int incomingByte = 0;
@@ -39,4 +40,25 @@ bool serialRead(String *message)
         gotMessage = true;
     }
     return gotMessage;
+}
+
+/**
+ *
+ */
+void serialControl()
+{
+    String message = "";
+    if (serialRead(&message))
+    {
+        Serial.print("message = ");
+        Serial.println(message);
+        int sway = message.toInt();
+        sway = sway % 10;
+        Serial.print("sway = ");
+        Serial.println(sway);
+
+        int8_t movOK = -1;
+        movOK = hk.calcServoAngles(servo_angles, {(double)sway, 0, 0, 0, 0, 0});
+        updateServos(movOK);
+    }
 }

@@ -31,18 +31,30 @@
  *
  */
 
-#include <Arduino.h>
-#include <P19.h>
-#include <HexapodKinematics.h>
-#include <serial.h>
-#include <ESP32Servo.h>
-#include <ouilogique_Joystick.h>
+#ifndef __MAIN_H__
+#define __MAIN_H__
 
+// Usefull functions.
 #define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
 #define SET_LED digitalWrite(LED_BUILTIN, LOW);
 #define CLEAR_LED digitalWrite(LED_BUILTIN, HIGH);
 
-// Joystick
+// External libs.
+#include <Arduino.h>
+#include <P19.h>
+#include <ESP32Servo.h>
+
+// Joystick lib.
 #define X_PIN 26
 #define Y_PIN 12
 #define Z_PIN 32
+#include <ouilogique_Joystick.h>
+#include <HexapodJoystick.h>
+
+// Hexapod libs.
+#include <HexapodKinematics.h>
+#include <HexapodServo.h>
+#include <HexapodSerial.h>
+#include <HexapodDemo.h>
+
+#endif //__MAIN_H__
