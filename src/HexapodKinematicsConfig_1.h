@@ -117,7 +117,7 @@ const double P_RAD = 50;               // Platform radius (mm). The distance fro
 const double B_RAD = 80.2;             // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
 const double ARM_LENGTH = 25.0;        // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 155.0;       // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-const double Z_HOME = 147.835046;      // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints.
+const double Z_HOME = 147.835046;      // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
 
 /*
   Prescalar to the output of the platform IK solution for each servo.

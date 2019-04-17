@@ -127,11 +127,6 @@ void updateServos(int8_t movOK)
         servos[sid].writeMicroseconds(servo_angles[sid].pw);
     }
 
-    // Sometimes the servos go crazy and rotate to their
-    // limits even they are not told to do so.
-    // Let’s add a delay to see if it solves this problem.
-    delay(10);
-
     CLEAR_LED;
 }
 
@@ -495,14 +490,14 @@ void setup()
     setupServos();
     setupJoystick();
     setupGPIO();
-    demoMovements2(1);
+    demoMovements2(3);
     shake();
-    testNaN();
-    testCalculations();
-    platform_t coords = {0, 0, HEAVE_MAX, 0, 0, 0};
-    int8_t movOK = hk.calcServoAngles(servo_angles, coords);
-    printServoAngles();
-    updateServos(movOK);
+    // testNaN();
+    // testCalculations();
+    // platform_t coords = {0, 0, HEAVE_MAX, 0, 0, 0};
+    // int8_t movOK = hk.calcServoAngles(servo_angles, coords);
+    // printServoAngles();
+    // updateServos(movOK);
 }
 
 /**
