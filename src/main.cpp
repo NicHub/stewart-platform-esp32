@@ -272,7 +272,7 @@ void demoMovements2(uint8_t nb_turn = 1)
         {
             movOK = hk.calcServoAngles(servo_angles, coords[cnt]);
             updateServos(movOK);
-            // delay(8);
+            delay(8);
         }
     }
     Serial.println("demoMovements2 DONE");

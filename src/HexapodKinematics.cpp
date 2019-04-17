@@ -105,11 +105,21 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
                   Z_HOME +
                   coord.heave;
 
+        // Square of the virtual arm length, i.e. the distance
+        // between the base joint and the platform joint.
         d2 = (pivot_x - B_COORDS[sid][0]) * (pivot_x - B_COORDS[sid][0]) +
              (pivot_y - B_COORDS[sid][1]) * (pivot_y - B_COORDS[sid][1]) +
              pivot_z * pivot_z;
 
-        // Geometry stuff.
+        // Test if the required virtual arm length is longer than physically possible.
+        // Abort computation of remaining angles if this one is not OK.
+        if (sqrt(d2) > (ARM_LENGTH + ROD_LENGTH))
+        {
+            movOK -= 1;
+            break;
+        }
+
+        // Compute intermediate values.
         k = d2 -
             (ROD_LENGTH * ROD_LENGTH) +
             (ARM_LENGTH * ARM_LENGTH);
@@ -119,24 +129,11 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
              sin(THETA_S[sid]) * (pivot_y - B_COORDS[sid][1]));
         n = k / sqrt(l * l + m * m);
 
-        // Test if the required virtual arm length is longer than physically possible.
-        bool armLengthNOK = sqrt(d2) > (ARM_LENGTH + ROD_LENGTH);
-
         // Test if other bad things happened.
-        bool otherNOK = abs(n) >= 1;
-
-        // Assign error codes if needed.
-        if (armLengthNOK)
-        {
-            movOK -= 1;
-        }
-        if (otherNOK)
+        // Abort computation of remaining angles if this one is not OK.
+        if (abs(n) >= 1)
         {
             movOK -= 3;
-        }
-        // Don’t compute other servo angles if this one is not OK.
-        if (movOK < 0)
-        {
             break;
         }
 
