@@ -1,5 +1,5 @@
-#ifndef __HEXAPODJOYSTICK_H__
-#define __HEXAPODJOYSTICK_H__
+#ifndef __Hexapod_Joystick_H__
+#define __Hexapod_Joystick_H__
 
 #include <main.h>
 

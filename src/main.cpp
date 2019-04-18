@@ -34,7 +34,7 @@
 #include <main.h>
 
 // Global variables.
-HexapodKinematics hk;            // Stewart platform object.
+Hexapod_Kinematics hk;            // Stewart platform object.
 servo_t servo_angles[NB_SERVOS]; // Servo angles.
 Servo servos[NB_SERVOS];         // Servo objects.
 

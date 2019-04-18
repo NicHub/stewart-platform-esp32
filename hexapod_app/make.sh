@@ -5,7 +5,7 @@
 
 g++                              \
     -I ../src/                   \
-    ../src/HexapodKinematics.cpp \
+    ../src/Hexapod_Kinematics.cpp \
     hexapod_app.cpp              \
     -o hexapod_app               \
     -std=c++11                   \

@@ -1,5 +1,5 @@
-#ifndef __HEXAPODSERIAL_H__
-#define __HEXAPODSERIAL_H__
+#ifndef __Hexapod_Serial_H__
+#define __Hexapod_Serial_H__
 
 #include <main.h>
 

@@ -31,12 +31,12 @@
  *
  */
 
-#include "HexapodKinematics.h"
+#include "Hexapod_Kinematics.h"
 
 /**
  *
  */
-double HexapodKinematics::mapDouble(double x,
+double Hexapod_Kinematics::mapDouble(double x,
                                     double in_min, double in_max,
                                     double out_min, double out_max)
 {
@@ -46,7 +46,7 @@ double HexapodKinematics::mapDouble(double x,
 /**
  * HOME position. No translation, no rotation.
  */
-int8_t HexapodKinematics::home(servo_t *servo_angles)
+int8_t Hexapod_Kinematics::home(servo_t *servo_angles)
 {
     return calcServoAngles(servo_angles, {0, 0, 0, 0, 0, 0});
 }
@@ -66,7 +66,7 @@ int8_t HexapodKinematics::home(servo_t *servo_angles)
  * Returns < 0 if Error
  *
  */
-int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coord)
+int8_t Hexapod_Kinematics::calcServoAngles(servo_t *servo_angles, platform_t coord)
 {
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
@@ -207,9 +207,9 @@ int8_t HexapodKinematics::calcServoAngles(servo_t *servo_angles, platform_t coor
     return movOK;
 }
 
-double HexapodKinematics::getSway() { return _sp_sway; }
-double HexapodKinematics::getSurge() { return _sp_surge; }
-double HexapodKinematics::getHeave() { return _sp_heave; }
-double HexapodKinematics::getPitch() { return _sp_pitch; }
-double HexapodKinematics::getRoll() { return _sp_roll; }
-double HexapodKinematics::getYaw() { return _sp_yaw; }
+double Hexapod_Kinematics::getSway() { return _sp_sway; }
+double Hexapod_Kinematics::getSurge() { return _sp_surge; }
+double Hexapod_Kinematics::getHeave() { return _sp_heave; }
+double Hexapod_Kinematics::getPitch() { return _sp_pitch; }
+double Hexapod_Kinematics::getRoll() { return _sp_roll; }
+double Hexapod_Kinematics::getYaw() { return _sp_yaw; }

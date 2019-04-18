@@ -1,5 +1,5 @@
-#ifndef __HEXAPODSERVO_H__
-#define __HEXAPODSERVO_H__
+#ifndef __Hexapod_Servo_H__
+#define __Hexapod_Servo_H__
 
 #include <main.h>
 

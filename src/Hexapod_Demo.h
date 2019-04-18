@@ -1,5 +1,5 @@
-#ifndef __HEXAPODDEMO_H__
-#define __HEXAPODDEMO_H__
+#ifndef __Hexapod_Demo_H__
+#define __Hexapod_Demo_H__
 
 #include <main.h>
 

@@ -49,12 +49,12 @@
 #define Y_PIN 12
 #define Z_PIN 32
 #include <ouilogique_Joystick.h>
-#include <HexapodJoystick.h>
+#include <Hexapod_Joystick.h>
 
 // Hexapod libs.
-#include <HexapodKinematics.h>
-#include <HexapodServo.h>
-#include <HexapodSerial.h>
-#include <HexapodDemo.h>
+#include <Hexapod_Kinematics.h>
+#include <Hexapod_Servo.h>
+#include <Hexapod_Serial.h>
+#include <Hexapod_Demo.h>
 
 #endif //__MAIN_H__

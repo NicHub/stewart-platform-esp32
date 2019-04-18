@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef __HEXAPODKINEMATICSCONFIG_H__
-#define __HEXAPODKINEMATICSCONFIG_H__
+#ifndef __Hexapod_KinematicsCONFIG_H__
+#define __Hexapod_KinematicsCONFIG_H__
 
 /*
  * ======== SERVO SETTINGS ==========
@@ -117,7 +117,7 @@ const double P_RAD = 99.55 / 2;       // Platform radius (mm). The distance from
 const double B_RAD = 138.13 / 2;      // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
 const double ARM_LENGTH = 15.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;      // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-const double Z_HOME = 135.02311;      // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
+const double Z_HOME = 135.02311;      // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints.
 
 /*
   Prescalar to the output of the platform IK solution for each servo.
@@ -126,4 +126,4 @@ const double Z_HOME = 135.02311;      // Default Z height of the platform (above
 */
 const double AGGRO = 1.5;
 
-#endif // __HEXAPODKINEMATICSCONFIG_H__
+#endif // __Hexapod_KinematicsCONFIG_H__

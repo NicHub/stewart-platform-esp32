@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef __HEXAPODKINEMATICS_H__
-#define __HEXAPODKINEMATICS_H__
+#ifndef __Hexapod_Kinematics_H__
+#define __Hexapod_Kinematics_H__
 
 // This library can be compiled for ESP32 or for a desktop application.
 #ifdef PLATFORMIO
@@ -45,11 +45,11 @@
 #define HEXAPOD_CONFIG 1
 
 #if HEXAPOD_CONFIG == 1
-#include "HexapodKinematicsConfig_1.h"
+#include "Hexapod_KinematicsConfig_1.h"
 #elif HEXAPOD_CONFIG == 2
-#include "HexapodKinematicsConfig_2.h"
+#include "Hexapod_KinematicsConfig_2.h"
 #elif HEXAPOD_CONFIG == 3
-#include "HexapodKinematicsConfig_3.h"
+#include "Hexapod_KinematicsConfig_3.h"
 #endif
 
 // servo_t
@@ -74,7 +74,7 @@ typedef struct
 /**
  *
  */
-class HexapodKinematics
+class Hexapod_Kinematics
 {
 private:
   // Setpoints (internal states)
@@ -90,7 +90,7 @@ public:
   /*
    * ======== MAIN FUNCTIONS ==========
    */
-  HexapodKinematics(){};
+  Hexapod_Kinematics(){};
   int8_t home(servo_t *servo_angles);
   int8_t calcServoAngles(servo_t *servo_angles, platform_t coord);
   double getSway();
@@ -163,4 +163,4 @@ public:
       {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
 };
 
-#endif //__HEXAPODKINEMATICS_H__
+#endif //__Hexapod_Kinematics_H__

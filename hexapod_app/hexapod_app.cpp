@@ -41,12 +41,12 @@ const int nb_intervals = 1;
 #include <sstream>
 #include <iomanip>
 #include <string>
-#include "HexapodKinematics.h"
+#include "Hexapod_Kinematics.h"
 
 using namespace std;
 
 // Variables.
-HexapodKinematics hk; // Stewart platform object.
+Hexapod_Kinematics hk; // Stewart platform object.
 servo_t servo_angles[NB_SERVOS];
 int movOK = -1;
 ofstream angle_file;
