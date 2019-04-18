@@ -52,13 +52,13 @@
 #include "Hexapod_KinematicsConfig_3.h"
 #endif
 
-// servo_t
+// angle_t
 typedef struct
 {
   double rad;   // Servo angle in radian.
   int pw;       // Servo pulse width in µs.
   double debug; // Used for debug.
-} servo_t;
+} angle_t;
 
 // Platform coordinates.
 typedef struct
@@ -91,8 +91,8 @@ public:
    * ======== MAIN FUNCTIONS ==========
    */
   Hexapod_Kinematics(){};
-  int8_t home(servo_t *servo_angles);
-  int8_t calcServoAngles(servo_t *servo_angles, platform_t coord);
+  int8_t home(angle_t *servo_angles);
+  int8_t calcServoAngles(angle_t *servo_angles, platform_t coord);
   double getSway();
   double getSurge();
   double getHeave();

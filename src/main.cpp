@@ -35,7 +35,7 @@
 
 // Global variables.
 Hexapod_Kinematics hk;            // Stewart platform object.
-servo_t servo_angles[NB_SERVOS]; // Servo angles.
+angle_t servo_angles[NB_SERVOS]; // Servo angles.
 Servo servos[NB_SERVOS];         // Servo objects.
 
 /**

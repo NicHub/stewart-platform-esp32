@@ -46,7 +46,7 @@ double Hexapod_Kinematics::mapDouble(double x,
 /**
  * HOME position. No translation, no rotation.
  */
-int8_t Hexapod_Kinematics::home(servo_t *servo_angles)
+int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
 {
     return calcServoAngles(servo_angles, {0, 0, 0, 0, 0, 0});
 }
@@ -66,7 +66,7 @@ int8_t Hexapod_Kinematics::home(servo_t *servo_angles)
  * Returns < 0 if Error
  *
  */
-int8_t Hexapod_Kinematics::calcServoAngles(servo_t *servo_angles, platform_t coord)
+int8_t Hexapod_Kinematics::calcServoAngles(angle_t *servo_angles, platform_t coord)
 {
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
@@ -197,7 +197,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(servo_t *servo_angles, platform_t coo
                                                SERVO_MIN_US, SERVO_MAX_US);
 
         // Apply trim values.
-        servo_angles[sid].pw += SERVO_TRIM[sid];
+        servo_angles[sid].pw += angle_tRIM[sid];
 
         // Constrain PW to min/max.
         servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw,

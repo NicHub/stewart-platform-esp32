@@ -1,7 +1,7 @@
 #include <Hexapod_Servo.h>
 
 extern Hexapod_Kinematics hk;            // Stewart platform object.
-extern servo_t servo_angles[NB_SERVOS]; // Servo angles.
+extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
 extern Servo servos[NB_SERVOS];         // Servo objects.
 
 

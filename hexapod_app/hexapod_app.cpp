@@ -47,7 +47,7 @@ using namespace std;
 
 // Variables.
 Hexapod_Kinematics hk; // Stewart platform object.
-servo_t servo_angles[NB_SERVOS];
+angle_t servo_angles[NB_SERVOS];
 int movOK = -1;
 ofstream angle_file;
 
