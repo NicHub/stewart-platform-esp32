@@ -67,8 +67,10 @@ void setup()
     hx_serial.setupSerial();
     hx_servo.setupServo();
     hx_joystick.setupJoystick();
-    hx_demo.demoMov_circles(3);
-    hx_demo.demoMov_shake();
+    hx_demo.testCalcSpeed(2000);
+    // hx_demo.demoMov_circles(3);
+    // hx_demo.demoMov_shake();
+
     // demoMov_MinMaxAllAxis();
     // testNaN();
     // testCalculations();

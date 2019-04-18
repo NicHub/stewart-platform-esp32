@@ -12,6 +12,7 @@ class Hexapod_Demo
     void demoMov_shake();
     void testNaN();
     void testCalculations();
+    void testCalcSpeed(uint16_t nb_iter);
 };
 
 #endif

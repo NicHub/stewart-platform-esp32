@@ -204,3 +204,26 @@ void Hexapod_Demo::testCalculations()
     Serial.print("\n0, 0, HEAVE_MIN, 0, 0, 0");
     hx_servo.printServoAngles();
 }
+
+
+/**
+ *
+ */
+void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
+{
+    Serial.println("TEST CALCULATION SPEED");
+    Serial.print("Number of iterations = ");
+    Serial.println(nb_iter);
+    unsigned long T1 = 0, T2 = 0, TTot = 0;
+    for (uint16_t cid = 0; cid < nb_iter; cid++)
+    {
+        T1 = micros();
+        hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
+        T2 = micros();
+        TTot += (T2 - T1);
+    }
+    Serial.print("total time elapsed (us) = ");
+    Serial.println(TTot);
+    Serial.print("time per calculation (us) = ");
+    Serial.println(TTot / nb_iter);
+}
