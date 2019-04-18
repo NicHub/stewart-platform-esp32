@@ -44,13 +44,9 @@
 #include <P19.h>
 #include <ESP32Servo.h>
 
-// Joystick lib.
-#define X_PIN 26
-#define Y_PIN 12
-#define Z_PIN 32
-#include <Hexapod_Joystick.h>
 
 // Hexapod libs.
+#include <Hexapod_Joystick.h>
 #include <Hexapod_Kinematics.h>
 #include <Hexapod_Servo.h>
 #include <Hexapod_Serial.h>

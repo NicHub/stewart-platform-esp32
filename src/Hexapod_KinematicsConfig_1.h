@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef __Hexapod_KinematicsCONFIG_H__
-#define __Hexapod_KinematicsCONFIG_H__
+#ifndef __HEXAPOD_KINEMATICSCONFIG_H__
+#define __HEXAPOD_KINEMATICSCONFIG_H__
 
 /*
  * ======== SERVO SETTINGS ==========
@@ -126,4 +126,4 @@ const double Z_HOME = 147.835046;      // Default Z height of the platform (abov
 */
 const double AGGRO = 1.5;
 
-#endif // __Hexapod_KinematicsCONFIG_H__
+#endif // __HEXAPOD_KINEMATICSCONFIG_H__

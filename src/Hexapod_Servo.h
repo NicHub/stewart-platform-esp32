@@ -6,7 +6,7 @@
 class Hexapod_Servo : public Hexapod_Kinematics
 {
   private:
-    int8_t _state = 0;
+    Servo servos[NB_SERVOS]; // Array of servo objects.
 
   public:
     Hexapod_Servo();

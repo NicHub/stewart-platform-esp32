@@ -1,14 +1,12 @@
 #include <Hexapod_Servo.h>
 
-extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
-Servo servos[NB_SERVOS];         // Servo objects.
+extern angle_t servo_angles[NB_SERVOS];
 
 /**
  *
  */
 Hexapod_Servo::Hexapod_Servo()
 {
-    _state = 1;
 }
 
 /**
@@ -116,25 +114,4 @@ void Hexapod_Servo::printJointAndServoAxisCoord()
         Serial.print("  ");
         Serial.println(B_COORDS[sid][1]);
     }
-}
-
-/**
- *
- */
-void Hexapod_Servo::test()
-{
-    Serial.print("####################### TEST\n_state = ");
-    Serial.println(_state);
-
-    angle_t servo_angles[NB_SERVOS]; // Servo angles.
-    int8_t movOK = -1;
-    movOK = calcServoAngles(servo_angles, {0, 0, 0, 0, 0, 0});
-    Serial.print("movOK = ");
-    Serial.println(movOK);
-    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
-    {
-        Serial.print(servo_angles[sid].rad);
-        Serial.print(" ");
-    }
-    Serial.print("\n");
 }

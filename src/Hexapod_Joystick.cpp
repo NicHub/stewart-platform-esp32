@@ -1,6 +1,6 @@
 #include <Hexapod_Joystick.h>
 
-extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
+extern angle_t servo_angles[NB_SERVOS];
 extern Hexapod_Servo hx_servo;
 
 /**
@@ -104,13 +104,13 @@ void Hexapod_Joystick::joystickControl()
     movOK = -1;
     if (joyMode == 0)
         // X, Y
-        movOK = hx_servo.calcServoAngles(servo_angles, {joyX, joyY, 0, 0, 0, 0});
+        movOK = hx_servo.calcServoAngles({joyX, joyY, 0, 0, 0, 0}, servo_angles);
     else if (joyMode == 1)
         // Z, tiltZ
-        movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, joyY, 0, 0, joyX});
+        movOK = hx_servo.calcServoAngles({0, 0, joyY, 0, 0, joyX}, servo_angles);
     else if (joyMode == 2)
         // tilt X, tilt Y
-        movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, 0, joyX, joyY, 0});
+        movOK = hx_servo.calcServoAngles({0, 0, 0, joyX, joyY, 0}, servo_angles);
 
     hx_servo.updateServos(movOK);
 

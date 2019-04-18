@@ -58,7 +58,7 @@ const uint8_t ALL_WIDTH = 151;
 
 void calcAndPrintResults(platform_t coords)
 {
-     movOK = hk.calcServoAngles(servo_angles, coords);
+     movOK = hk.calcServoAngles(coords, servo_angles);
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.sway;
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.surge;
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.heave;

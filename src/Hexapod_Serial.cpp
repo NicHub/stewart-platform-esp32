@@ -1,7 +1,7 @@
 #include <Hexapod_Serial.h>
 
 extern Hexapod_Servo hx_servo;
-extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
+extern angle_t servo_angles[NB_SERVOS];
 
 /**
  *
@@ -26,6 +26,7 @@ void Hexapod_Serial::setupSerial()
     Serial.print("\n##########################\n\n");
 }
 
+#if ENABLE_SERIAL_READ
 /**
  *
  */
@@ -65,7 +66,8 @@ void Hexapod_Serial::serialControl()
         Serial.println(sway);
 
         int8_t movOK = -1;
-        movOK = hx_servo.calcServoAngles(servo_angles, {(double)sway, 0, 0, 0, 0, 0});
+        movOK = hx_servo.calcServoAngles({(double)sway, 0, 0, 0, 0, 0}, servo_angles);
         hx_servo.updateServos(movOK);
     }
 }
+#endif

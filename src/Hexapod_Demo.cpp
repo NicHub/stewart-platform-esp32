@@ -33,7 +33,7 @@
 
 #include <Hexapod_Demo.h>
 
-extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
+extern angle_t servo_angles[NB_SERVOS];
 extern Hexapod_Servo hx_servo;
 
 /**
@@ -85,7 +85,7 @@ void Hexapod_Demo::demoMov_MinMaxAllAxis()
     {
         Serial.print("cnt = ");
         Serial.println(cnt);
-        movOK = hx_servo.calcServoAngles(servo_angles, coords[cnt]);
+        movOK = hx_servo.calcServoAngles(coords[cnt], servo_angles);
         hx_servo.updateServos(movOK);
         delay(1000);
     }
@@ -118,7 +118,7 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
     {
         for (uint8_t cnt = 0; cnt < nb_points; cnt++)
         {
-            movOK = hx_servo.calcServoAngles(servo_angles, coords[cnt]);
+            movOK = hx_servo.calcServoAngles(coords[cnt], servo_angles);
             hx_servo.updateServos(movOK);
             delay(8);
         }
@@ -137,28 +137,28 @@ void Hexapod_Demo::demoMov_shake()
     const uint32_t wait = 200;
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, HEAVE_MAX, 0, 0, 0});
+    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, HEAVE_MIN, 0, 0, 0});
+    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MIN, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
     for (uint8_t demoMov_shake = 0; demoMov_shake < 10; demoMov_shake++)
     {
         delay(60);
-        movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, demoMov_shakeZ, 0, 0, 0});
+        movOK = hx_servo.calcServoAngles({0, 0, demoMov_shakeZ, 0, 0, 0}, servo_angles);
         hx_servo.updateServos(movOK);
         demoMov_shakeZ = -demoMov_shakeZ;
     }
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, HEAVE_MAX, 0, 0, 0});
+    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, HEAVE_MIN, 0, 0, 0});
+    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MIN, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
@@ -180,7 +180,7 @@ void Hexapod_Demo::testNaN()
         {-33.0, 11.0, -15.0, 5.7, 17.0, 17.0}};
     for (uint8_t coord_id = 0; coord_id < COUNT_OF(coords); coord_id++)
     {
-        movOK = hx_servo.calcServoAngles(servo_angles, coords[coord_id]);
+        movOK = hx_servo.calcServoAngles(coords[coord_id], servo_angles);
         hx_servo.printServoAngles();
         Serial.print("movOK = ");
         Serial.println(movOK);
@@ -192,15 +192,15 @@ void Hexapod_Demo::testNaN()
  */
 void Hexapod_Demo::testCalculations()
 {
-    hx_servo.calcServoAngles(servo_angles, {0, 0, 0, 0, 0, 0});
+    hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);
     Serial.print("\n0, 0, 0, 0, 0, 0 ");
     hx_servo.printServoAngles();
 
-    hx_servo.calcServoAngles(servo_angles, {0, 0, HEAVE_MAX, 0, 0, 0});
+    hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
     Serial.print("\n0, 0, HEAVE_MAX, 0, 0, 0");
     hx_servo.printServoAngles();
 
-    hx_servo.calcServoAngles(servo_angles, {0, 0, HEAVE_MIN, 0, 0, 0});
+    hx_servo.calcServoAngles({0, 0, HEAVE_MIN, 0, 0, 0}, servo_angles);
     Serial.print("\n0, 0, HEAVE_MIN, 0, 0, 0");
     hx_servo.printServoAngles();
 }

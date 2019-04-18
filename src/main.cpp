@@ -33,9 +33,17 @@
 
 #include <main.h>
 
-// Global variables.
-angle_t servo_angles[NB_SERVOS]; // Servo angles.
+// Servo pins are defined in
+// Hexapod_KinematicsConfig_`x`.h
+// (where `x` is the file number)
 
+// Joystick pins.
+#define X_PIN 26
+#define Y_PIN 12
+#define Z_PIN 32
+
+// Global variables.
+angle_t servo_angles[NB_SERVOS];
 Hexapod_Servo hx_servo;
 Hexapod_Serial hx_serial;
 Hexapod_Joystick hx_joystick(X_PIN, Y_PIN, Z_PIN);
@@ -55,17 +63,17 @@ void setupGPIO()
  */
 void setup()
 {
+    setupGPIO();
     hx_serial.setupSerial();
     hx_servo.setupServo();
     hx_joystick.setupJoystick();
-    setupGPIO();
     hx_demo.demoMov_circles(3);
     hx_demo.demoMov_shake();
     // demoMov_MinMaxAllAxis();
     // testNaN();
     // testCalculations();
     // platform_t coords = {0, 0, HEAVE_MAX, 0, 0, 0};
-    // int8_t movOK = hk.calcServoAngles(servo_angles, coords);
+    // int8_t movOK = hk.calcServoAngles(coords, servo_angles);
     // printServoAngles();
     // updateServos(movOK);
 }

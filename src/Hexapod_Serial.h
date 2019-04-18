@@ -8,8 +8,10 @@ class Hexapod_Serial
   public:
     Hexapod_Serial();
     void setupSerial();
+#if ENABLE_SERIAL_READ
     bool serialRead(String *message);
     void serialControl();
+#endif
 };
 
 #endif
