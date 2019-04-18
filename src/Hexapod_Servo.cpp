@@ -1,28 +1,34 @@
 #include <Hexapod_Servo.h>
 
-extern Hexapod_Kinematics hk;            // Stewart platform object.
 extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
-extern Servo servos[NB_SERVOS];         // Servo objects.
-
+Servo servos[NB_SERVOS];         // Servo objects.
 
 /**
  *
  */
-void setupServos()
+Hexapod_Servo::Hexapod_Servo()
+{
+    _state = 1;
+}
+
+/**
+ *
+ */
+void Hexapod_Servo::setupServo()
 {
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
         servos[sid].attach(SERVO_PINS[sid], SERVO_MIN_US, SERVO_MAX_US);
     }
-    int8_t movOK = hk.home(servo_angles);
-    updateServos(movOK);
+    int8_t movOK = home(servo_angles);
+    this->updateServos(movOK);
     delay(500);
 }
 
 /**
  * Set servo values to the angles in servo_angles[].
  */
-void updateServos(int8_t movOK)
+void Hexapod_Servo::updateServos(int8_t movOK)
 {
     // Display error (movOK < 0)
     // and warnings (movOK > 0).
@@ -52,20 +58,20 @@ void updateServos(int8_t movOK)
 /**
  *
  */
-void printServoAngles()
+void Hexapod_Servo::printServoAngles()
 {
     Serial.print("\nSERVO COORD        = ");
-    Serial.print(hk.getSway());
+    Serial.print(getSway());
     Serial.print(" ");
-    Serial.print(hk.getSurge());
+    Serial.print(getSurge());
     Serial.print(" ");
-    Serial.print(hk.getHeave());
+    Serial.print(getHeave());
     Serial.print(" ");
-    Serial.print(hk.getPitch());
+    Serial.print(getPitch());
     Serial.print(" ");
-    Serial.print(hk.getRoll());
+    Serial.print(getRoll());
     Serial.print(" ");
-    Serial.print(hk.getYaw());
+    Serial.print(getYaw());
 
     Serial.print("\nSERVO_ANGLES (rad) = ");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
@@ -93,21 +99,42 @@ void printServoAngles()
 /**
  *
  */
-void printJointAndServoAxisCoord()
+void Hexapod_Servo::printJointAndServoAxisCoord()
 {
     Serial.println("P_COORDS");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(hk.P_COORDS[sid][0]);
+        Serial.print(P_COORDS[sid][0]);
         Serial.print("  ");
-        Serial.println(hk.P_COORDS[sid][1]);
+        Serial.println(P_COORDS[sid][1]);
     }
 
     Serial.println("\nB_COORDS");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(hk.B_COORDS[sid][0]);
+        Serial.print(B_COORDS[sid][0]);
         Serial.print("  ");
-        Serial.println(hk.B_COORDS[sid][1]);
+        Serial.println(B_COORDS[sid][1]);
     }
+}
+
+/**
+ *
+ */
+void Hexapod_Servo::test()
+{
+    Serial.print("####################### TEST\n_state = ");
+    Serial.println(_state);
+
+    angle_t servo_angles[NB_SERVOS]; // Servo angles.
+    int8_t movOK = -1;
+    movOK = calcServoAngles(servo_angles, {0, 0, 0, 0, 0, 0});
+    Serial.print("movOK = ");
+    Serial.println(movOK);
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.print(servo_angles[sid].rad);
+        Serial.print(" ");
+    }
+    Serial.print("\n");
 }

@@ -1,40 +1,46 @@
 #include <Hexapod_Joystick.h>
 
-ouilogique_Joystick joystick(X_PIN, Y_PIN, Z_PIN);
-extern Hexapod_Kinematics hk;            // Stewart platform object.
 extern angle_t servo_angles[NB_SERVOS]; // Servo angles.
-extern Servo servos[NB_SERVOS];         // Servo objects.
+extern Hexapod_Servo hx_servo;
 
 /**
  *
  */
-void setupJoystick()
+Hexapod_Joystick::Hexapod_Joystick(
+    uint8_t pinX, uint8_t pinY, uint8_t pinZ) : ouilogique_Joystick(pinX, pinY, pinZ)
 {
-    Serial.print("millis = ");
-    Serial.print(millis());
-    Serial.print(" | getRawValueMidX = ");
-    Serial.print(joystick.getRawValueMidX());
-    Serial.print(" | getRawValueMidY = ");
-    Serial.println(joystick.getRawValueMidY());
-
-    joystick.calibrate();
-    delay(10);
-    joystick.setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
-    int8_t movOK = hk.home(servo_angles);
-    updateServos(movOK);
-
-    Serial.print("millis = ");
-    Serial.print(millis());
-    Serial.print(" | getRawValueMidX = ");
-    Serial.print(joystick.getRawValueMidX());
-    Serial.print(" | getRawValueMidY = ");
-    Serial.println(joystick.getRawValueMidY());
 }
 
 /**
  *
  */
-void joystickControl()
+void Hexapod_Joystick::setupJoystick()
+{
+    Serial.print("millis = ");
+    Serial.print(millis());
+    Serial.print(" | getRawValueMidX = ");
+    Serial.print(getRawValueMidX());
+    Serial.print(" | getRawValueMidY = ");
+    Serial.println(getRawValueMidY());
+
+    calibrate();
+    delay(10);
+    setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
+    int8_t movOK = hx_servo.home(servo_angles);
+    hx_servo.updateServos(movOK);
+
+    Serial.print("millis = ");
+    Serial.print(millis());
+    Serial.print(" | getRawValueMidX = ");
+    Serial.print(getRawValueMidX());
+    Serial.print(" | getRawValueMidY = ");
+    Serial.println(getRawValueMidY());
+}
+
+/**
+ *
+ */
+void Hexapod_Joystick::joystickControl()
 {
     static double joyX = 0;
     static double joyY = 0;
@@ -45,9 +51,9 @@ void joystickControl()
     static uint8_t joyMode = 0;
     static const uint8_t nbJoyMode = 3;
 
-    joyX = joystick.getX();
-    joyY = joystick.getY();
-    joyZ = joystick.getZ();
+    joyX = getX();
+    joyY = getY();
+    joyZ = getZ();
 
     // Exit if joystick X, Y and Z did not change.
     static bool joyStill;
@@ -69,14 +75,14 @@ void joystickControl()
 
         // Set new limits.
         if (joyMode == 0)
-            joystick.setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
+            setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
         else if (joyMode == 1)
-            joystick.setLimits(YAW_MIN, YAW_MAX, YAW_MID, HEAVE_MIN, HEAVE_MAX, HEAVE_MID);
+            setLimits(YAW_MIN, YAW_MAX, YAW_MID, HEAVE_MIN, HEAVE_MAX, HEAVE_MID);
         else if (joyMode == 2)
-            joystick.setLimits(PITCH_MIN, PITCH_MAX, PITCH_MID, ROLL_MIN, ROLL_MAX, ROLL_MID);
+            setLimits(PITCH_MIN, PITCH_MAX, PITCH_MID, ROLL_MIN, ROLL_MAX, ROLL_MID);
 
         // Debounce.
-        while (joystick.getZ())
+        while (getZ())
         {
         }
 
@@ -98,15 +104,15 @@ void joystickControl()
     movOK = -1;
     if (joyMode == 0)
         // X, Y
-        movOK = hk.calcServoAngles(servo_angles, {joyX, joyY, 0, 0, 0, 0});
+        movOK = hx_servo.calcServoAngles(servo_angles, {joyX, joyY, 0, 0, 0, 0});
     else if (joyMode == 1)
         // Z, tiltZ
-        movOK = hk.calcServoAngles(servo_angles, {0, 0, joyY, 0, 0, joyX});
+        movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, joyY, 0, 0, joyX});
     else if (joyMode == 2)
         // tilt X, tilt Y
-        movOK = hk.calcServoAngles(servo_angles, {0, 0, 0, joyX, joyY, 0});
+        movOK = hx_servo.calcServoAngles(servo_angles, {0, 0, 0, joyX, joyY, 0});
 
-    updateServos(movOK);
+    hx_servo.updateServos(movOK);
 
     // Save last joystick values.
     lastJoyX = joyX;
@@ -130,9 +136,9 @@ void joystickControl()
     Serial.println(lastJoyZ);
 
     Serial.print("getRawX = ");
-    Serial.print(joystick.getRawX());
+    Serial.print(getRawX());
     Serial.print(" | getRawY = ");
-    Serial.println(joystick.getRawY());
+    Serial.println(getRawY());
 
     Serial.print("joyX == lastJoyX = ");
     Serial.println(joyX == lastJoyX);

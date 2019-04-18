@@ -34,9 +34,12 @@
 #include <main.h>
 
 // Global variables.
-Hexapod_Kinematics hk;            // Stewart platform object.
 angle_t servo_angles[NB_SERVOS]; // Servo angles.
-Servo servos[NB_SERVOS];         // Servo objects.
+
+Hexapod_Servo hx_servo;
+Hexapod_Serial hx_serial;
+Hexapod_Joystick hx_joystick(X_PIN, Y_PIN, Z_PIN);
+Hexapod_Demo hx_demo;
 
 /**
  *
@@ -52,12 +55,12 @@ void setupGPIO()
  */
 void setup()
 {
-    setupSerial();
-    setupServos();
-    setupJoystick();
+    hx_serial.setupSerial();
+    hx_servo.setupServo();
+    hx_joystick.setupJoystick();
     setupGPIO();
-    demoMov_circles(3);
-    demoMov_shake();
+    hx_demo.demoMov_circles(3);
+    hx_demo.demoMov_shake();
     // demoMov_MinMaxAllAxis();
     // testNaN();
     // testCalculations();
@@ -73,10 +76,10 @@ void setup()
 void loop()
 {
 #if ENABLE_JOYSTICK_READ
-    joystickControl();
+    hx_joystick.joystickControl();
 #endif
 
 #if ENABLE_SERIAL_READ
-    serialControl();
+    hx_serial.serialControl();
 #endif
 }

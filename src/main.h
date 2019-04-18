@@ -48,7 +48,6 @@
 #define X_PIN 26
 #define Y_PIN 12
 #define Z_PIN 32
-#include <ouilogique_Joystick.h>
 #include <Hexapod_Joystick.h>
 
 // Hexapod libs.

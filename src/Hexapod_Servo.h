@@ -1,11 +1,20 @@
-#ifndef __Hexapod_Servo_H__
-#define __Hexapod_Servo_H__
+#ifndef __HEXAPODSERVO_H__
+#define __HEXAPODSERVO_H__
 
 #include <main.h>
 
-void setupServos();
-void updateServos(int8_t);
-void printServoAngles();
-void printJointAndServoAxisCoord();
+class Hexapod_Servo : public Hexapod_Kinematics
+{
+  private:
+    int8_t _state = 0;
+
+  public:
+    Hexapod_Servo();
+    void test();
+    void setupServo();
+    void updateServos(int8_t);
+    void printServoAngles();
+    void printJointAndServoAxisCoord();
+};
 
 #endif

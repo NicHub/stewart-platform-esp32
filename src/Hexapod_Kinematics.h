@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef __Hexapod_Kinematics_H__
-#define __Hexapod_Kinematics_H__
+#ifndef __HEXAPOD_KINEMATICS_H__
+#define __HEXAPOD_KINEMATICS_H__
 
 // This library can be compiled for ESP32 or for a desktop application.
 #ifdef PLATFORMIO
