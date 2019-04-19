@@ -53,7 +53,7 @@ const double SERVO_MAX_US = 2300; // default 2500 (library 4744/ESP32Servo)
 const double SERVO_MID_US = (SERVO_MIN_US + SERVO_MAX_US) / 2;
 
 // Trim values, in microseconds, AFTER reversing
-const double ANGLE_TRIM[] = {
+const int ANGLE_TRIM[] = {
     0,  // 0,
     0,  // 20,
     0,  // 0,
