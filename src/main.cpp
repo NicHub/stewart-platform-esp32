@@ -69,7 +69,7 @@ void setup()
     hx_joystick.setupJoystick();
     hx_demo.demoMov_circles(3);
     hx_demo.demoMov_shake();
-    hx_demo.testCalcSpeed(2000);
+    hx_demo.testCalcSpeed(2);
 
     // demoMov_MinMaxAllAxis();
     // testNaN();

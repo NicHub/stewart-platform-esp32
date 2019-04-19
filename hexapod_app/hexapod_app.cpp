@@ -73,7 +73,7 @@ void calcAndPrintResults(platform_t coords)
           {
 #define WHAT_TO_PRINT 1
 #if WHAT_TO_PRINT == 1
-               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << degrees(servo_angles[id].rad);
+               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].deg;
 #elif WHAT_TO_PRINT == 2
                angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].pw;
 #elif WHAT_TO_PRINT == 3

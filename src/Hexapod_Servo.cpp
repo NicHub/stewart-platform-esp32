@@ -74,7 +74,7 @@ void Hexapod_Servo::printServoAngles()
     Serial.print("\nSERVO_ANGLES (rad) = ");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(degrees(servo_angles[sid].rad));
+        Serial.print(servo_angles[sid].deg);
         Serial.print(" ");
     }
 

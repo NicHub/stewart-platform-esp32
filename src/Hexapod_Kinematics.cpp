@@ -111,7 +111,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Test if the required virtual arm length is longer than physically possible.
         // Abort computation of remaining angles if this one is not OK.
-        if (sqrt(d2) > (ARM_LENGTH + ROD_LENGTH))
+        if (d2 > ((ARM_LENGTH + ROD_LENGTH) * (ARM_LENGTH + ROD_LENGTH)))
         {
             movOK -= 1;
             break;
@@ -158,16 +158,20 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
             servo_rad = SERVO_MIN_ANGLE;
         }
 
-        // Update array.
-        servo_angles[sid].rad = servo_rad;
-
         // Apply reverse if needed.
         if (SERVO_REVERSE[sid])
         {
             servo_angles[sid].rad = SERVO_MIN_ANGLE +
                                     SERVO_MAX_ANGLE -
-                                    servo_angles[sid].rad;
+                                    servo_rad;
         }
+        else
+        {
+            servo_angles[sid].rad = servo_rad;
+        }
+
+        // Convert radians to degrees.
+        servo_angles[sid].deg = degrees(servo_angles[sid].rad);
 
         // Convert radians to pulse width.
         servo_angles[sid].pw = (int)this->mapDouble(servo_angles[sid].rad,
