@@ -25,6 +25,8 @@ In terminal, run:
 
     platformio run --target uploadfs
 
+### Clean build
+platformio run --target clean
 
 ## Problème WiFi
 

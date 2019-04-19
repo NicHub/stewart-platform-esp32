@@ -65,11 +65,7 @@ void calcAndPrintResults(platform_t coords)
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.pitch);
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.roll);
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.yaw);
-
-     if (movOK != 0)
-          angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << movOK;
-     else
-          angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << " ";
+     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << movOK;
 
      if (movOK >= 0)
      {

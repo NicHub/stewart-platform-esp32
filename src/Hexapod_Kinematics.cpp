@@ -70,10 +70,8 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 {
     double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
         d2,                           // Distance^2 between servo pivot and platform link.
-        k, l, m, n,                   // Intermediate values.
+        k, m, n,                      // Intermediate values.
         servo_rad;                    // Angle (radians) to turn each servo.
-
-    double new_servo_angles[NB_SERVOS];
 
     // Intermediate values, to avoid recalculating SIN / COS.
     double cr = cos(coord.roll),
@@ -90,12 +88,16 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
         // Coordinates of platform joints (pivots) after movement.
+        // Minus B_COORDS.x for pivot_x.
+        // Minus B_COORDS.y for pivot_y.
         pivot_x = P_COORDS[sid][0] * cr * cy +
                   P_COORDS[sid][1] * (sp * sr * cr - cp * sy) +
-                  coord.sway;
+                  coord.sway -
+                  B_COORDS[sid][0];
         pivot_y = P_COORDS[sid][0] * cr * sy +
                   P_COORDS[sid][1] * (cp * cy + sp * sr * sy) +
-                  coord.surge;
+                  coord.surge -
+                  B_COORDS[sid][1];
         pivot_z = -P_COORDS[sid][0] * sr +
                   P_COORDS[sid][1] * sp * cr +
                   Z_HOME +
@@ -103,9 +105,9 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Square of the virtual arm length, i.e. the distance
         // between the base joint and the platform joint.
-        d2 = (pivot_x - B_COORDS[sid][0]) * (pivot_x - B_COORDS[sid][0]) +
-             (pivot_y - B_COORDS[sid][1]) * (pivot_y - B_COORDS[sid][1]) +
-             pivot_z * pivot_z;
+        d2 = (pivot_x * pivot_x) +
+             (pivot_y * pivot_y) +
+             (pivot_z * pivot_z);
 
         // Test if the required virtual arm length is longer than physically possible.
         // Abort computation of remaining angles if this one is not OK.
@@ -119,11 +121,9 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         k = d2 -
             (ROD_LENGTH * ROD_LENGTH) +
             (ARM_LENGTH * ARM_LENGTH);
-        l = 2 * ARM_LENGTH * pivot_z;
-        m = 2 * ARM_LENGTH *
-            (cos(THETA_S[sid]) * (pivot_x - B_COORDS[sid][0]) +
-             sin(THETA_S[sid]) * (pivot_y - B_COORDS[sid][1]));
-        n = k / sqrt(l * l + m * m);
+        m = (COS_THETA_S[sid] * pivot_x +
+             SIN_THETA_S[sid] * pivot_y);
+        n = k / (2 * ARM_LENGTH * sqrt(pivot_z * pivot_z + m * m));
 
         // Test if other bad things happened.
         // Abort computation of remaining angles if this one is not OK.
@@ -134,7 +134,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         }
 
         // Compute servo angle.
-        servo_rad = asin(n) - atan(m / l);
+        servo_rad = asin(n) - atan(m / pivot_z);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
         servo_rad = this->mapDouble(servo_rad,
@@ -158,8 +158,28 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
             servo_rad = SERVO_MIN_ANGLE;
         }
 
-        // Update new_servo_angles array.
-        new_servo_angles[sid] = servo_rad;
+        // Update array.
+        servo_angles[sid].rad = servo_rad;
+
+        // Apply reverse if needed.
+        if (SERVO_REVERSE[sid])
+        {
+            servo_angles[sid].rad = SERVO_MIN_ANGLE +
+                                    SERVO_MAX_ANGLE -
+                                    servo_angles[sid].rad;
+        }
+
+        // Convert radians to pulse width.
+        servo_angles[sid].pw = (int)this->mapDouble(servo_angles[sid].rad,
+                                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
+                                                    SERVO_MIN_US, SERVO_MAX_US);
+
+        // Apply trim values.
+        servo_angles[sid].pw += ANGLE_TRIM[sid];
+
+        // Constrain PW to min/max.
+        servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw,
+                                              SERVO_MIN_US, SERVO_MAX_US);
     }
 
     // Exit if there are errors.
@@ -168,41 +188,13 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         return movOK;
     }
 
-    // Update platform coordinates.
+    // Otherwise update platform coordinates.
     _sp_sway = coord.sway;
     _sp_surge = coord.surge;
     _sp_heave = coord.heave;
     _sp_pitch = coord.pitch;
     _sp_roll = coord.roll;
     _sp_yaw = coord.yaw;
-
-    // Reverse and convert radians to pulse width (PWM).
-    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
-    {
-        // Apply reverse if needed.
-        if (SERVO_REVERSE[sid])
-        {
-            servo_angles[sid].rad = SERVO_MIN_ANGLE +
-                                    SERVO_MAX_ANGLE -
-                                    new_servo_angles[sid];
-        }
-        else
-        {
-            servo_angles[sid].rad = new_servo_angles[sid];
-        }
-
-        // Convert radians to pulse width.
-        servo_angles[sid].pw = this->mapDouble(servo_angles[sid].rad,
-                                               SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
-                                               SERVO_MIN_US, SERVO_MAX_US);
-
-        // Apply trim values.
-        servo_angles[sid].pw += angle_tRIM[sid];
-
-        // Constrain PW to min/max.
-        servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw,
-                                              SERVO_MIN_US, SERVO_MAX_US);
-    }
 
     return movOK;
 }

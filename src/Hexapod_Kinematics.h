@@ -42,7 +42,7 @@
 #endif
 
 // Choose configuration file.
-#define HEXAPOD_CONFIG 1
+#define HEXAPOD_CONFIG 2
 
 #if HEXAPOD_CONFIG == 1
 #include "Hexapod_KinematicsConfig_1.h"
@@ -128,13 +128,21 @@ class Hexapod_Kinematics
     /*
      * Absolute angle that the servo arm plane of rotation is at, from the world-X axis.
      */
-    const double THETA_S[NB_SERVOS] = {
-        radians(-60),
-        radians(120),
-        radians(180),
-        radians(0),
-        radians(60),
-        radians(-120)};
+    const double COS_THETA_S[NB_SERVOS] = {
+        cos(radians(-60)),
+        cos(radians(120)),
+        cos(radians(180)),
+        cos(radians(0)),
+        cos(radians(60)),
+        cos(radians(-120))};
+
+    const double SIN_THETA_S[NB_SERVOS] = {
+        sin(radians(-60)),
+        sin(radians(120)),
+        sin(radians(180)),
+        sin(radians(0)),
+        sin(radians(60)),
+        sin(radians(-120))};
 
     /*
      * XY cartesian coordinates of the platform joints, based on the polar
