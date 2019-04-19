@@ -96,13 +96,13 @@ const double HEAVE_MAX = 10;
 const double HEAVE_MID = (HEAVE_MAX + HEAVE_MIN) / 2;
 const double HEAVE_BAND = HEAVE_MAX - HEAVE_MIN;
 
-const double PITCH_MIN = radians(-6);
-const double PITCH_MAX = radians(6);
+const double PITCH_MIN = radians(-11);
+const double PITCH_MAX = radians(11);
 const double PITCH_MID = (PITCH_MAX + PITCH_MIN) / 2;
 const double PITCH_BAND = PITCH_MAX - PITCH_MIN;
 
-const double ROLL_MIN = radians(-6);
-const double ROLL_MAX = radians(6);
+const double ROLL_MIN = radians(-11);
+const double ROLL_MAX = radians(11);
 const double ROLL_MID = (ROLL_MAX + ROLL_MIN) / 2;
 const double ROLL_BAND = ROLL_MAX - ROLL_MIN;
 
