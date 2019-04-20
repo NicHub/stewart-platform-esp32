@@ -67,17 +67,11 @@ void setup()
     hx_serial.setupSerial();
     hx_servo.setupServo();
     hx_joystick.setupJoystick();
-    hx_demo.demoMov_circles(3);
-    hx_demo.demoMov_shake();
-    hx_demo.testCalcSpeed(2);
 
-    // demoMov_MinMaxAllAxis();
-    // testNaN();
-    // testCalculations();
-    // platform_t coords = {0, 0, HEAVE_MAX, 0, 0, 0};
-    // int8_t movOK = hk.calcServoAngles(coords, servo_angles);
-    // printServoAngles();
-    // updateServos(movOK);
+    hx_demo.demoMov_circles(5);
+    hx_demo.demoMov_shakeHeave();
+    hx_demo.testCalcSpeed(2);
+    // hx_demo.demoMov_MinMaxAllAxis();
 }
 
 /**

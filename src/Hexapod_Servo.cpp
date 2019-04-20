@@ -28,29 +28,40 @@ void Hexapod_Servo::setupServo()
  */
 void Hexapod_Servo::updateServos(int8_t movOK)
 {
-    // Display error (movOK < 0)
-    // and warnings (movOK > 0).
-    if (movOK != 0)
+    // Statistics of errors.
+    static double nbMov = 0;
+    static double nbMovNOK = 0;
+    static double NOKrate = 0;
+    nbMov++;
+
+    if (movOK == 0)
     {
-        SET_LED;
-        Serial.print("\n");
-        Serial.print(millis());
-        Serial.print(" bad move - movOK = ");
-        Serial.println(movOK, DEC);
-        // If error, exit.
-        if (movOK < 0)
+        // Write to servos.
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            return;
+            servos[sid].writeMicroseconds(servo_angles[sid].pw);
         }
     }
-
-    // Write to servos.
-    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    else
     {
-        servos[sid].writeMicroseconds(servo_angles[sid].pw);
+        // Error handling.
+        SET_LED;
+        nbMovNOK++;
+        NOKrate = (nbMovNOK / nbMov) * (double)100.0;
+        Serial.printf("%10lu", millis());
+        Serial.printf(" | BAD MOVE | movOK = %d", movOK);
+        Serial.printf(" | NB MOV = %10.0f", nbMov);
+        Serial.printf(" | NOK rate = %4.1f %%", NOKrate);
+        Serial.print("\n");
     }
 
-    CLEAR_LED;
+    // Switch off LED.
+    static unsigned long T1 = millis();
+    if (millis() - T1 > 20)
+    {
+        CLEAR_LED;
+        T1 = millis();
+    }
 }
 
 /**

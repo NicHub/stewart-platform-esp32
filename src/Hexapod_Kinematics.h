@@ -42,7 +42,7 @@
 #endif
 
 // Choose configuration file.
-#define HEXAPOD_CONFIG 1
+#define HEXAPOD_CONFIG 2
 
 #if HEXAPOD_CONFIG == 1
 #include "Hexapod_Config_1.h"

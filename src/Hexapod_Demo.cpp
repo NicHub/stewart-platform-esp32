@@ -129,10 +129,10 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
 /**
  *
  */
-void Hexapod_Demo::demoMov_shake()
+void Hexapod_Demo::demoMov_shakeHeave()
 {
-    Serial.println("demoMov_shake START");
-    double demoMov_shakeZ = HEAVE_MIN;
+    Serial.println("demoMov_shakeHeave START");
+    double shakeVal = HEAVE_MIN;
     int8_t movOK = -1;
     const uint32_t wait = 200;
 
@@ -145,12 +145,12 @@ void Hexapod_Demo::demoMov_shake()
     hx_servo.updateServos(movOK);
 
     delay(wait);
-    for (uint8_t demoMov_shake = 0; demoMov_shake < 10; demoMov_shake++)
+    for (uint8_t demoMov_shakeHeave = 0; demoMov_shakeHeave < 10; demoMov_shakeHeave++)
     {
         delay(60);
-        movOK = hx_servo.calcServoAngles({0, 0, demoMov_shakeZ, 0, 0, 0}, servo_angles);
+        movOK = hx_servo.calcServoAngles({0, 0, shakeVal, 0, 0, 0}, servo_angles);
         hx_servo.updateServos(movOK);
-        demoMov_shakeZ = -demoMov_shakeZ;
+        shakeVal = -shakeVal;
     }
 
     delay(wait);
@@ -165,7 +165,7 @@ void Hexapod_Demo::demoMov_shake()
     movOK = hx_servo.home(servo_angles);
     hx_servo.updateServos(movOK);
 
-    Serial.println("demoMov_shake DONE");
+    Serial.println("demoMov_shakeHeave DONE");
 }
 
 /**
