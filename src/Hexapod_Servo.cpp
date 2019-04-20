@@ -1,6 +1,7 @@
 #include <Hexapod_Servo.h>
 
 extern angle_t servo_angles[NB_SERVOS];
+extern Hexapod_GPIO hx_gpio;
 
 /**
  *
@@ -45,7 +46,7 @@ void Hexapod_Servo::updateServos(int8_t movOK)
     else
     {
         // Error handling.
-        SET_LED;
+        hx_gpio.setBuiltInLED();
         nbMovNOK++;
         NOKrate = (nbMovNOK / nbMov) * (double)100.0;
         Serial.printf("%10lu", millis());
@@ -56,12 +57,7 @@ void Hexapod_Servo::updateServos(int8_t movOK)
     }
 
     // Switch off LED.
-    static unsigned long T1 = millis();
-    if (millis() - T1 > 20)
-    {
-        CLEAR_LED;
-        T1 = millis();
-    }
+    hx_gpio.clearBuiltInLEDDelayed(20);
 }
 
 /**

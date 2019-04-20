@@ -2,6 +2,7 @@
 
 extern angle_t servo_angles[NB_SERVOS];
 extern Hexapod_Servo hx_servo;
+extern Hexapod_GPIO hx_gpio;
 
 /**
  *
@@ -81,19 +82,14 @@ void Hexapod_Joystick::joystickControl()
         else if (joyMode == 2)
             setLimits(PITCH_MIN, PITCH_MAX, PITCH_MID, ROLL_MIN, ROLL_MAX, ROLL_MID);
 
+        // Blink built in LED (joyMode + 1) times.
+        hx_gpio.blinkBuitInLED(joyMode + 1, 150, 75);
+
         // Debounce.
         while (getZ())
         {
         }
 
-        // Blink.
-        for (uint8_t cnt = 0; cnt < 3; cnt++)
-        {
-            SET_LED;
-            delay(20);
-            CLEAR_LED;
-            delay(100);
-        }
         return;
     }
 

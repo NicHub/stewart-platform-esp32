@@ -36,20 +36,18 @@
 
 // Usefull functions.
 #define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
-#define SET_LED digitalWrite(LED_BUILTIN, LOW);
-#define CLEAR_LED digitalWrite(LED_BUILTIN, HIGH);
 
 // External libs.
 #include <Arduino.h>
 #include <P19.h>
 #include <ESP32Servo.h>
 
-
 // Hexapod libs.
 #include <Hexapod_Joystick.h>
 #include <Hexapod_Kinematics.h>
 #include <Hexapod_Servo.h>
 #include <Hexapod_Serial.h>
+#include <Hexapod_GPIO.h>
 #include <Hexapod_Demo.h>
 
 #endif //__MAIN_H__

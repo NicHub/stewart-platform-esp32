@@ -48,30 +48,24 @@ Hexapod_Servo hx_servo;
 Hexapod_Serial hx_serial;
 Hexapod_Joystick hx_joystick(X_PIN, Y_PIN, Z_PIN);
 Hexapod_Demo hx_demo;
-
-/**
- *
- */
-void setupGPIO()
-{
-    pinMode(LED_BUILTIN, OUTPUT);
-    CLEAR_LED;
-}
+Hexapod_GPIO hx_gpio;
 
 /**
  *
  */
 void setup()
 {
-    setupGPIO();
+    // Setup.
+    hx_gpio.setupGPIO();
     hx_serial.setupSerial();
     hx_servo.setupServo();
     hx_joystick.setupJoystick();
 
-    hx_demo.demoMov_circles(5);
+    // Demo movements.
+    hx_demo.demoMov_circles(3);
     hx_demo.demoMov_shakeHeave();
-    hx_demo.testCalcSpeed(2);
     // hx_demo.demoMov_MinMaxAllAxis();
+    hx_demo.testCalcSpeed(2);
 }
 
 /**

@@ -10,7 +10,6 @@ class Hexapod_Servo : public Hexapod_Kinematics
 
   public:
     Hexapod_Servo();
-    void test();
     void setupServo();
     void updateServos(int8_t);
     void printServoAngles();
