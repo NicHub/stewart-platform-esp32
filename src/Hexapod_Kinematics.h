@@ -42,14 +42,14 @@
 #endif
 
 // Choose configuration file.
-#define HEXAPOD_CONFIG 2
+#define HEXAPOD_CONFIG 1
 
 #if HEXAPOD_CONFIG == 1
-#include "Hexapod_KinematicsConfig_1.h"
+#include "Hexapod_Config_1.h"
 #elif HEXAPOD_CONFIG == 2
-#include "Hexapod_KinematicsConfig_2.h"
+#include "Hexapod_Config_2.h"
 #elif HEXAPOD_CONFIG == 3
-#include "Hexapod_KinematicsConfig_3.h"
+#include "Hexapod_Config_3.h"
 #endif
 
 // angle_t

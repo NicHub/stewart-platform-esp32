@@ -34,7 +34,7 @@
 #include <main.h>
 
 // Servo pins are defined in
-// Hexapod_KinematicsConfig_`x`.h
+// Hexapod_Config_`x`.h
 // (where `x` is the file number)
 
 // Joystick pins.
