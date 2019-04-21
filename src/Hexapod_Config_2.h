@@ -91,7 +91,7 @@ const double SURGE_MAX = 34;
 const double SURGE_MID = (SURGE_MAX + SURGE_MIN) / 2;
 const double SURGE_BAND = SURGE_MAX - SURGE_MIN;
 
-const double HEAVE_MIN = -11;
+const double HEAVE_MIN = -9;
 const double HEAVE_MAX = 11;
 const double HEAVE_MID = (HEAVE_MAX + HEAVE_MIN) / 2;
 const double HEAVE_BAND = HEAVE_MAX - HEAVE_MIN;

@@ -118,9 +118,13 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
     {
         for (uint8_t cnt = 0; cnt < nb_points; cnt++)
         {
+            static unsigned long T1;
+            while ((millis() - T1) < 8UL)
+            {
+            }
+            T1 = millis();
             movOK = hx_servo.calcServoAngles(coords[cnt], servo_angles);
-            hx_servo.updateServos(movOK);
-            delay(8);
+            hx_servo.updateServos(movOK, 0UL);
         }
     }
     Serial.println("demoMov_circles DONE");
@@ -147,7 +151,11 @@ void Hexapod_Demo::demoMov_shakeHeave()
     delay(wait);
     for (uint8_t demoMov_shakeHeave = 0; demoMov_shakeHeave < 10; demoMov_shakeHeave++)
     {
-        delay(60);
+        static unsigned long T1;
+        while ((millis() - T1) < 60UL)
+        {
+        }
+        T1 = millis();
         movOK = hx_servo.calcServoAngles({0, 0, shakeVal, 0, 0, 0}, servo_angles);
         hx_servo.updateServos(movOK);
         shakeVal = -shakeVal;

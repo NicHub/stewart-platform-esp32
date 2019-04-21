@@ -46,7 +46,7 @@ void Hexapod_Serial::setupSerial()
  * This will keep the axes unmoving for the period of time in seconds
  * specified by the P number. It is an error if the P number is negative.
  */
-void Hexapod_Serial::pause(float seconds)
+void Hexapod_Serial::pause(double seconds)
 {
     if (seconds >= 0.001)
         delay(seconds * 1000);
@@ -57,7 +57,7 @@ void Hexapod_Serial::pause(float seconds)
 /**
  *
  **/
-void Hexapod_Serial::line(float newx, float newy, float newz, float newa, float newb, float newc)
+void Hexapod_Serial::line(double newx, double newy, double newz, double newa, double newb, double newc)
 {
     position(newx, newy, newz, newa, newb, newc);
 
@@ -66,7 +66,7 @@ void Hexapod_Serial::line(float newx, float newy, float newz, float newa, float 
     movOK = hx_servo.calcServoAngles(
         {px, py, pz, radians(pa), radians(pb), radians(pc)},
         servo_angles);
-    hx_servo.updateServos(movOK);
+    hx_servo.updateServos(movOK, 0UL);
 
     where();
 }
@@ -140,19 +140,19 @@ void Hexapod_Serial::where()
 }
 
 /**
- * Look for character /code/ in the buffer and read the float that immediately follows it.
+ * Look for character /code/ in the buffer and read the double that immediately follows it.
  * @return the value found.  If nothing is found, /val/ is returned.
  * @input code the character to look for.
  * @input val the return value if /code/ is not found.
  **/
-float Hexapod_Serial::parseNumber(const char code, float val)
+double Hexapod_Serial::parseNumber(const char code, double val)
 {
     char *ptr = buffer; // start at the beginning of buffer
     while ((long)ptr > 1 && (*ptr) && (long)ptr < (long)buffer + sofar)
     { // walk to the end
         if (*ptr == code)
         {                         // if you find code on your walk,
-            return atof(ptr + 1); // convert the digits that follow into a float and return it
+            return atof(ptr + 1); // convert the digits that follow into a double and return it
         }
         ptr = strchr(ptr, ' ') + 1; // take a step from here to the letter after the next space
     }
@@ -164,7 +164,7 @@ float Hexapod_Serial::parseNumber(const char code, float val)
  * @input npx new position x
  * @input npy new position y
  */
-void Hexapod_Serial::position(float npx, float npy, float npz, float npa, float npb, float npc)
+void Hexapod_Serial::position(double npx, double npy, double npz, double npa, double npb, double npc)
 {
     px = npx;
     py = npy;
@@ -175,11 +175,11 @@ void Hexapod_Serial::position(float npx, float npy, float npz, float npa, float 
 }
 
 /**
- * write a string followed by a float to the serial line.  Convenient for debugging.
+ * write a string followed by a double to the serial line.  Convenient for debugging.
  * @input code the string.
- * @input val the float.
+ * @input val the double.
  */
-void Hexapod_Serial::output(const char code, float val)
+void Hexapod_Serial::output(const char code, double val)
 {
     Serial.print(code);
     Serial.print(val);

@@ -27,7 +27,7 @@ void Hexapod_Servo::setupServo()
 /**
  * Set servo values to the angles in servo_angles[].
  */
-void Hexapod_Servo::updateServos(int8_t movOK)
+void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
 {
     // Statistics of errors.
     static double nbMov = 0;
@@ -37,6 +37,15 @@ void Hexapod_Servo::updateServos(int8_t movOK)
 
     if (movOK == 0)
     {
+        // Do not update too quickly. This helps a little to prevent
+        // the servos from going crazy. safetyWait_ms must be set to 0
+        // when going on a smooth trajectory with a lot of points.
+        static unsigned long T1;
+        while ((millis() - T1) < safetyWait_ms)
+        {
+        }
+        T1 = millis();
+
         // Write to servos.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {

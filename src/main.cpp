@@ -58,8 +58,8 @@ void setup()
     hx_joystick.setupJoystick();
 
     // Demo movements.
-    // hx_demo.demoMov_circles(3);
-    // hx_demo.demoMov_shakeHeave();
+    hx_demo.demoMov_circles(3);
+    hx_demo.demoMov_shakeHeave();
     // hx_demo.demoMov_MinMaxAllAxis();
     // hx_demo.testCalcSpeed(2);
 }
