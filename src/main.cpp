@@ -33,10 +33,6 @@
 
 #include <main.h>
 
-// Servo pins are defined in
-// Hexapod_Config_`x`.h
-// (where `x` is the file number)
-
 // Joystick pins.
 #define X_PIN 26
 #define Y_PIN 12
@@ -44,11 +40,12 @@
 
 // Global variables.
 angle_t servo_angles[NB_SERVOS];
-Hexapod_Servo hx_servo;
+Hexapod_Servo hx_servo; // Servo pins are defined in Hexapod_Config_`x`.h (where `x` is the file number)
 Hexapod_Serial hx_serial;
 Hexapod_Joystick hx_joystick(X_PIN, Y_PIN, Z_PIN);
 Hexapod_Demo hx_demo;
 Hexapod_GPIO hx_gpio;
+Hexapod_GCode hx_gcode;
 
 /**
  *
@@ -62,10 +59,10 @@ void setup()
     hx_joystick.setupJoystick();
 
     // Demo movements.
-    hx_demo.demoMov_circles(3);
-    hx_demo.demoMov_shakeHeave();
+    // hx_demo.demoMov_circles(3);
+    // hx_demo.demoMov_shakeHeave();
     // hx_demo.demoMov_MinMaxAllAxis();
-    hx_demo.testCalcSpeed(2);
+    // hx_demo.testCalcSpeed(2);
 }
 
 /**
@@ -78,6 +75,6 @@ void loop()
 #endif
 
 #if ENABLE_SERIAL_READ
-    hx_serial.serialControl();
+    hx_serial.serialRead();
 #endif
 }
