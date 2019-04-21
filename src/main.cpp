@@ -45,7 +45,6 @@ Hexapod_Serial hx_serial;
 Hexapod_Joystick hx_joystick(X_PIN, Y_PIN, Z_PIN);
 Hexapod_Demo hx_demo;
 Hexapod_GPIO hx_gpio;
-Hexapod_GCode hx_gcode;
 
 /**
  *

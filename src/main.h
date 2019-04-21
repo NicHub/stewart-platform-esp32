@@ -48,6 +48,5 @@
 #include <Hexapod_Serial.h>
 #include <Hexapod_GPIO.h>
 #include <Hexapod_Demo.h>
-#include <Hexapod_GCode.h>
 
 #endif //__MAIN_H__
