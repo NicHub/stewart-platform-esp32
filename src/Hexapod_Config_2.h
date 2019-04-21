@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef __Hexapod_Config_H__
-#define __Hexapod_Config_H__
+#ifndef __HEXAPOD_CONFIG_H__
+#define __HEXAPOD_CONFIG_H__
 
 /*
  * ======== SERVO SETTINGS ==========

@@ -39,7 +39,6 @@
 
 // External libs.
 #include <Arduino.h>
-#include <P19.h>
 #include <ESP32Servo.h>
 
 // Hexapod libs.
