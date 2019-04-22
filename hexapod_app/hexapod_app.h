@@ -36,8 +36,7 @@
 #include <math.h>
 #include <stdint.h>
 
-#ifndef __TEST_H__
-#define __TEST_H__
+#pragma once
 
 #define PI 3.1415926535897932384626433832795
 #define HALF_PI 1.5707963267948966192313216916398
@@ -46,5 +45,3 @@
 #define radians(deg) ((deg)*DEG_TO_RAD)
 #define degrees(rad) ((rad)*RAD_TO_DEG)
 #define constrain(amt, low, high) ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
-
-#endif //__TEST_H__

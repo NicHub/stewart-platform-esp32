@@ -1,20 +1,7 @@
 /**
  * S T E W A R T    P L A T F O R M    O N    E S P 3 2
  *
- * Based on
- * 6dof-stewduino
- * Copyright (C) 2018  Philippe Desrosiers
- * https://github.com/xoxota99/stewy
- *
- * Derived from the work of Daniel Waters
- * https://www.youtube.com/watch?v=1jrP3_1ML9M
- *
- * Modified by Nicolas Jeanmonod
- * ouilogique.com
- * March 2019
- *
- *
- * Copyright (C) 2019  Nicolas Jeanmonod
+ * Copyright (C) 2019  Nicolas Jeanmonod, ouilogique.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +18,7 @@
  *
  */
 
-#ifndef __HEXAPOD_KINEMATICS_H__
-#define __HEXAPOD_KINEMATICS_H__
+#pragma once
 
 // This library can be compiled for ESP32 or for a desktop application.
 #ifdef PLATFORMIO
@@ -171,5 +157,3 @@ class Hexapod_Kinematics
         {-B_RAD * cos(AXIS3 - THETA_B), B_RAD *sin(AXIS3 - THETA_B)},
         {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
 };
-
-#endif //__HEXAPOD_KINEMATICS_H__

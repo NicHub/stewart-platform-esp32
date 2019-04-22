@@ -1,24 +1,11 @@
 /**
- * S T E W A R T    P L A T F O R M    O N    E S P 1 2
+ * S T E W A R T    P L A T F O R M    O N    E S P 3 2
  *
- * Based on
- * 6dof-stewduino
- * Copyright (C) 2018  Philippe Desrosiers
- * https://github.com/xoxota99/stewy
- *
- * Derived from the work of Daniel Waters
- * https://www.youtube.com/watch?v=1jrP1_1ML9M
- *
- * Modified by Nicolas Jeanmonod
- * ouilogique.com
- * March 2019
- *
- *
- * Copyright (C) 2019  Nicolas Jeanmonod
+ * Copyright (C) 2019  Nicolas Jeanmonod, ouilogique.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 1 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -31,7 +18,17 @@
  *
  */
 
-#include <main.h>
+// External libs.
+#include <Arduino.h>
+#include <ESP32Servo.h>
+
+// Hexapod libs.
+#include <Hexapod_Demo.h>
+#include <Hexapod_GPIO.h>
+#include <Hexapod_Joystick.h>
+#include <Hexapod_Kinematics.h>
+#include <Hexapod_Serial.h>
+#include <Hexapod_Servo.h>
 
 // Joystick pins.
 #define X_PIN 26

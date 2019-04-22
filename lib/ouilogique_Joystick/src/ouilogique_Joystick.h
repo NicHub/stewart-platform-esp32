@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef __OUILOGIQUE_JOYSTICK_h
-#define __OUILOGIQUE_JOYSTICK_h
+#pragma once
 
 #include <Arduino.h>
 
@@ -75,5 +74,3 @@ public:
      */
   double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
 };
-
-#endif

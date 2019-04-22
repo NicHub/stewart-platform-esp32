@@ -1,20 +1,7 @@
 /**
  * S T E W A R T    P L A T F O R M    O N    E S P 3 2
  *
- * Based on
- * 6dof-stewduino
- * Copyright (C) 2018  Philippe Desrosiers
- * https://github.com/xoxota99/stewy
- *
- * Derived from the work of Daniel Waters
- * https://www.youtube.com/watch?v=1jrP3_1ML9M
- *
- * Modified by Nicolas Jeanmonod
- * ouilogique.com
- * March 2019
- *
- *
- * Copyright (C) 2019  Nicolas Jeanmonod
+ * Copyright (C) 2019  Nicolas Jeanmonod, ouilogique.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +19,10 @@
  */
 
 #include <Hexapod_Demo.h>
+#include <Hexapod_Servo.h>
+#include <Hexapod_Kinematics.h>
+
+#define COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
 
 extern angle_t servo_angles[NB_SERVOS];
 extern Hexapod_Servo hx_servo;
