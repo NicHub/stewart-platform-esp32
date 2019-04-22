@@ -143,7 +143,7 @@ void Hexapod_Demo::demoMov_shakeHeave()
     for (uint8_t demoMov_shakeHeave = 0; demoMov_shakeHeave < 10; demoMov_shakeHeave++)
     {
         static unsigned long T1;
-        while ((millis() - T1) < 60UL)
+        while ((millis() - T1) < 1500UL) // 60UL for fast servos.
         {
         }
         T1 = millis();

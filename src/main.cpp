@@ -56,7 +56,9 @@ void setup()
 
     // Demo movements.
     hx_demo.demoMov_circles(3);
-    hx_demo.demoMov_shakeHeave();
+    uint8_t movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);
+    hx_servo.updateServos(movOK);
+    // hx_demo.demoMov_shakeHeave();
     // hx_demo.demoMov_MinMaxAllAxis();
     // hx_demo.testCalcSpeed(2);
 }

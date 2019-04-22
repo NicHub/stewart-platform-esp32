@@ -28,24 +28,24 @@
 
 // Which servos are reversed. 1 = reversed, 0 = normal.
 // !! First servo is of another type, that’s why it is set to 0 !!
-const int8_t SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
+const int8_t SERVO_REVERSE[6] = {1, 0, 1, 0, 1, 0};
 
-const double SERVO_MIN_ANGLE = radians(0.0);   // These values don’t seem to be taken into account correctly.
-const double SERVO_MAX_ANGLE = radians(180.0); // These values don’t seem to be taken into account correctly.
+const double SERVO_MIN_ANGLE = radians(10.0);   // These values don’t seem to be taken into account correctly.
+const double SERVO_MAX_ANGLE = radians(170.0); // These values don’t seem to be taken into account correctly.
 const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
 
-const double SERVO_MIN_US = 600;  // default  500 (library 4744/ESP32Servo)
-const double SERVO_MAX_US = 2300; // default 2500 (library 4744/ESP32Servo)
+const double SERVO_MIN_US = 700;  // default  500 (library 4744/ESP32Servo)
+const double SERVO_MAX_US = 2100; // default 2500 (library 4744/ESP32Servo)
 const double SERVO_MID_US = (SERVO_MIN_US + SERVO_MAX_US) / 2;
 
 // Trim values, in microseconds, AFTER reversing
 const int ANGLE_TRIM[] = {
+    -130,
+    100,
+    20,
     0,
-    0,
-    0,
-    0,
-    0,
-    0};
+    200,
+    100};
 
 // Pin numbers for each servo signal.
 const int SERVO_PINS[] = {
@@ -77,7 +77,7 @@ const double SURGE_MAX = 34;
 const double SURGE_MID = (SURGE_MAX + SURGE_MIN) / 2;
 const double SURGE_BAND = SURGE_MAX - SURGE_MIN;
 
-const double HEAVE_MIN = -11;
+const double HEAVE_MIN = -9;
 const double HEAVE_MAX = 11;
 const double HEAVE_MID = (HEAVE_MAX + HEAVE_MIN) / 2;
 const double HEAVE_BAND = HEAVE_MAX - HEAVE_MIN;
@@ -100,8 +100,8 @@ const double YAW_BAND = YAW_MAX - YAW_MIN;
 const double THETA_P = radians(49.1); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
 const double THETA_B = radians(26.0); // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
 const double P_RAD = 99.55 / 2;       // Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
-const double B_RAD = 138.13 / 2;      // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
-const double ARM_LENGTH = 15.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
+const double B_RAD = 139 / 2;         // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
+const double ARM_LENGTH = 22.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;      // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
 const double Z_HOME = 135.02311;      // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
 
