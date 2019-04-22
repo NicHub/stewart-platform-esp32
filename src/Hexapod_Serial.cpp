@@ -31,12 +31,13 @@ Hexapod_Serial::Hexapod_Serial()
 }
 
 /**
- * prepares the input buffer to receive a new message and tells the serial connected device it is ready for more.
+ * Prepares the input buffer to receive a new message
+ * and tells the serial connected device it is ready for more.
  */
 void Hexapod_Serial::ready()
 {
-    sofar = 0;              // clear input buffer
-    Serial.println(F(">")); // signal ready to receive input
+    sofar = 0;              // Clear input buffer.
+    Serial.println(F(">")); // Signal ready to receive input.
 }
 
 /**
@@ -57,11 +58,34 @@ void Hexapod_Serial::setupSerial()
 }
 
 /**
- * pause (dwell)
+ *
+ **/
+void Hexapod_Serial::G0(double newx, double newy, double newz,
+                        double newa, double newb, double newc)
+{
+    px = newx;
+    py = newy;
+    pz = newz;
+    pa = newa;
+    pb = newb;
+    pc = newc;
+
+    static int8_t movOK;
+    movOK = -1;
+    movOK = hx_servo.calcServoAngles(
+        {px, py, pz, radians(pa), radians(pb), radians(pc)},
+        servo_angles);
+    hx_servo.updateServos(movOK, 0UL);
+
+    M114();
+}
+
+/**
+ * Pause (dwell)
  * This will keep the axes unmoving for the period of time in seconds
  * specified by the P number. It is an error if the P number is negative.
  */
-void Hexapod_Serial::pause(double seconds)
+void Hexapod_Serial::G4P(double seconds)
 {
     if (seconds >= 0.001)
         delay(seconds * 1000);
@@ -71,79 +95,24 @@ void Hexapod_Serial::pause(double seconds)
 
 /**
  *
- **/
-void Hexapod_Serial::line(double newx, double newy, double newz, double newa, double newb, double newc)
+ */
+void Hexapod_Serial::G90()
 {
-    position(newx, newy, newz, newa, newb, newc);
-
-    static int8_t movOK;
-    movOK = -1;
-    movOK = hx_servo.calcServoAngles(
-        {px, py, pz, radians(pa), radians(pb), radians(pc)},
-        servo_angles);
-    hx_servo.updateServos(movOK, 0UL);
-
-    where();
+    mode_abs = 1;
 }
 
 /**
- * Read the input buffer and find any recognized commands.  One G or M command per line.
+ *
  */
-void Hexapod_Serial::processCommand()
+void Hexapod_Serial::G91()
 {
-    int cmd = parseNumber('G', -1);
-    switch (cmd)
-    {
-    case 0:
-    {
-        line(parseNumber('X', (mode_abs ? px : 0)) + (mode_abs ? 0 : px),
-             parseNumber('Y', (mode_abs ? py : 0)) + (mode_abs ? 0 : py),
-             parseNumber('Z', (mode_abs ? pz : 0)) + (mode_abs ? 0 : pz),
-             parseNumber('A', (mode_abs ? pa : 0)) + (mode_abs ? 0 : pa),
-             parseNumber('B', (mode_abs ? pb : 0)) + (mode_abs ? 0 : pb),
-             parseNumber('C', (mode_abs ? pb : 0)) + (mode_abs ? 0 : pc));
-        break;
-    }
-    case 4:
-        pause(parseNumber('P', 0));
-        break; // dwell in seconds
-    case 90:
-        mode_abs = 1;
-        break; // absolute mode
-    case 91:
-        mode_abs = 0;
-        break; // relative mode
-    case 92:   // set logical position
-        position(
-            parseNumber('X', 0),
-            parseNumber('Y', 0),
-            parseNumber('Z', 0),
-            parseNumber('A', 0),
-            parseNumber('B', 0),
-            parseNumber('C', 0));
-        break;
-    default:
-        break;
-    }
-
-    cmd = parseNumber('M', -1);
-    switch (cmd)
-    {
-    case 100:
-        help();
-        break;
-    case 114:
-        where();
-        break;
-    default:
-        break;
-    }
+    mode_abs = 0;
 }
 
 /**
- * print the current position, feedrate, and absolute mode.
+ * Print the current coordinates and absolute mode.
  */
-void Hexapod_Serial::where()
+void Hexapod_Serial::M114()
 {
     output('X', px);
     output('Y', py);
@@ -152,6 +121,78 @@ void Hexapod_Serial::where()
     output('B', pb);
     output('C', pc);
     Serial.println(mode_abs ? "ABS" : "REL");
+}
+
+/**
+ * write a string followed by a double to the serial line.  Convenient for debugging.
+ * @input code the string.
+ * @input val the double.
+ */
+void Hexapod_Serial::output(const char code, double val)
+{
+    Serial.print(code);
+    Serial.print(val);
+    Serial.print(" ");
+}
+
+/**
+ * Read the input buffer and find any recognized commands.
+ * One G or M command per line.
+ */
+void Hexapod_Serial::processCommand()
+{
+    int cmd = parseNumber('G', -1);
+    switch (cmd)
+    {
+
+    // G0 [X/Y/Z/A/B/C]; - Rapid linear motion. X, Y, Z in mm | A, B, C in degrees.
+    case 0:
+    {
+        G0(parseNumber('X', (mode_abs ? px : 0)) + (mode_abs ? 0 : px),
+           parseNumber('Y', (mode_abs ? py : 0)) + (mode_abs ? 0 : py),
+           parseNumber('Z', (mode_abs ? pz : 0)) + (mode_abs ? 0 : pz),
+           parseNumber('A', (mode_abs ? pa : 0)) + (mode_abs ? 0 : pa),
+           parseNumber('B', (mode_abs ? pb : 0)) + (mode_abs ? 0 : pb),
+           parseNumber('C', (mode_abs ? pb : 0)) + (mode_abs ? 0 : pc));
+        break;
+    }
+
+    // G4 P[seconds]; - Pause (dwell) in seconds.
+    case 4:
+        G4P(parseNumber('P', 0));
+        break;
+
+    // G90; - Go into absolute distance mode.
+    case 90:
+        G90();
+        break;
+
+    // G91; - Go into relative distance mode.
+    case 91:
+        G91();
+        break;
+
+    default:
+        break;
+    }
+
+    cmd = parseNumber('M', -1);
+    switch (cmd)
+    {
+
+    // M100 | Print help message.
+    case 100:
+        M100();
+        break;
+
+    // M114 | Print current coordinates.
+    case 114:
+        M114();
+        break;
+
+    default:
+        break;
+    }
 }
 
 /**
@@ -175,48 +216,19 @@ double Hexapod_Serial::parseNumber(const char code, double val)
 }
 
 /**
- * Set the logical position
- * @input npx new position x
- * @input npy new position y
- */
-void Hexapod_Serial::position(double npx, double npy, double npz, double npa, double npb, double npc)
-{
-    px = npx;
-    py = npy;
-    pz = npz;
-    pa = npa;
-    pb = npb;
-    pc = npc;
-}
-
-/**
- * write a string followed by a double to the serial line.  Convenient for debugging.
- * @input code the string.
- * @input val the double.
- */
-void Hexapod_Serial::output(const char code, double val)
-{
-    Serial.print(code);
-    Serial.print(val);
-    Serial.print(" ");
-}
-
-/**
  * display helpful information
  */
-void Hexapod_Serial::help()
+void Hexapod_Serial::M100()
 {
-    Serial.print(F("GcodeCNCDemo6AxisV2 "));
+    Serial.print(F("# HEXAPOD G-CODE PARSER #"));
     Serial.println(VERSION);
-    Serial.println(F("Commands:"));
-    Serial.println(F("G00/G01 [X/Y/Z/E(steps)] [F(feedrate)]; - linear move"));
-    Serial.println(F("G04 P[seconds]; - delay"));
+    Serial.println(F("## COMMANDS ##"));
+    Serial.println(F("// G0 [X/Y/Z/A/B/C]; - Rapid linear motion. X, Y, Z in mm | A, B, C in degrees."));
+    Serial.println(F("G4 P[seconds]; - Pause (dwell) in seconds"));
     Serial.println(F("G90; - absolute mode"));
     Serial.println(F("G91; - relative mode"));
-    Serial.println(F("G92 [X/Y/Z/E(steps)]; - change logical position"));
-    Serial.println(F("M18; - disable motors"));
     Serial.println(F("M100; - this help message"));
-    Serial.println(F("M114; - report position and feedrate"));
+    Serial.println(F("M114; - report position"));
     Serial.println(F("All commands must end with a newline."));
 }
 
@@ -225,19 +237,17 @@ void Hexapod_Serial::help()
  */
 void Hexapod_Serial::serialRead()
 {
-    // listen for serial commands
     while (Serial.available() > 0)
-    {                           // if something is available
-        char c = Serial.read(); // get it
-        // Serial.print(c);        // repeat it back so I know you got the message
+    {
+        char c = Serial.read();
         if (sofar < MAX_BUF - 1)
-            buffer[sofar++] = c; // store it
+            buffer[sofar++] = c;
         if (c == '\n')
         {
-            // entire message received
-            buffer[sofar] = 0;       // end the buffer so string functions work right
-            Serial.print(F("\r\n")); // echo a return character for humans
-            processCommand();        // do something with the command
+            // End the buffer so string functions work right.
+            buffer[sofar] = 0;
+            Serial.print(F("\r\n"));
+            processCommand();
             ready();
         }
     }

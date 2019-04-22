@@ -42,16 +42,14 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  * Calculate the servo angles in radians, degrees and in pulse width (PWM)
  * given the desired target platform coordinates.
  *
- * INPUT
- * coord : the desired target platform coordinates.
+ * @param coord : the desired target platform coordinates.
  * A struct containing sway, surge, heave in mm
  * and pitch, roll and yaw in radians.
  *
- * OUTPUT
- * servo_angles : pointer to an array of struct containing
- * the angles in radians, degrees and in pulse width (PWM).
+ * @param servo_angles : pointer to an array of struct containing
+ * the calculated servos angles in radians, degrees and in pulse width (PWM).
  *
- * RETURNS
+ * @return
  * Returns = 0 if OK
  * Returns > 0 if Warning
  * Returns < 0 if Error
@@ -112,7 +110,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
             break;
         }
 
-        // Compute intermediate values.
+        // Calculation of intermediate values.
         // (~1 µs)
         k = d2 -
             (ROD_LENGTH * ROD_LENGTH) +

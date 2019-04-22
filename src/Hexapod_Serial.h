@@ -35,15 +35,15 @@ class Hexapod_Serial
     long line_number = 0;
 
     void ready();
-    void pause(double seconds);
     void processCommand();
     double parseNumber(const char code, double val);
-    void feedrate(double nfr);
-    void position(double npx, double npy, double npz, double npa, double npb, double npc);
-    void where();
     void output(const char code, double val);
-    void help();
-    void line(double newx, double newy, double newz, double newa, double newb, double newc);
+    void G0(double newx, double newy, double newz, double newa, double newb, double newc);
+    void G4P(double seconds);
+    void G90();
+    void G91();
+    void M100();
+    void M114();
 
   public:
     Hexapod_Serial();

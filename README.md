@@ -38,16 +38,19 @@ ESP32 Brownout detector was triggered
 
 ## Kinematics
 
-Kinematics based on
-6dof-stewduino
+Kinematics based on 6dof-stewduino
+
 Copyright (C) 2018  Philippe Desrosiers
+
 https://github.com/xoxota99/stewy
 
 Derived from the work of Daniel Waters
+
 https://www.youtube.com/watch?v=1jrP3_1ML9M
 
 
 ## Serial buffer for G-Code
 
 Original implementation from MarginallyClever
+
 https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield
