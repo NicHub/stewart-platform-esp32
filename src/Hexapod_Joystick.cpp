@@ -72,7 +72,7 @@ void Hexapod_Joystick::joystickControl()
     static double lastJoyY = 0;
     static double lastJoyZ = 0;
     static uint8_t joyMode = 0;
-    static const uint8_t nbJoyMode = 3;
+    static const uint8_t nbJoyMode = 4;
 
     joyX = getX();
     joyY = getY();
@@ -102,6 +102,8 @@ void Hexapod_Joystick::joystickControl()
         else if (joyMode == 1)
             setLimits(YAW_MIN, YAW_MAX, YAW_MID, HEAVE_MIN, HEAVE_MAX, HEAVE_MID);
         else if (joyMode == 2)
+            setLimits(YAW_MIN, YAW_MAX, YAW_MID, HEAVE_MIN, HEAVE_MAX, HEAVE_MID);
+        else if (joyMode == 3)
             setLimits(PITCH_MIN, PITCH_MAX, PITCH_MID, ROLL_MIN, ROLL_MAX, ROLL_MID);
 
         // Blink built in LED (joyMode + 1) times.
@@ -124,9 +126,12 @@ void Hexapod_Joystick::joystickControl()
         // X, Y
         movOK = hx_servo.calcServoAngles({joyX, joyY, 0, 0, 0, 0}, servo_angles);
     else if (joyMode == 1)
-        // Z, tiltZ
-        movOK = hx_servo.calcServoAngles({0, 0, joyY, 0, 0, joyX}, servo_angles);
+        // Z
+        movOK = hx_servo.calcServoAngles({0, 0, joyY, 0, 0, 0}, servo_angles);
     else if (joyMode == 2)
+        // tiltZ
+        movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, joyX}, servo_angles);
+    else if (joyMode == 3)
         // tilt X, tilt Y
         movOK = hx_servo.calcServoAngles({0, 0, 0, joyX, joyY, 0}, servo_angles);
 
