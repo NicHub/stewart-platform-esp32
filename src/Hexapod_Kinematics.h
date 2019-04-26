@@ -50,12 +50,12 @@ typedef struct
 // Platform coordinates.
 typedef struct
 {
-    double sway;  // Translation along X axis (mm)
-    double surge; // Translation along Y axis (mm)
-    double heave; // Translation along Z axis (mm)
-    double pitch; // Rotation around X axis (rad)
-    double roll;  // Rotation around Y axis (rad)
-    double yaw;   // Rotation around Z axis (rad)
+    double hx_x; // Sway, translation along X axis (mm)
+    double hx_y; // Surge, translation along Y axis (mm)
+    double hx_z; // Heave, translation along Z axis (mm)
+    double hx_a; // Pitch, rotation around X axis (rad)
+    double hx_b; // Roll, rotation around Y axis (rad)
+    double hx_c; // Yaw, rotation around Z axis (rad)
 } platform_t;
 
 /**
@@ -65,13 +65,7 @@ class Hexapod_Kinematics
 {
   private:
     // Setpoints (internal states)
-    double
-        _sp_sway = 0,  // Translation along X axis (mm)
-        _sp_surge = 0, // Translation along Y axis (mm)
-        _sp_heave = 0, // Translation along Z axis (mm)
-        _sp_pitch = 0, // Rotation around X axis (rad)
-        _sp_roll = 0,  // Rotation around Y axis (rad)
-        _sp_yaw = 0;   // Rotation around Z axis (rad)
+    platform_t _coord;
 
   public:
     /*
@@ -80,12 +74,12 @@ class Hexapod_Kinematics
     Hexapod_Kinematics(){};
     int8_t home(angle_t *servo_angles);
     int8_t calcServoAngles(platform_t coord, angle_t *servo_angles);
-    double getSway();
-    double getSurge();
-    double getHeave();
-    double getPitch();
-    double getRoll();
-    double getYaw();
+    double getHX_X();
+    double getHX_Y();
+    double getHX_Z();
+    double getHX_A();
+    double getHX_B();
+    double getHX_C();
 
     /*
      * ======== HELPER FUNCTION ==========

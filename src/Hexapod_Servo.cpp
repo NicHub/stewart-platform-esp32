@@ -98,17 +98,17 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
 void Hexapod_Servo::printServoAngles()
 {
     Serial.print("\nSERVO COORD        = ");
-    Serial.print(getSway());
+    Serial.print(getHX_X());
     Serial.print(" ");
-    Serial.print(getSurge());
+    Serial.print(getHX_Y());
     Serial.print(" ");
-    Serial.print(getHeave());
+    Serial.print(getHX_Z());
     Serial.print(" ");
-    Serial.print(getPitch());
+    Serial.print(getHX_A());
     Serial.print(" ");
-    Serial.print(getRoll());
+    Serial.print(getHX_B());
     Serial.print(" ");
-    Serial.print(getYaw());
+    Serial.print(getHX_C());
 
     Serial.print("\nSERVO_ANGLES (rad) = ");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)

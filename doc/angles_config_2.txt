@@ -2,11 +2,11 @@
 STEWART PLATFORM
 
 COMPILATION DATE AND TIME
-Apr 22 2019
-13:53:21
+Apr 25 2019
+09:45:45
 HEXAPOD_CONFIG = 2
 
-   SWAY  SURGE  HEAVE  PITCH   ROLL    YAW  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6
+      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6
 =======================================================================================================================================================
     0.0    0.0    0.0    0.0    0.0    0.0      0        90.000008        90.000008        89.999992        90.000008        89.999992        90.000008
     0.0    0.0   11.0    0.0    0.0    0.0      0       155.651240       155.651240        24.348760       155.651240        24.348760       155.651240

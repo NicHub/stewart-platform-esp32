@@ -67,35 +67,35 @@ const int SERVO_PINS[] = {
   ideal conditions (eg: max for roll when pitch is zero).
 */
 
-const double SWAY_MIN = -33;
-const double SWAY_MAX = 33;
-const double SWAY_MID = (SWAY_MAX + SWAY_MIN) / 2;
-const double SWAY_BAND = SWAY_MAX - SWAY_MIN;
+const double HX_X_MIN = -33;
+const double HX_X_MAX = 33;
+const double HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
+const double HX_X_BAND = HX_X_MAX - HX_X_MIN;
 
-const double SURGE_MIN = -33;
-const double SURGE_MAX = 33;
-const double SURGE_MID = (SURGE_MAX + SURGE_MIN) / 2;
-const double SURGE_BAND = SURGE_MAX - SURGE_MIN;
+const double HX_Y_MIN = -33;
+const double HX_Y_MAX = 33;
+const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
+const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HEAVE_MIN = -15;
-const double HEAVE_MAX = 15;
-const double HEAVE_MID = (HEAVE_MAX + HEAVE_MIN) / 2;
-const double HEAVE_BAND = HEAVE_MAX - HEAVE_MIN;
+const double HX_Z_MIN = -15;
+const double HX_Z_MAX = 15;
+const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
+const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
-const double PITCH_MIN = radians(-17);
-const double PITCH_MAX = radians(17);
-const double PITCH_MID = (PITCH_MAX + PITCH_MIN) / 2;
-const double PITCH_BAND = PITCH_MAX - PITCH_MIN;
+const double HX_A_MIN = radians(-17);
+const double HX_A_MAX = radians(17);
+const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
+const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
-const double ROLL_MIN = radians(-17);
-const double ROLL_MAX = radians(17);
-const double ROLL_MID = (ROLL_MAX + ROLL_MIN) / 2;
-const double ROLL_BAND = ROLL_MAX - ROLL_MIN;
+const double HX_B_MIN = radians(-17);
+const double HX_B_MAX = radians(17);
+const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
+const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
-const double YAW_MIN = radians(-30);
-const double YAW_MAX = radians(30);
-const double YAW_MID = (YAW_MAX + YAW_MIN) / 2;
-const double YAW_BAND = YAW_MAX - YAW_MIN;
+const double HX_C_MIN = radians(-30);
+const double HX_C_MAX = radians(30);
+const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
+const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 
 const double THETA_P = radians(45.25); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
 const double THETA_B = radians(24.5);  // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.

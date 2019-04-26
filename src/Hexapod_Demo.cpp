@@ -41,34 +41,34 @@ void Hexapod_Demo::demoMov_MinMaxAllAxis()
 {
     Serial.println("demoMov_MinMaxAllAxis START");
     const platform_t coords[] = {
-        // sway
-        {SWAY_MAX, 0, 0, 0, 0, 0},
-        {SWAY_MIN, 0, 0, 0, 0, 0},
+        // X sway
+        {HX_X_MAX, 0, 0, 0, 0, 0},
+        {HX_X_MIN, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // surge
-        {0, SURGE_MAX, 0, 0, 0, 0},
-        {0, SURGE_MIN, 0, 0, 0, 0},
+        // Y surge
+        {0, HX_Y_MAX, 0, 0, 0, 0},
+        {0, HX_Y_MIN, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // heave
-        {0, 0, HEAVE_MAX, 0, 0, 0},
-        {0, 0, HEAVE_MIN, 0, 0, 0},
+        // Z heave
+        {0, 0, HX_Z_MAX, 0, 0, 0},
+        {0, 0, HX_Z_MIN, 0, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // pitch
-        {0, 0, 0, PITCH_MAX, 0, 0},
-        {0, 0, 0, PITCH_MIN, 0, 0},
+        // A pitch
+        {0, 0, 0, HX_A_MAX, 0, 0},
+        {0, 0, 0, HX_A_MIN, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // roll
-        {0, 0, 0, 0, ROLL_MAX, 0},
-        {0, 0, 0, 0, ROLL_MIN, 0},
+        // B roll
+        {0, 0, 0, 0, HX_B_MAX, 0},
+        {0, 0, 0, 0, HX_B_MIN, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // yaw
-        {0, 0, 0, 0, 0, YAW_MAX},
-        {0, 0, 0, 0, 0, YAW_MIN},
+        // C yaw
+        {0, 0, 0, 0, 0, HX_C_MAX},
+        {0, 0, 0, 0, 0, HX_C_MIN},
         {0, 0, 0, 0, 0, 0}};
 
     int8_t movOK = -1;
@@ -93,7 +93,7 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
     Serial.println("demoMov_circles START");
 
     const uint8_t nb_points = 90;
-    const double radius = SWAY_MAX;
+    const double radius = HX_X_MAX;
     const double angleInc = TWO_PI / nb_points;
     double angle = 0;
     platform_t coords[nb_points];
@@ -127,16 +127,16 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
 void Hexapod_Demo::demoMov_shakeHeave()
 {
     Serial.println("demoMov_shakeHeave START");
-    double shakeVal = HEAVE_MIN;
+    double shakeVal = HX_Z_MIN;
     int8_t movOK = -1;
     const uint32_t wait = 200;
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
+    movOK = hx_servo.calcServoAngles({0, 0, HX_Z_MAX, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MIN, 0, 0, 0}, servo_angles);
+    movOK = hx_servo.calcServoAngles({0, 0, HX_Z_MIN, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
@@ -153,11 +153,11 @@ void Hexapod_Demo::demoMov_shakeHeave()
     }
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
+    movOK = hx_servo.calcServoAngles({0, 0, HX_Z_MAX, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
-    movOK = hx_servo.calcServoAngles({0, 0, HEAVE_MIN, 0, 0, 0}, servo_angles);
+    movOK = hx_servo.calcServoAngles({0, 0, HX_Z_MIN, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
 
     delay(wait);
@@ -195,12 +195,12 @@ void Hexapod_Demo::testCalculations()
     Serial.print("\n0, 0, 0, 0, 0, 0 ");
     hx_servo.printServoAngles();
 
-    hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
-    Serial.print("\n0, 0, HEAVE_MAX, 0, 0, 0");
+    hx_servo.calcServoAngles({0, 0, HX_Z_MAX, 0, 0, 0}, servo_angles);
+    Serial.print("\n0, 0, HX_Z_MAX, 0, 0, 0");
     hx_servo.printServoAngles();
 
-    hx_servo.calcServoAngles({0, 0, HEAVE_MIN, 0, 0, 0}, servo_angles);
-    Serial.print("\n0, 0, HEAVE_MIN, 0, 0, 0");
+    hx_servo.calcServoAngles({0, 0, HX_Z_MIN, 0, 0, 0}, servo_angles);
+    Serial.print("\n0, 0, HX_Z_MIN, 0, 0, 0");
     hx_servo.printServoAngles();
 }
 
@@ -217,7 +217,7 @@ void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
     for (uint16_t cid = 0; cid < nb_iter; cid++)
     {
         T1 = micros();
-        hx_servo.calcServoAngles({0, 0, HEAVE_MAX, 0, 0, 0}, servo_angles);
+        hx_servo.calcServoAngles({0, 0, HX_Z_MAX, 0, 0, 0}, servo_angles);
         T2 = micros();
         TTot += (T2 - T1);
     }

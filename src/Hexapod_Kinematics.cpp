@@ -43,8 +43,8 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  * given the desired target platform coordinates.
  *
  * @param coord : the desired target platform coordinates.
- * A struct containing sway, surge, heave in mm
- * and pitch, roll and yaw in radians.
+ * A struct containing X (sway), Y (surge), Z (heave) in mm
+ * and A (pitch), B (roll) and C (yaw) in radians.
  *
  * @param servo_angles : pointer to an array of struct containing
  * the calculated servos angles in radians, degrees and in pulse width (PWM).
@@ -64,12 +64,12 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
     // Intermediate values, to avoid recalculating sin and cos.
     // (3 µs).
-    double cr = cos(coord.roll),
-           cp = cos(coord.pitch),
-           cy = cos(coord.yaw),
-           sr = sin(coord.roll),
-           sp = sin(coord.pitch),
-           sy = sin(coord.yaw);
+    double cosA = cos(coord.hx_a),
+           cosB = cos(coord.hx_b),
+           cosC = cos(coord.hx_c),
+           sinA = sin(coord.hx_a),
+           sinB = sin(coord.hx_b),
+           sinC = sin(coord.hx_c);
 
     // Assume everything will be OK.
     int8_t movOK = 0;
@@ -81,18 +81,18 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // Minus B_COORDS.x for pivot_x.
         // Minus B_COORDS.y for pivot_y.
         // (~7 µs)
-        pivot_x = P_COORDS[sid][0] * cr * cy +
-                  P_COORDS[sid][1] * (sp * sr * cr - cp * sy) +
-                  coord.sway -
+        pivot_x = P_COORDS[sid][0] * cosB * cosC +
+                  P_COORDS[sid][1] * (sinA * sinB * cosB - cosA * sinC) +
+                  coord.hx_x -
                   B_COORDS[sid][0];
-        pivot_y = P_COORDS[sid][0] * cr * sy +
-                  P_COORDS[sid][1] * (cp * cy + sp * sr * sy) +
-                  coord.surge -
+        pivot_y = P_COORDS[sid][0] * cosB * sinC +
+                  P_COORDS[sid][1] * (cosA * cosC + sinA * sinB * sinC) +
+                  coord.hx_y -
                   B_COORDS[sid][1];
-        pivot_z = -P_COORDS[sid][0] * sr +
-                  P_COORDS[sid][1] * sp * cr +
+        pivot_z = -P_COORDS[sid][0] * sinB +
+                  P_COORDS[sid][1] * sinA * cosB +
                   Z_HOME +
-                  coord.heave;
+                  coord.hx_z;
 
         // Square of the virtual arm length, i.e. the distance
         // between the base joint and the platform joint.
@@ -196,20 +196,20 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
     if (movOK == 0)
     {
         // Otherwise update platform coordinates.
-        _sp_sway = coord.sway;
-        _sp_surge = coord.surge;
-        _sp_heave = coord.heave;
-        _sp_pitch = coord.pitch;
-        _sp_roll = coord.roll;
-        _sp_yaw = coord.yaw;
+        _coord.hx_x = coord.hx_x;
+        _coord.hx_y = coord.hx_y;
+        _coord.hx_z = coord.hx_z;
+        _coord.hx_a = coord.hx_a;
+        _coord.hx_b = coord.hx_b;
+        _coord.hx_c = coord.hx_c;
     }
 
     return movOK;
 }
 
-double Hexapod_Kinematics::getSway() { return _sp_sway; }
-double Hexapod_Kinematics::getSurge() { return _sp_surge; }
-double Hexapod_Kinematics::getHeave() { return _sp_heave; }
-double Hexapod_Kinematics::getPitch() { return _sp_pitch; }
-double Hexapod_Kinematics::getRoll() { return _sp_roll; }
-double Hexapod_Kinematics::getYaw() { return _sp_yaw; }
+double Hexapod_Kinematics::getHX_X() { return _coord.hx_x; }
+double Hexapod_Kinematics::getHX_Y() { return _coord.hx_y; }
+double Hexapod_Kinematics::getHX_Z() { return _coord.hx_z; }
+double Hexapod_Kinematics::getHX_A() { return _coord.hx_a; }
+double Hexapod_Kinematics::getHX_B() { return _coord.hx_b; }
+double Hexapod_Kinematics::getHX_C() { return _coord.hx_c; }

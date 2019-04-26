@@ -48,7 +48,7 @@ void Hexapod_Joystick::setupJoystick()
 
     calibrate();
     delay(10);
-    setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
+    setLimits(HX_X_MIN, HX_X_MAX, HX_X_MID, HX_Y_MIN, HX_Y_MAX, HX_Y_MID);
     int8_t movOK = hx_servo.home(servo_angles);
     hx_servo.updateServos(movOK);
 
@@ -98,13 +98,13 @@ void Hexapod_Joystick::joystickControl()
 
         // Set new limits.
         if (joyMode == 0)
-            setLimits(SWAY_MIN, SWAY_MAX, SWAY_MID, SURGE_MIN, SURGE_MAX, SURGE_MID);
+            setLimits(HX_X_MIN, HX_X_MAX, HX_X_MID, HX_Y_MIN, HX_Y_MAX, HX_Y_MID);
         else if (joyMode == 1)
-            setLimits(YAW_MIN, YAW_MAX, YAW_MID, HEAVE_MIN, HEAVE_MAX, HEAVE_MID);
+            setLimits(HX_C_MIN, HX_C_MAX, HX_C_MID, HX_Z_MIN, HX_Z_MAX, HX_Z_MID);
         else if (joyMode == 2)
-            setLimits(YAW_MIN, YAW_MAX, YAW_MID, HEAVE_MIN, HEAVE_MAX, HEAVE_MID);
+            setLimits(HX_C_MIN, HX_C_MAX, HX_C_MID, HX_Z_MIN, HX_Z_MAX, HX_Z_MID);
         else if (joyMode == 3)
-            setLimits(PITCH_MIN, PITCH_MAX, PITCH_MID, ROLL_MIN, ROLL_MAX, ROLL_MID);
+            setLimits(HX_A_MIN, HX_A_MAX, HX_A_MID, HX_B_MIN, HX_B_MAX, HX_B_MID);
 
         // Blink built in LED (joyMode + 1) times.
         hx_gpio.blinkBuitInLED(joyMode + 1, 150, 75);
