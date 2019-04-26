@@ -51,7 +51,6 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  *
  * @return
  * Returns = 0 if OK
- * Returns > 0 if Warning
  * Returns < 0 if Error
  *
  */

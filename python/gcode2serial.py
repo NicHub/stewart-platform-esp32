@@ -47,30 +47,35 @@ time.sleep(1)
 hx_serial.flushInput()
 print("SENDING GCODE")
 
-# Open g-code file
-f = open(args.file, "r")
-print("Opening gcode file")
+endlessLoop = False
 
-# Stream g-code
-for line in f:
-    cmd = removeComment(line).strip()
+while True:
+    # Open g-code file
+    f = open(args.file, "r")
+    print("Opening gcode file")
 
-    if (cmd.isspace() == False and len(cmd) > 0):
-        print(cmd)
-        if (cmd.find("G4 P") >= 0):
-            t = float(cmd[5:])
-            print(f"Waiting : {t}")
-        else:
-            t = 0.002
-        time.sleep(t)
-        hx_serial.write(str.encode(cmd + "\n"))
-        if wait_for_ans:
-            while (True):
-                try:
-                    hx_ans = hx_serial.readline().strip().decode("ascii")
-                    print(":" + hx_ans)
-                except:
-                    pass
+    # Stream g-code
+    for line in f:
+        cmd = removeComment(line).strip()
+
+        if (cmd.isspace() == False and len(cmd) > 0):
+            print(cmd)
+            if (cmd.find("G4 P") >= 0):
+                t = float(cmd[5:])
+                print(f"Waiting : {t}")
+            else:
+                t = 0.002
+            time.sleep(t)
+            hx_serial.write(str.encode(cmd + "\n"))
+            if wait_for_ans:
+                while (True):
+                    try:
+                        hx_ans = hx_serial.readline().strip().decode("ascii")
+                        print(":" + hx_ans)
+                    except:
+                        pass
+    if not endlessLoop:
+        break
 
 
 # Close file and serial port

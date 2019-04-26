@@ -54,13 +54,17 @@ void setup()
     hx_servo.setupServo();
     hx_joystick.setupJoystick();
 
-    // Demo movements.
-    hx_demo.demoMov_circles(3);
+    // Demo movements => move in circles until joystick button pressed.
+    while (!hx_joystick.getZ())
+        hx_demo.demoMov_circles(1);
+    while (hx_joystick.getZ())
+    {
+    }
+    delay(200);
+
+    // Go to home position.
     uint8_t movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
-    // hx_demo.demoMov_shakeHeave();
-    // hx_demo.demoMov_MinMaxAllAxis();
-    // hx_demo.testCalcSpeed(2);
 }
 
 /**
