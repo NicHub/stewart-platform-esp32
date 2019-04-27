@@ -110,4 +110,4 @@ const double Z_HOME = 135.02311;      // Default Z height of the platform (above
   NOTE: Even with aggro, the solution will never fall outside the range of
   [SERVO_ANGLE_MIN .. SERVO_ANGLE_MAX]
 */
-const double AGGRO = 1.5;
+const double AGGRO = 1.0;

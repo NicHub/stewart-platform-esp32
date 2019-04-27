@@ -139,7 +139,8 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Scale values by aggro.
         // (~6 µs)
-        servo_rad = SERVO_MID_ANGLE + (servo_rad - SERVO_MID_ANGLE) * AGGRO;
+        if (AGGRO != 1)
+            servo_rad = SERVO_MID_ANGLE + (servo_rad - SERVO_MID_ANGLE) * AGGRO;
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if this one is not OK.
