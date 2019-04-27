@@ -56,10 +56,10 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  */
 int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angles)
 {
-    double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
-        d2,                           // Distance^2 between servo pivot and platform link.
-        k, m, n,                      // Intermediate values.
-        servo_rad;                    // Angle (radians) to turn each servo.
+    double dPivot_x, dPivot_y, dPivot_z, // Global XYZ coordinates of platform pivot points.
+        d2,                              // Distance^2 between servo pivot and platform link.
+        k, m, n,                         // Intermediate values.
+        servo_rad;                       // Angle (radians) to turn each servo.
 
     // Intermediate values, to avoid recalculating sin and cos.
     // (3 µs).
@@ -76,29 +76,27 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
     // Compute new angle values.
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        // Coordinates of platform joints (pivots) after movement.
-        // Minus B_COORDS.x for pivot_x.
-        // Minus B_COORDS.y for pivot_y.
+        // Distances between platform pivots and motor pivots after movement.
         // (~7 µs)
-        pivot_x = P_COORDS[sid][0] * cosB * cosC +
-                  P_COORDS[sid][1] * (sinA * sinB * cosB - cosA * sinC) +
-                  coord.hx_x -
-                  B_COORDS[sid][0];
-        pivot_y = P_COORDS[sid][0] * cosB * sinC +
-                  P_COORDS[sid][1] * (cosA * cosC + sinA * sinB * sinC) +
-                  coord.hx_y -
-                  B_COORDS[sid][1];
-        pivot_z = -P_COORDS[sid][0] * sinB +
-                  P_COORDS[sid][1] * sinA * cosB +
-                  Z_HOME +
-                  coord.hx_z;
+        dPivot_x = P_COORDS[sid][0] * cosB * cosC +
+                   P_COORDS[sid][1] * (sinA * sinB * cosB - cosA * sinC) +
+                   coord.hx_x -
+                   B_COORDS[sid][0];
+        dPivot_y = P_COORDS[sid][0] * cosB * sinC +
+                   P_COORDS[sid][1] * (cosA * cosC + sinA * sinB * sinC) +
+                   coord.hx_y -
+                   B_COORDS[sid][1];
+        dPivot_z = -P_COORDS[sid][0] * sinB +
+                   P_COORDS[sid][1] * sinA * cosB +
+                   Z_HOME +
+                   coord.hx_z;
 
         // Square of the virtual arm length, i.e. the distance
         // between the base joint and the platform joint.
         // (~3 µs)
-        d2 = (pivot_x * pivot_x) +
-             (pivot_y * pivot_y) +
-             (pivot_z * pivot_z);
+        d2 = (dPivot_x * dPivot_x) +
+             (dPivot_y * dPivot_y) +
+             (dPivot_z * dPivot_z);
 
         // Test if the required virtual arm length is longer than physically possible.
         // Abort computation of remaining angles if this one is not OK.
@@ -115,10 +113,10 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
             (ROD_LENGTH * ROD_LENGTH) +
             (ARM_LENGTH * ARM_LENGTH);
         // (~2 µs)
-        m = (COS_THETA_S[sid] * pivot_x +
-             SIN_THETA_S[sid] * pivot_y);
+        m = (COS_THETA_S[sid] * dPivot_x +
+             SIN_THETA_S[sid] * dPivot_y);
         // (~9 µs)
-        n = k / (2 * ARM_LENGTH * sqrt(pivot_z * pivot_z + m * m));
+        n = k / (2 * ARM_LENGTH * sqrt(dPivot_z * dPivot_z + m * m));
 
         // Test if other bad things happened.
         // Abort computation of remaining angles if this one is not OK.
@@ -131,7 +129,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Compute servo angle.
         // (22-32 µs This calculation takes half of the total computation time !)
-        servo_rad = asin(n) - atan(m / pivot_z);
+        servo_rad = asin(n) - atan(m / dPivot_z);
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
         // (~1 µs)

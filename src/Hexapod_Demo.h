@@ -32,4 +32,5 @@ class Hexapod_Demo
     void testNaN();
     void testCalculations();
     void testCalcSpeed(uint16_t nb_iter);
+    void findMinMax();
 };

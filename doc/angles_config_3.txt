@@ -2,8 +2,8 @@
 STEWART PLATFORM
 
 COMPILATION DATE AND TIME
-Apr 25 2019
-10:18:01
+Apr 27 2019
+13:49:59
 HEXAPOD_CONFIG = 3
 
       X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6

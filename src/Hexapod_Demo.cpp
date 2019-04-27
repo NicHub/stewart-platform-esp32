@@ -226,3 +226,166 @@ void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
     Serial.print("time per calculation (us) = ");
     Serial.println(TTot / nb_iter);
 }
+
+/**
+ *
+ */
+void Hexapod_Demo::findMinMax()
+{
+    double HX_X_MIN = 0;
+    double HX_X_MAX = 0;
+    double HX_X_MID = 0;
+
+    double HX_Y_MIN = 0;
+    double HX_Y_MAX = 0;
+    double HX_Y_MID = 0;
+
+    double HX_Z_MIN = 0;
+    double HX_Z_MAX = 0;
+    double HX_Z_MID = 0;
+
+    double HX_A_MIN = 0;
+    double HX_A_MAX = 0;
+    double HX_A_MID = 0;
+
+    double HX_B_MIN = 0;
+    double HX_B_MAX = 0;
+    double HX_B_MID = 0;
+
+    double HX_C_MIN = 0;
+    double HX_C_MAX = 0;
+    double HX_C_MID = 0;
+
+    unsigned long T1 = millis();
+    unsigned long timeToFindMinMax;
+    uint8_t movOK;
+    angle_t servo_angles[NB_SERVOS];
+
+    double COORD_MIN = -100.0;
+    double COORD_MAX = 200.0;
+    double COORD_INC = 1;
+
+    for (double coord = COORD_MIN; coord < COORD_MAX; coord += COORD_INC)
+    {
+        // Find X min/max.
+        movOK = hx_servo.calcServoAngles({coord, 0, 0, 0, 0, 0}, servo_angles);
+        if (movOK == 0)
+        {
+            if (coord < HX_X_MIN)
+                HX_X_MIN = coord;
+            else if (coord > HX_X_MAX)
+                HX_X_MAX = coord;
+        }
+        // Find Y min/max.
+        movOK = hx_servo.calcServoAngles({0, coord, 0, 0, 0, 0}, servo_angles);
+        if (movOK == 0)
+        {
+            if (coord < HX_Y_MIN)
+                HX_Y_MIN = coord;
+            else if (coord > HX_Y_MAX)
+                HX_Y_MAX = coord;
+        }
+        // Find Z min/max.
+        movOK = hx_servo.calcServoAngles({0, 0, coord, 0, 0, 0}, servo_angles);
+        if (movOK == 0)
+        {
+            if (coord < HX_Z_MIN)
+                HX_Z_MIN = coord;
+            else if (coord > HX_Z_MAX)
+                HX_Z_MAX = coord;
+        }
+    }
+
+    COORD_MIN = -HALF_PI;
+    COORD_MAX = HALF_PI;
+    COORD_INC = radians(1);
+
+    for (double coord = COORD_MIN; coord < COORD_MAX; coord += COORD_INC)
+    {
+        // Find A min/max.
+        movOK = hx_servo.calcServoAngles({0, 0, 0, coord, 0, 0}, servo_angles);
+        if (movOK == 0)
+        {
+            if (coord < HX_A_MIN)
+                HX_A_MIN = coord;
+            else if (coord > HX_A_MAX)
+                HX_A_MAX = coord;
+        }
+        // Find B min/max.
+        movOK = hx_servo.calcServoAngles({0, 0, 0, 0, coord, 0}, servo_angles);
+        if (movOK == 0)
+        {
+            if (coord < HX_B_MIN)
+                HX_B_MIN = coord;
+            else if (coord > HX_B_MAX)
+                HX_B_MAX = coord;
+        }
+        // Find C min/max.
+        movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, coord}, servo_angles);
+        if (movOK == 0)
+        {
+            if (coord < HX_C_MIN)
+                HX_C_MIN = coord;
+            else if (coord > HX_C_MAX)
+                HX_C_MAX = coord;
+        }
+    }
+
+    HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
+    HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
+    HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
+    HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
+    HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
+    HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
+
+    timeToFindMinMax = millis() - T1;
+
+
+
+    Serial.println("\n########## MIN / MAX ##########");
+
+    Serial.print("\nHX_X_MIN = ");
+    Serial.print(HX_X_MIN);
+    Serial.println(" mm");
+    Serial.print("HX_X_MAX = ");
+    Serial.print(HX_X_MAX);
+    Serial.println(" mm");
+
+    Serial.print("\nHX_Y_MIN = ");
+    Serial.print(HX_Y_MIN);
+    Serial.println(" mm");
+    Serial.print("HX_Y_MAX = ");
+    Serial.print(HX_Y_MAX);
+    Serial.println(" mm");
+
+    Serial.print("\nHX_Z_MIN = ");
+    Serial.print(HX_Z_MIN);
+    Serial.println(" mm");
+    Serial.print("HX_Z_MAX = ");
+    Serial.print(HX_Z_MAX);
+    Serial.println(" mm");
+
+    Serial.print("\nHX_A_MIN = ");
+    Serial.print(degrees(HX_A_MIN));
+    Serial.println(" deg");
+    Serial.print("HX_A_MAX = ");
+    Serial.print(degrees(HX_A_MAX));
+    Serial.println(" deg");
+
+    Serial.print("\nHX_B_MIN = ");
+    Serial.print(degrees(HX_B_MIN));
+    Serial.println(" deg");
+    Serial.print("HX_B_MAX = ");
+    Serial.print(degrees(HX_B_MAX));
+    Serial.println(" deg");
+
+    Serial.print("\nHX_C_MIN = ");
+    Serial.print(degrees(HX_C_MIN));
+    Serial.println(" deg");
+    Serial.print("HX_C_MAX = ");
+    Serial.print(degrees(HX_C_MAX));
+    Serial.println(" deg");
+
+    Serial.print("\ntimeToFindMinMax = ");
+    Serial.println(timeToFindMinMax);
+}

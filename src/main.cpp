@@ -65,6 +65,9 @@ void setup()
     // Go to home position.
     uint8_t movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);
     hx_servo.updateServos(movOK);
+
+    // Find min and max coord.
+    hx_demo.findMinMax();
 }
 
 /**
