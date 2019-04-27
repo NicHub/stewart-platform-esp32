@@ -29,18 +29,16 @@
 // Which servos are reversed. 1 = reversed, 0 = normal.
 const int8_t SERVO_REVERSE[6] = {1, 0, 1, 0, 1, 0};
 
-// These values don’t seem to be taken into account correctly.
-const double SERVO_MID_ANGLE = radians(90);
-const double SERVO_SPAN_ANGLE = radians(80);
-const double SERVO_MIN_ANGLE = SERVO_MID_ANGLE - SERVO_SPAN_ANGLE;
-const double SERVO_MAX_ANGLE = SERVO_MID_ANGLE + SERVO_SPAN_ANGLE;
+const double SERVO_MIN_ANGLE = radians(10.0);
+const double SERVO_MAX_ANGLE = radians(170.0);
+const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
 
 const double SERVO_MIN_US = 700;  // default  500 (library 4744/ESP32Servo)
 const double SERVO_MAX_US = 2100; // default 2500 (library 4744/ESP32Servo)
 const double SERVO_MID_US = (SERVO_MIN_US + SERVO_MAX_US) / 2;
 
 // Trim values, in microseconds, AFTER reversing
-const int ANGLE_TRIM[] = {
+const int PW_OFFSET[] = {
     -130,
     100,
     20,

@@ -133,14 +133,28 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
         // (~1 µs)
-        servo_rad = this->mapDouble(servo_rad,
-                                    -HALF_PI, HALF_PI,
-                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        // servo_rad = this->mapDouble(servo_rad,
+        //                             -HALF_PI, HALF_PI,
+        //                             SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+        servo_rad += HALF_PI;
 
         // Scale values by aggro.
         // (~6 µs)
         if (AGGRO != 1)
             servo_rad = SERVO_MID_ANGLE + (servo_rad - SERVO_MID_ANGLE) * AGGRO;
+
+        // Apply reverse if needed.
+        // (~1 µs)
+        if (SERVO_REVERSE[sid])
+        {
+            servo_angles[sid].rad = SERVO_MIN_ANGLE +
+                                    SERVO_MAX_ANGLE -
+                                    servo_rad;
+        }
+        else
+        {
+            servo_angles[sid].rad = servo_rad;
+        }
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if this one is not OK.
@@ -156,37 +170,16 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
             break;
         }
 
-        // Apply reverse if needed.
-        // (~1 µs)
-        if (SERVO_REVERSE[sid])
-        {
-            servo_angles[sid].rad = SERVO_MIN_ANGLE +
-                                    SERVO_MAX_ANGLE -
-                                    servo_rad;
-        }
-        else
-        {
-            servo_angles[sid].rad = servo_rad;
-        }
-
         // Convert radians to degrees.
         // (~2 µs)
         servo_angles[sid].deg = degrees(servo_angles[sid].rad);
 
         // Convert radians to pulse width.
         // (~5 µs)
-        servo_angles[sid].pw = (int)this->mapDouble(servo_angles[sid].rad,
-                                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
-                                                    SERVO_MIN_US, SERVO_MAX_US);
-
-        // Apply trim values.
-        // (~1 µs)
-        servo_angles[sid].pw += ANGLE_TRIM[sid];
-
-        // Constrain PW to min/max.
-        // (~2 µs)
-        servo_angles[sid].pw = (int)constrain(servo_angles[sid].pw,
-                                              SERVO_MIN_US, SERVO_MAX_US);
+        servo_angles[sid].pw = (int)this->mapDouble(
+            servo_angles[sid].rad,
+            SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
+            SERVO_MIN_US_OFFSET[sid], SERVO_MAX_US_OFFSET[sid]);
     }
 
     // Update platform coordinates if there are no errors.

@@ -150,4 +150,22 @@ class Hexapod_Kinematics
         {-B_RAD * cos(AXIS2 + THETA_B), B_RAD *sin(AXIS2 + THETA_B)},
         {-B_RAD * cos(AXIS3 - THETA_B), B_RAD *sin(AXIS3 - THETA_B)},
         {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
+
+    // Servo min µs with offset.
+    const double SERVO_MIN_US_OFFSET[NB_SERVOS] = {
+        SERVO_MIN_US + PW_OFFSET[0],
+        SERVO_MIN_US + PW_OFFSET[1],
+        SERVO_MIN_US + PW_OFFSET[2],
+        SERVO_MIN_US + PW_OFFSET[3],
+        SERVO_MIN_US + PW_OFFSET[4],
+        SERVO_MIN_US + PW_OFFSET[5]};
+
+    // Servo max µs with offset.
+    const double SERVO_MAX_US_OFFSET[NB_SERVOS] = {
+        SERVO_MAX_US + PW_OFFSET[0],
+        SERVO_MAX_US + PW_OFFSET[1],
+        SERVO_MAX_US + PW_OFFSET[2],
+        SERVO_MAX_US + PW_OFFSET[3],
+        SERVO_MAX_US + PW_OFFSET[4],
+        SERVO_MAX_US + PW_OFFSET[5]};
 };

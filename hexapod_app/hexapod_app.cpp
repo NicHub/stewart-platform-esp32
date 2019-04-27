@@ -77,7 +77,7 @@ void calcAndPrintResults(platform_t coords)
 #elif WHAT_TO_PRINT == 2
                angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].pw;
 #elif WHAT_TO_PRINT == 3
-               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].debug;
+               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].rad;
 #endif
           }
      }
@@ -140,7 +140,7 @@ int main()
                          {
                               for (double yaw = HX_B_MIN; yaw <= HX_B_MAX; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals)
                               {
-                                   calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
+                                   // calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
                               }
                          }
                     }
