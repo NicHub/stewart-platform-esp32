@@ -27,12 +27,13 @@
 #define NB_SERVOS 6
 
 // Which servos are reversed. 1 = reversed, 0 = normal.
-// !! First servo is of another type, that’s why it is set to 0 !!
 const int8_t SERVO_REVERSE[6] = {1, 0, 1, 0, 1, 0};
 
-const double SERVO_MIN_ANGLE = radians(10.0);   // These values don’t seem to be taken into account correctly.
-const double SERVO_MAX_ANGLE = radians(170.0); // These values don’t seem to be taken into account correctly.
-const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
+// These values don’t seem to be taken into account correctly.
+const double SERVO_MID_ANGLE = radians(50);
+const double SERVO_SPAN_ANGLE = radians(80);
+const double SERVO_MIN_ANGLE = SERVO_MID_ANGLE - SERVO_SPAN_ANGLE;
+const double SERVO_MAX_ANGLE = SERVO_MID_ANGLE + SERVO_SPAN_ANGLE;
 
 const double SERVO_MIN_US = 700;  // default  500 (library 4744/ESP32Servo)
 const double SERVO_MAX_US = 2100; // default 2500 (library 4744/ESP32Servo)
@@ -61,39 +62,39 @@ const int SERVO_PINS[] = {
  */
 
 /*
-  NOTE: The actual min and max for each DOF are interdependent. eg:
-  If the platform is pitched by some amount, the roll min/max will be physically
-  different than what's defined here. These are just the absolute maximums under
-  ideal conditions (eg: max for roll when pitch is zero).
-*/
-
-const double HX_X_MIN = -34;
-const double HX_X_MAX = 34;
+ * MIN/MAX COORDINATES
+ * NOTE: The actual min and max for each DOF are interdependent. eg:
+ * If the platform is pitched by some amount, the roll min/max will be physically
+ * different than what's defined here. These are just the absolute maximums under
+ * ideal conditions (eg: max for roll when pitch is zero).
+ */
+const double HX_X_MIN = -36; // -53
+const double HX_X_MAX = 36;  // 53
 const double HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
 const double HX_X_BAND = HX_X_MAX - HX_X_MIN;
 
-const double HX_Y_MIN = -34;
-const double HX_Y_MAX = 34;
+const double HX_Y_MIN = -36; // -58
+const double HX_Y_MAX = 36;  // 52
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -9;
-const double HX_Z_MAX = 11;
+const double HX_Z_MIN = -15; // -20
+const double HX_Z_MAX = 23;  // 23
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
-const double HX_A_MIN = radians(-11);
-const double HX_A_MAX = radians(11);
+const double HX_A_MIN = radians(-15); // radians(-25)
+const double HX_A_MAX = radians(15);  // radians(28)
 const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
 const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
-const double HX_B_MIN = radians(-11);
-const double HX_B_MAX = radians(11);
+const double HX_B_MIN = radians(-15); // radians(-26)
+const double HX_B_MAX = radians(15);  // radians(26)
 const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
 const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
-const double HX_C_MIN = radians(-30);
-const double HX_C_MAX = radians(30);
+const double HX_C_MIN = radians(-63); // radians(-63)
+const double HX_C_MAX = radians(63);  // radians(63)
 const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 

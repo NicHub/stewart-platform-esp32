@@ -55,12 +55,17 @@ void setup()
     hx_joystick.setupJoystick();
 
     // Demo movements => move in circles until joystick button pressed.
+#define endlessLoop false
+#if endlessLoop == true
     while (!hx_joystick.getZ())
         hx_demo.demoMov_circles(1);
     while (hx_joystick.getZ())
     {
     }
     delay(200);
+#else
+    hx_demo.demoMov_circles(3);
+#endif
 
     // Go to home position.
     uint8_t movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);
