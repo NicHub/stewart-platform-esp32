@@ -71,7 +71,7 @@ void calcAndPrintResults(platform_t coords)
      {
           for (uint8_t id = 0; id < NB_SERVOS; id++)
           {
-#define WHAT_TO_PRINT 1
+#define WHAT_TO_PRINT 2
 #if WHAT_TO_PRINT == 1
                angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].deg;
 #elif WHAT_TO_PRINT == 2

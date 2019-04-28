@@ -39,7 +39,8 @@ Hexapod_Demo::Hexapod_Demo()
  */
 void Hexapod_Demo::demoMov_MinMaxAllAxis()
 {
-    Serial.println("demoMov_MinMaxAllAxis START");
+    Serial.println("\n########## demoMov_MinMaxAllAxis START ##########");
+
     const platform_t coords[] = {
         // X sway
         {HX_X_MAX, 0, 0, 0, 0, 0},
@@ -89,8 +90,7 @@ void Hexapod_Demo::demoMov_MinMaxAllAxis()
 void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
 {
     // Move in circles in the horizontal plane.
-
-    Serial.println("demoMov_circles START");
+    Serial.println("\n########## demoMov_circles START ##########");
 
     const uint8_t nb_points = 90;
     const double radius = HX_X_MAX;
@@ -126,7 +126,7 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
  */
 void Hexapod_Demo::demoMov_shakeHeave()
 {
-    Serial.println("demoMov_shakeHeave START");
+    Serial.println("\n########## demoMov_shakeHeave START ##########");
     double shakeVal = HX_Z_MIN;
     int8_t movOK = -1;
     const uint32_t wait = 200;
@@ -172,7 +172,7 @@ void Hexapod_Demo::demoMov_shakeHeave()
  */
 void Hexapod_Demo::testNaN()
 {
-    Serial.print("\nTEST NaN");
+    Serial.println("\n########## TEST NaN ##########");
     int8_t movOK;
     platform_t coords[] = {
         {-33.0, 11.0, -15.0, 17.0, -5.7, 5.7},
@@ -204,14 +204,13 @@ void Hexapod_Demo::testCalculations()
     hx_servo.printServoAngles();
 }
 
-
 /**
  *
  */
 void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
 {
-    Serial.println("TEST CALCULATION SPEED");
-    Serial.print("Number of iterations = ");
+    Serial.println("\n########## TEST CALCULATION SPEED ##########");
+    Serial.print("\nNumber of iterations = ");
     Serial.println(nb_iter);
     unsigned long T1 = 0, T2 = 0, TTot = 0;
     for (uint16_t cid = 0; cid < nb_iter; cid++)
@@ -339,8 +338,6 @@ void Hexapod_Demo::findMinMax()
     HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 
     timeToFindMinMax = millis() - T1;
-
-
 
     Serial.println("\n########## MIN / MAX ##########");
 

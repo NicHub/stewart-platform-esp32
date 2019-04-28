@@ -99,7 +99,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
              (dPivot_z * dPivot_z);
 
         // Test if the required virtual arm length is longer than physically possible.
-        // Abort computation of remaining angles if this one is not OK.
+        // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
         if (d2 > ((ARM_LENGTH + ROD_LENGTH) * (ARM_LENGTH + ROD_LENGTH)))
         {
@@ -119,7 +119,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         n = k / (2 * ARM_LENGTH * sqrt(dPivot_z * dPivot_z + m * m));
 
         // Test if other bad things happened.
-        // Abort computation of remaining angles if this one is not OK.
+        // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
         if (abs(n) >= 1)
         {
@@ -131,44 +131,9 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // (22-32 µs This calculation takes half of the total computation time !)
         servo_rad = asin(n) - atan(m / dPivot_z);
 
-        // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+        // Rotate the angle.
         // (~1 µs)
-        // servo_rad = this->mapDouble(servo_rad,
-        //                             -HALF_PI, HALF_PI,
-        //                             SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
-        servo_rad += HALF_PI;
-
-        // Scale values by aggro.
-        // (~6 µs)
-        if (AGGRO != 1)
-            servo_rad = SERVO_MID_ANGLE + (servo_rad - SERVO_MID_ANGLE) * AGGRO;
-
-        // Apply reverse if needed.
-        // (~1 µs)
-        if (SERVO_REVERSE[sid])
-        {
-            servo_angles[sid].rad = SERVO_MIN_ANGLE +
-                                    SERVO_MAX_ANGLE -
-                                    servo_rad;
-        }
-        else
-        {
-            servo_angles[sid].rad = servo_rad;
-        }
-
-        // Check if the angle is in min/max.
-        // Abort computation of remaining angles if this one is not OK.
-        // (~1 µs)
-        if (servo_rad > SERVO_MAX_ANGLE)
-        {
-            movOK = -3;
-            break;
-        }
-        else if (servo_rad < SERVO_MIN_ANGLE)
-        {
-            movOK = -4;
-            break;
-        }
+        servo_angles[sid].rad = servo_rad + SERVO_MID_ANGLE;
 
         // Convert radians to degrees.
         // (~2 µs)
@@ -176,10 +141,22 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Convert radians to pulse width.
         // (~5 µs)
-        servo_angles[sid].pw = (int)this->mapDouble(
-            servo_angles[sid].rad,
-            SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
-            SERVO_MIN_US_OFFSET[sid], SERVO_MAX_US_OFFSET[sid]);
+        servo_angles[sid].pw = servo_angles[sid].rad * SERVO_CALIBRATION[sid].gain +
+                               SERVO_CALIBRATION[sid].offset;
+
+        // Check if the angle is in min/max.
+        // Abort computation of remaining angles if the current angle is not OK.
+        // (~1 µs)
+        if (servo_angles[sid].pw > SERVO_MAX_US)
+        {
+            movOK = -3;
+            break;
+        }
+        else if (servo_angles[sid].pw < SERVO_MIN_US)
+        {
+            movOK = -4;
+            break;
+        }
     }
 
     // Update platform coordinates if there are no errors.

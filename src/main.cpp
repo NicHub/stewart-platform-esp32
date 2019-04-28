@@ -73,6 +73,9 @@ void setup()
 
     // Find min and max coord.
     hx_demo.findMinMax();
+
+    // Test calculation speed.
+    hx_demo.testCalcSpeed(3);
 }
 
 /**

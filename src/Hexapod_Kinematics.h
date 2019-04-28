@@ -28,7 +28,7 @@
 #endif
 
 // Choose configuration file.
-#define HEXAPOD_CONFIG 3
+#define HEXAPOD_CONFIG 1
 
 #if HEXAPOD_CONFIG == 1
 #include "Hexapod_Config_1.h"
@@ -43,9 +43,16 @@ typedef struct
 {
     double rad;   // Servo angle in radian.
     double deg;   // Servo angle in degrees.
-    int pw;       // Servo pulse width in µs.
+    int pw;       // Servo angle in pulse width (µs).
     double debug; // Used for debug.
 } angle_t;
+
+// calibration_t
+typedef struct
+{
+    double gain;
+    double offset;
+} calibration_t;
 
 // Platform coordinates.
 typedef struct
@@ -151,21 +158,23 @@ class Hexapod_Kinematics
         {-B_RAD * cos(AXIS3 - THETA_B), B_RAD *sin(AXIS3 - THETA_B)},
         {-B_RAD * cos(AXIS3 + THETA_B), B_RAD *sin(AXIS3 + THETA_B)}};
 
-    // Servo min µs with offset.
-    const double SERVO_MIN_US_OFFSET[NB_SERVOS] = {
-        SERVO_MIN_US + PW_OFFSET[0],
-        SERVO_MIN_US + PW_OFFSET[1],
-        SERVO_MIN_US + PW_OFFSET[2],
-        SERVO_MIN_US + PW_OFFSET[3],
-        SERVO_MIN_US + PW_OFFSET[4],
-        SERVO_MIN_US + PW_OFFSET[5]};
+    /*
+     * The gain in µs/rad (=~ 518 µs/rad).
+     */
+    const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
+                        (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE);
 
-    // Servo max µs with offset.
-    const double SERVO_MAX_US_OFFSET[NB_SERVOS] = {
-        SERVO_MAX_US + PW_OFFSET[0],
-        SERVO_MAX_US + PW_OFFSET[1],
-        SERVO_MAX_US + PW_OFFSET[2],
-        SERVO_MAX_US + PW_OFFSET[3],
-        SERVO_MAX_US + PW_OFFSET[4],
-        SERVO_MAX_US + PW_OFFSET[5]};
+    /*
+     * Calibration factors. The calibration takes into account
+     * that one servo over two is mirrored.
+     * It is a linear calibration, where
+     * pulse width (µs) = gain (µs/rad) + offset (µs)
+     */
+    const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
+        {-gain, SERVO_MAX_US + PW_OFFSET[0]},
+        {gain, SERVO_MIN_US + PW_OFFSET[1]},
+        {-gain, SERVO_MAX_US + PW_OFFSET[2]},
+        {gain, SERVO_MIN_US + PW_OFFSET[3]},
+        {-gain, SERVO_MAX_US + PW_OFFSET[4]},
+        {gain, SERVO_MIN_US + PW_OFFSET[5]}};
 };
