@@ -233,27 +233,27 @@ void Hexapod_Demo::findMinMax()
 {
     double HX_X_MIN = 0;
     double HX_X_MAX = 0;
-    double HX_X_MID = 0;
+    // double HX_X_MID = 0;
 
     double HX_Y_MIN = 0;
     double HX_Y_MAX = 0;
-    double HX_Y_MID = 0;
+    // double HX_Y_MID = 0;
 
     double HX_Z_MIN = 0;
     double HX_Z_MAX = 0;
-    double HX_Z_MID = 0;
+    // double HX_Z_MID = 0;
 
     double HX_A_MIN = 0;
     double HX_A_MAX = 0;
-    double HX_A_MID = 0;
+    // double HX_A_MID = 0;
 
     double HX_B_MIN = 0;
     double HX_B_MAX = 0;
-    double HX_B_MID = 0;
+    // double HX_B_MID = 0;
 
     double HX_C_MIN = 0;
     double HX_C_MAX = 0;
-    double HX_C_MID = 0;
+    // double HX_C_MID = 0;
 
     unsigned long T1 = millis();
     unsigned long timeToFindMinMax;
@@ -330,12 +330,12 @@ void Hexapod_Demo::findMinMax()
         }
     }
 
-    HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
-    HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
-    HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
-    HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
-    HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
-    HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
+    // HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
+    // HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
+    // HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
+    // HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
+    // HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
+    // HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 
     timeToFindMinMax = millis() - T1;
 
@@ -384,5 +384,6 @@ void Hexapod_Demo::findMinMax()
     Serial.println(" deg");
 
     Serial.print("\ntimeToFindMinMax = ");
-    Serial.println(timeToFindMinMax);
+    Serial.print(timeToFindMinMax);
+    Serial.println(" ms");
 }

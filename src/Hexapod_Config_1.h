@@ -72,7 +72,7 @@ const double HX_Y_MAX = 35;  // 53
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -15; // -18
+const double HX_Z_MIN = -12; // -18
 const double HX_Z_MAX = 20;  // 23
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
@@ -92,10 +92,10 @@ const double HX_C_MAX = radians(61);  // radians(61)
 const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 
-const double THETA_P = radians(49.1); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
-const double THETA_B = radians(26.0); // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
+const double THETA_P = radians(48.0); // Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
+const double THETA_B = radians(25.0); // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
 const double P_RAD = 99.55 / 2;       // Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
-const double B_RAD = 139 / 2;         // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
-const double ARM_LENGTH = 22.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
+const double B_RAD = 142.3 / 2;       // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
+const double ARM_LENGTH = 20.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;      // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-const double Z_HOME = 133.683048;     // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
+const double Z_HOME = 133.802903;     // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
