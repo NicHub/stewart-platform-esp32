@@ -55,6 +55,14 @@ const int SERVO_PINS[] = {
  * ======== GEOMETRY SETTINGS ==========
  */
 
+const double THETA_S[NB_SERVOS] = {
+    radians(-60),
+    radians(120),
+    radians(180),
+    radians(0),
+    radians(60),
+    radians(-120)};
+
 /*
  * MIN/MAX COORDINATES
  * NOTE: The actual min and max for each DOF are interdependent. eg:

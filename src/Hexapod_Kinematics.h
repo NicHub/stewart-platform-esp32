@@ -114,23 +114,23 @@ class Hexapod_Kinematics
     const double AXIS3 = AXIS1;
 
     /*
-     * Absolute angle that the servo arm plane of rotation is at, from the world-X axis.
+     * Orientations of the servos arms relative to the X axis.
      */
     const double COS_THETA_S[NB_SERVOS] = {
-        cos(radians(-60)),
-        cos(radians(120)),
-        cos(radians(180)),
-        cos(radians(0)),
-        cos(radians(60)),
-        cos(radians(-120))};
+        cos(THETA_S[0]),
+        cos(THETA_S[1]),
+        cos(THETA_S[2]),
+        cos(THETA_S[3]),
+        cos(THETA_S[4]),
+        cos(THETA_S[5])};
 
     const double SIN_THETA_S[NB_SERVOS] = {
-        sin(radians(-60)),
-        sin(radians(120)),
-        sin(radians(180)),
-        sin(radians(0)),
-        sin(radians(60)),
-        sin(radians(-120))};
+        sin(THETA_S[0]),
+        sin(THETA_S[1]),
+        sin(THETA_S[2]),
+        sin(THETA_S[3]),
+        sin(THETA_S[4]),
+        sin(THETA_S[5])};
 
     /*
      * XY cartesian coordinates of the platform joints, based on the polar
@@ -177,4 +177,14 @@ class Hexapod_Kinematics
         {gain, SERVO_MIN_US + PW_OFFSET[3]},
         {-gain, SERVO_MAX_US + PW_OFFSET[4]},
         {gain, SERVO_MIN_US + PW_OFFSET[5]}};
+
+    /*
+     * Square of the maximum arm + rod length possible.
+     */
+    const double d2Max = ((ARM_LENGTH + ROD_LENGTH) * (ARM_LENGTH + ROD_LENGTH));
+
+    /*
+     *
+     */
+    const double d2Home = (ROD_LENGTH * ROD_LENGTH) - (ARM_LENGTH * ARM_LENGTH);
 };
