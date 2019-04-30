@@ -179,12 +179,14 @@ class Hexapod_Kinematics
         {gain, SERVO_MIN_US + PW_OFFSET[5]}};
 
     /*
-     * Square of the maximum arm + rod length possible.
+     * Square of the longest physically possible distance
+     * between servo pivot and platform joint (called “d”).
      */
     const double d2Max = ((ARM_LENGTH + ROD_LENGTH) * (ARM_LENGTH + ROD_LENGTH));
 
     /*
-     *
+     * Square of the length of d when the servo arm is perpendicular to d
+     * and the rod is the hypotenuse.
      */
-    const double d2Home = (ROD_LENGTH * ROD_LENGTH) - (ARM_LENGTH * ARM_LENGTH);
+    const double d2Perp = (ROD_LENGTH * ROD_LENGTH) - (ARM_LENGTH * ARM_LENGTH);
 };
