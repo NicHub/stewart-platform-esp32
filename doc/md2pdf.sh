@@ -9,3 +9,4 @@ pandoc                               \
     -o hexapod-kinematics.html
 
 prince --javascript hexapod-kinematics.html
+
