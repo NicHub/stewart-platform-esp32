@@ -58,7 +58,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 {
     double dPB_x, dPB_y, dPB_z, // Platform movements relative to servo pivot.
         d2,                     // Distance^2 between servo pivot and platform link.
-        k, m, n;                // Intermediate values.
+        m, n;                   // Intermediate values.
 
     // Intermediate values, to avoid recalculating sin and cos.
     // (3 µs).
@@ -74,7 +74,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        // Compute platform movements relative to servo pivot.
+        // Compute the new platform joint coordinates relative to servo pivot.
         // (~7 µs)
         dPB_x = P_COORDS[sid][0] * cosB * cosC +
                 P_COORDS[sid][1] * (sinA * sinB * cosC - cosA * sinC) +
@@ -89,7 +89,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
                 coord.hx_z +
                 Z_HOME;
 
-        // Square of the new distance between servo pivot and platform joint.
+        // Square of the new distance between platform joint and servo pivot.
         d2 = (dPB_x * dPB_x) +
              (dPB_y * dPB_y) +
              (dPB_z * dPB_z);
@@ -105,15 +105,13 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         }
 
         // Calculation of intermediate values.
-        // (~1 µs)
-        k = d2 - d2Perp;
         // (~2 µs)
         m = (COS_THETA_S[sid] * dPB_x +
              SIN_THETA_S[sid] * dPB_y);
         // (~9 µs)
-        n = k / (2 * ARM_LENGTH * sqrt(dPB_z * dPB_z + m * m));
+        n = (d2 - d2Perp) / (2 * ARM_LENGTH * sqrt(dPB_z * dPB_z + m * m));
 
-        // Test if other bad things happened.
+        // Test if there is no physically possible solution.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
         if (abs(n) >= 1)

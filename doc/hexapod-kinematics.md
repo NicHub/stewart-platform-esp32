@@ -141,3 +141,5 @@ $$
 d_{i}^2 \leq  (a + s)^2
 \text{    (eq 3)}
 $$
+
+TO BE CONTINUED...
