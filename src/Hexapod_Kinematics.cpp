@@ -156,7 +156,6 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
     // (~1 µs)
     if (movOK == 0)
     {
-        // Otherwise update platform coordinates.
         _coord.hx_x = coord.hx_x;
         _coord.hx_y = coord.hx_y;
         _coord.hx_z = coord.hx_z;

@@ -26,10 +26,12 @@
 
 #define NB_SERVOS 6
 
+// Servo calibration values.
+// These values should not be used to restrict servo movements.
+// Use MIN/MAX COORDINATES below for that.
 const double SERVO_MIN_ANGLE = radians(0);
 const double SERVO_MAX_ANGLE = radians(155);
 const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
-
 const double SERVO_MIN_US = 700;
 const double SERVO_MAX_US = 2100;
 
