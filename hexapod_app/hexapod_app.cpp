@@ -140,7 +140,7 @@ int main()
                          {
                               for (double yaw = HX_B_MIN; yaw <= HX_B_MAX; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals)
                               {
-                                   // calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
+                                   calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
                               }
                          }
                     }
