@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pandoc                               \
-    --from markdown \
+    --from markdown                  \
     --to html                        \
     --standalone                     \
     --mathml                         \

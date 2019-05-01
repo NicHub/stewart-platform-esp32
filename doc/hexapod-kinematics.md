@@ -99,7 +99,7 @@ $$
 
 We can now calculate the distances between the servo pivots $\text{B}_{i}$ and the platform joints $\text{P1}_{i}$ :
 
-$$****
+$$
 \text{dPB}_{i} = \left(\text{P1}_{i} - \text{B}_{i}\right)  = \left(\text{P1}_{i} - \{Bx_i,By_i,-Z_{home},1\}\right) =
 $$
 
@@ -122,7 +122,7 @@ $$
 \end{array}
 \right)^T
 
-\text(eq 1)
+\text{(eq 1)}
 $$
 
 
@@ -130,14 +130,14 @@ And the squares of the length of the vectors are :
 
 $$
 d_{i}^2=\text{dDPx}_i^2+\text{dDPy}_i^2+\text{dDPz}_i^2
-\text    (eq 2)
+\text{    (eq 2)}
 $$
 
-For a platform using linear motors, the calculation can be done with $\text eq 1$ and $\text eq 2$. In our case we have rotational motors so we need to continue. Note that it is not a good idea to compute the square root of $d_{i}^2$ because it is a computer intensive operation and we don’t need the value of $d$.
+For a platform using linear motors, the calculation can be done with $\text{eq 1}$ and $\text{eq 2}$. In our case we have rotational motors so we need to continue. Note that it is not a good idea to compute the square root of $d_{i}^2$ because it is a computer intensive operation and we don’t need the value of $d$.
 
 Now, we need to check if the arm of length $a$ and the rod of length $s$ are long enoug to actualy go to the target position :
 
 $$
 d_{i}^2 \leq  (a + s)^2
-\text    (eq 3)
+\text{    (eq 3)}
 $$

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Nicolas Jeanmonod" />
+  <title>Hexapod kinematics</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Hexapod kinematics</h1>
+<p class="author">Nicolas Jeanmonod</p>
+</header>
+<h1 id="hexapod-kinematics">Hexapod kinematics</h1>
+<blockquote>
+<p>Nicolas Jeanmonod, May 2019</p>
+</blockquote>
+<p>The coordinates of the platform joints at home position are called <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">P0</mtext><mi>i</mi></msub><annotation encoding="application/x-tex">\text{P0}_{i}</annotation></semantics></math>.</p>
+<p>Note that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">P0z</mtext><mi>i</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\text{P0z}_{i}=0</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mtext mathvariant="normal">motor index</mtext><mo>=</mo><mn>0</mn><mi>.</mi><mn>.5</mn></mrow><annotation encoding="application/x-tex">i=\text{motor index}=0..5</annotation></semantics></math>.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">P0</mtext><mi>i</mi></msub><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>P</mi><mn>0</mn><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><mi>P</mi><mn>0</mn><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">
+\text{P0}_{i}=\{P0x_i,P0y_i,0,1\}
+</annotation></semantics></math></p>
+<p>The platform has six degrees of freedom, three rotations and three translations with the following transformation matrices :</p>
+$$
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center"><mtext mathvariant="normal">Rx</mtext><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center"><mn>1</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mphantom><mo>−</mo></mphantom><mo>cos</mo><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mo>sin</mo><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mo>−</mo><mo>sin</mo><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mo>cos</mo><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="center"></mtd></mtr><mtr><mtd columnalign="center"><mtext mathvariant="normal">Rz</mtext><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center"><mphantom><mo>−</mo></mphantom><mo>cos</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mo>sin</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mo>−</mo><mo>sin</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mo>cos</mo><mo stretchy="false" form="prefix">(</mo><mi>C</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{gathered}
+
+\text{Rx}=\left(
+\begin{array}{cccc}
+ 1 &amp; 0 &amp; 0 &amp; 0 \\
+ 0 &amp; \phantom{-}\cos (A) &amp; \sin (A) &amp; 0 \\
+ 0 &amp; -\sin (A) &amp; \cos (A) &amp; 0 \\
+ 0 &amp; 0 &amp; 0 &amp; 1 \\
+\end{array}
+\right)
+\\
+\\
+\text{Rz}=\left(
+\begin{array}{cccc}
+ \phantom{-}\cos (C) &amp; \sin (C) &amp; 0 &amp; 0 \\
+ -\sin (C) &amp; \cos (C) &amp; 0 &amp; 0 \\
+ 0 &amp; 0 &amp; 1 &amp; 0 \\
+ 0 &amp; 0 &amp; 0 &amp; 1 \\
+\end{array}
+\right)
+
+\end{gathered}</annotation></semantics></math>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="center"><mtext mathvariant="normal">Ry</mtext><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center"><mo>cos</mo><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mo>−</mo><mo>sin</mo><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mo>sin</mo><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mphantom><mo>−</mo></mphantom><mo>cos</mo><mo stretchy="false" form="prefix">(</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="center"></mtd></mtr><mtr><mtd columnalign="center"><mtext mathvariant="normal">Txyz</mtext><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center"><mn>1</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd><mtd columnalign="center"><mn>1</mn></mtd><mtd columnalign="center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center"><mtext mathvariant="normal">Tx</mtext></mtd><mtd columnalign="center"><mtext mathvariant="normal">Ty</mtext></mtd><mtd columnalign="center"><mtext mathvariant="normal">Tz</mtext></mtd><mtd columnalign="center"><mn>1</mn></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{gathered}
+
+\text{Ry}=\left(
+\begin{array}{cccc}
+ \cos (B) &amp; 0 &amp; -\sin (B) &amp; 0 \\
+ 0 &amp; 1 &amp; 0 &amp; 0 \\
+ \sin (B) &amp; 0 &amp; \phantom{-}\cos (B) &amp; 0 \\
+ 0 &amp; 0 &amp; 0 &amp; 1 \\
+\end{array}
+\right)
+\\
+\\
+\text{Txyz}=\left(
+\begin{array}{cccc}
+ 1 &amp; 0 &amp; 0 &amp; 0 \\
+ 0 &amp; 1 &amp; 0 &amp; 0 \\
+ 0 &amp; 0 &amp; 1 &amp; 0 \\
+ \text{Tx} &amp; \text{Ty} &amp; \text{Tz} &amp; 1 \\
+\end{array}
+\right)
+
+\end{gathered}</annotation></semantics></math>
+<p>$$</p>
+<p>The coordinates of the platform joints after movement are called <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">P1</mtext><mi>i</mi></msub><annotation encoding="application/x-tex">\text{P1}_{i}</annotation></semantics></math> and can be found by calculating the following dot product :</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">P1</mtext><mi>i</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">P0</mtext><mi>i</mi></msub><mo>⋅</mo><mtext mathvariant="normal">Rx</mtext><mo>⋅</mo><mtext mathvariant="normal">Ry</mtext><mo>⋅</mo><mtext mathvariant="normal">Rz</mtext><mo>⋅</mo><mtext mathvariant="normal">Txyz</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">
+\left(
+\text{P1}_{i}=\left(\text{P0}_{i}\cdot\text{Rx}\cdot\text{Ry}\cdot\text{Rz}\cdot\text{Txyz}\right) =
+</annotation></semantics></math></p>
+<p>$$ ( \begin{array}{c} _i\ _i\ _i\ 1 \end{array} )^T =</p>
+<p>( \begin{array}{c} P0x_i B C + P0y_i (A B C-A C) +  \ P0x_iB C+ P0y_i (A C + A B C) +  \ -P0x_i B + A B y +  \ 1 \ \end{array} )^T $$</p>
+<p>We can now calculate the distances between the servo pivots <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">B</mtext><mi>i</mi></msub><annotation encoding="application/x-tex">\text{B}_{i}</annotation></semantics></math> and the platform joints <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">P1</mtext><mi>i</mi></msub><annotation encoding="application/x-tex">\text{P1}_{i}</annotation></semantics></math> :</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">dPB</mtext><mi>i</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">P1</mtext><mi>i</mi></msub><mo>−</mo><msub><mtext mathvariant="normal">B</mtext><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">P1</mtext><mi>i</mi></msub><mo>−</mo><mo stretchy="false" form="prefix">{</mo><mi>B</mi><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><mi>B</mi><msub><mi>y</mi><mi>i</mi></msub><mo>,</mo><mo>−</mo><msub><mi>Z</mi><mrow><mi>h</mi><mi>o</mi><mi>m</mi><mi>e</mi></mrow></msub><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">
+\text{dPB}_{i} = \left(\text{P1}_{i} - \text{B}_{i}\right)  = \left(\text{P1}_{i} - \{Bx_i,By_i,-Z_{home},1\}\right) =
+</annotation></semantics></math></p>
+<p>$$ ( \begin{array}{c} <em>i\ <em>i\ <em>i\ 1 \end{array} )^T = ( \begin{array}{c} P0x_i B C + P0y_i (A B C-A C) +  - </em>{i}\ P0x_i B C + P0y_i (A C + A B C) +  - </em>{i}\ -P0x_i B + A B y +  + </em>{home}\ 1 \ \end{array} )^T</p>
+
+<p>$$</p>
+<p>And the squares of the length of the vectors are :</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>d</mi><mi>i</mi><mn>2</mn></msubsup><mo>=</mo><msubsup><mtext mathvariant="normal">dDPx</mtext><mi>i</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mtext mathvariant="normal">dDPy</mtext><mi>i</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mtext mathvariant="normal">dDPz</mtext><mi>i</mi><mn>2</mn></msubsup><mtext mathvariant="normal">    (eq 2)</mtext></mrow><annotation encoding="application/x-tex">
+d_{i}^2=\text{dDPx}_i^2+\text{dDPy}_i^2+\text{dDPz}_i^2
+\text{    (eq 2)}
+</annotation></semantics></math></p>
+<p>For a platform using linear motors, the calculation can be done with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="normal">eq 1</mtext><annotation encoding="application/x-tex">\text{eq 1}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="normal">eq 2</mtext><annotation encoding="application/x-tex">\text{eq 2}</annotation></semantics></math>. In our case we have rotational motors so we need to continue. Note that it is not a good idea to compute the square root of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>d</mi><mi>i</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">d_{i}^2</annotation></semantics></math> because it is a computer intensive operation and we don’t need the value of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>.</p>
+<p>Now, we need to check if the arm of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math> and the rod of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> are long enoug to actualy go to the target position :</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>d</mi><mi>i</mi><mn>2</mn></msubsup><mo>≤</mo><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo>+</mo><mi>s</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mtext mathvariant="normal">    (eq 3)</mtext></mrow><annotation encoding="application/x-tex">
+d_{i}^2 \leq  (a + s)^2
+\text{    (eq 3)}
+</annotation></semantics></math></p>
+</body>
+</html>
