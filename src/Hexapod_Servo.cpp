@@ -72,7 +72,7 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
         // Write to servos.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            servos[sid].writeMicroseconds(servo_angles[sid].pw);
+            servos[sid].writeMicroseconds(servo_angles[sid].us);
         }
     }
     else
@@ -117,10 +117,10 @@ void Hexapod_Servo::printServoAngles()
         Serial.print(" ");
     }
 
-    Serial.print("\nSERVO_ANGLES (pwm) = ");
+    Serial.print("\nSERVO_ANGLES (us) = ");
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
-        Serial.print(servo_angles[sid].pw);
+        Serial.print(servo_angles[sid].us);
         Serial.print(" ");
     }
 

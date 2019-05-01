@@ -43,7 +43,7 @@ typedef struct
 {
     double rad;   // Servo angle in radian.
     double deg;   // Servo angle in degrees.
-    int pw;       // Servo angle in pulse width (µs).
+    int us;       // Servo angle in µs (PWM).
     double debug; // Used for debug.
 } angle_t;
 

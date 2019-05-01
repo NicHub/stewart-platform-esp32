@@ -136,18 +136,18 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // The calibration values take into account the fact
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
-        servo_angles[sid].pw = servo_angles[sid].rad * SERVO_CALIBRATION[sid].gain +
+        servo_angles[sid].us = servo_angles[sid].rad * SERVO_CALIBRATION[sid].gain +
                                SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (servo_angles[sid].pw > SERVO_MAX_US)
+        if (servo_angles[sid].us > SERVO_MAX_US)
         {
             movOK = -3;
             break;
         }
-        else if (servo_angles[sid].pw < SERVO_MIN_US)
+        else if (servo_angles[sid].us < SERVO_MIN_US)
         {
             movOK = -4;
             break;
