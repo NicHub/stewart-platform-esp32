@@ -133,6 +133,8 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         servo_angles[sid].deg = degrees(servo_angles[sid].rad);
 
         // Convert radians to pulse width.
+        // The calibration values take into account the fact
+        // that the odd and even arms are a reflection of each other.
         // (~5 µs)
         servo_angles[sid].pw = servo_angles[sid].rad * SERVO_CALIBRATION[sid].gain +
                                SERVO_CALIBRATION[sid].offset;

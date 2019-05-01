@@ -165,9 +165,9 @@ class Hexapod_Kinematics
                         (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE);
 
     /*
-     * Calibration factors. The calibration takes into account
-     * that one servo over two is mirrored.
-     * It is a linear calibration, where
+     * Calibration factors. These values take into account the fact
+     * that the odd and even arms are a reflection of each other.
+     * The calibration is linear:
      * pulse width (µs) = gain (µs/rad) + offset (µs)
      */
     const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
