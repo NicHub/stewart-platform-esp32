@@ -77,7 +77,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // Compute platform movements relative to servo pivot.
         // (~7 µs)
         dPB_x = P_COORDS[sid][0] * cosB * cosC +
-                P_COORDS[sid][1] * (sinA * sinB * cosB - cosA * sinC) +
+                P_COORDS[sid][1] * (sinA * sinB * cosC - cosA * sinC) +
                 coord.hx_x -
                 B_COORDS[sid][0];
         dPB_y = P_COORDS[sid][0] * cosB * sinC +
