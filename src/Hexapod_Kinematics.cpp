@@ -56,9 +56,11 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  */
 int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angles)
 {
-    double dPB_x, dPB_y, dPB_z, // Platform movements relative to servo pivot.
-        d2,                     // Distance^2 between servo pivot and platform link.
-        m, n;                   // Intermediate values.
+    double dPB_x, dPB_y, dPB_z, // Platform joint movements relative to servo pivot.
+        d2,                     // Distance^2 between platform joint and servo pivot.
+        s, t;                   // Intermediate values.
+
+    angle_t new_servo_angles[NB_SERVOS];
 
     // Intermediate values, to avoid recalculating sin and cos.
     // (3 µs).
@@ -81,7 +83,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
                 coord.hx_x -
                 B_COORDS[sid][0];
         dPB_y = P_COORDS[sid][0] * cosB * sinC +
-                P_COORDS[sid][1] * (cosA * cosC + sinA * sinB * sinC) +
+                P_COORDS[sid][1] * (sinA * sinB * sinC + cosA * cosC) +
                 coord.hx_y -
                 B_COORDS[sid][1];
         dPB_z = -P_COORDS[sid][0] * sinB +
@@ -98,7 +100,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // is longer than physically possible.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (d2 > d2Max)
+        if (d2 > D2MAX)
         {
             movOK = -1;
             break;
@@ -106,15 +108,17 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Calculation of intermediate values.
         // (~2 µs)
-        m = (COS_THETA_S[sid] * dPB_x +
-             SIN_THETA_S[sid] * dPB_y);
+        t = (COS_THETA_S[sid] * dPB_x +
+             SIN_THETA_S[sid] * dPB_y) /
+            dPB_z;
         // (~9 µs)
-        n = (d2 - d2Perp) / (2 * ARM_LENGTH * sqrt(dPB_z * dPB_z + m * m));
+        s = (d2 - D2PERP) /
+            (2 * ARM_LENGTH * dPB_z * sqrt(1 + t * t));
 
-        // Test if there is no physically possible solution.
+        // Tests if there are no physically possible solutions.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (abs(n) >= 1)
+        if (abs(s) >= 1)
         {
             movOK = -2;
             break;
@@ -122,32 +126,33 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 
         // Compute servo angle.
         // (~40 µs This calculation takes 2/3 of the total computation time !)
-        servo_angles[sid].rad = asin(n) - atan(m / dPB_z);
+        new_servo_angles[sid].rad = asin(s) - atan(t);
 
         // Rotate the angle.
         // (~1 µs)
-        servo_angles[sid].rad += SERVO_MID_ANGLE;
+        new_servo_angles[sid].rad += SERVO_MID_ANGLE;
 
         // Convert radians to degrees.
         // (~2 µs)
-        servo_angles[sid].deg = degrees(servo_angles[sid].rad);
+        new_servo_angles[sid].deg = degrees(new_servo_angles[sid].rad);
 
-        // Convert radians to pulse width.
+        // Convert radians to microseconds (PWM).
         // The calibration values take into account the fact
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
-        servo_angles[sid].us = servo_angles[sid].rad * SERVO_CALIBRATION[sid].gain +
-                               SERVO_CALIBRATION[sid].offset;
+        new_servo_angles[sid].us =
+            SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad +
+            SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (servo_angles[sid].us > SERVO_MAX_US)
+        if (new_servo_angles[sid].us > SERVO_MAX_US)
         {
             movOK = -3;
             break;
         }
-        else if (servo_angles[sid].us < SERVO_MIN_US)
+        else if (new_servo_angles[sid].us < SERVO_MIN_US)
         {
             movOK = -4;
             break;
@@ -158,6 +163,10 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
     // (~1 µs)
     if (movOK == 0)
     {
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+        {
+            servo_angles[sid] = new_servo_angles[sid];
+        }
         _coord.hx_x = coord.hx_x;
         _coord.hx_y = coord.hx_y;
         _coord.hx_z = coord.hx_z;

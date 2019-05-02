@@ -1,12 +1,15 @@
+<!--
 ---
 title: Hexapod kinematics
 author: Nicolas Jeanmonod
 header-includes: |
     \usepackage{amsmath}
 ---
+-->
 
 # Hexapod kinematics
 
+<p style="color:red">This document is a draft</p>
 > Nicolas Jeanmonod, May 2019
 
 The coordinates of the platform joints at home position are called $\text{P0}_{i}$.
@@ -25,8 +28,8 @@ $$
 \text{Rx}=\left(
 \begin{array}{cccc}
  1 & 0 & 0 & 0 \\
- 0 & \phantom{-}\cos (A) & \sin (A) & 0 \\
- 0 & -\sin (A) & \cos (A) & 0 \\
+ 0 & \phantom{-}\cos A & \sin A & 0 \\
+ 0 & -\sin A & \cos A & 0 \\
  0 & 0 & 0 & 1 \\
 \end{array}
 \right)
@@ -34,8 +37,8 @@ $$
 \\
 \text{Rz}=\left(
 \begin{array}{cccc}
- \phantom{-}\cos (C) & \sin (C) & 0 & 0 \\
- -\sin (C) & \cos (C) & 0 & 0 \\
+ \phantom{-}\cos C & \sin C & 0 & 0 \\
+ -\sin C & \cos C & 0 & 0 \\
  0 & 0 & 1 & 0 \\
  0 & 0 & 0 & 1 \\
 \end{array}
@@ -50,9 +53,9 @@ $$
 
 \text{Ry}=\left(
 \begin{array}{cccc}
- \cos (B) & 0 & -\sin (B) & 0 \\
+ \cos B & 0 & -\sin B & 0 \\
  0 & 1 & 0 & 0 \\
- \sin (B) & 0 & \phantom{-}\cos (B) & 0 \\
+ \sin B & 0 & \phantom{-}\cos B & 0 \\
  0 & 0 & 0 & 1 \\
 \end{array}
 \right)
@@ -89,10 +92,10 @@ $$
 
 \left(
 \begin{array}{c}
- P0x_i \cos  B \cos  C + P0y_i (\sin  A \sin  B \cos  C-\cos  A \sin  C)  +   \text{Tx} \\
- P0x_i\cos  B \sin  C+ P0y_i (\cos  A \cos  C + \sin  A \sin  B \sin  C)  +   \text{Ty} \\
- -P0x_i  \sin  B + \sin  A \cos  B y  +   \text{Tz} \\
- 1 \\
+P0x_i \cos B \cos C + P0y_i (\sin A \sin B \cos C - \cos A \sin C) + \text{Tx} \\
+P0x_i \cos B \sin C + P0y_i (\sin A \sin B \sin C + \cos A \cos C) + \text{Ty} \\
+-P0x_i\sin B + P0y_i \sin A \cos B+ \text{Tz} \\
+1 \\
 \end{array}
 \right)^T
 $$
@@ -100,7 +103,7 @@ $$
 We can now calculate the distances between the servo pivots $\text{B}_{i}$ and the platform joints $\text{P1}_{i}$ :
 
 $$
-\text{dPB}_{i} = \left(\text{P1}_{i} - \text{B}_{i}\right)  = \left(\text{P1}_{i} - \{Bx_i,By_i,-Z_{home},1\}\right) =
+\text{dPB}_{i} = \left(\text{P1}_{i} - \text{B}_{i}\right)= \left(\text{P1}_{i} - \{Bx_i,By_i,-Z_{home},1\}\right) =
 $$
 
 $$
@@ -115,10 +118,10 @@ $$
 =
 \left(
 \begin{array}{c}
- P0x_i \cos B \cos C + P0y_i (\sin  A \sin  B \cos  C-\cos  A \sin  C)  +   \text{Tx} -  \text{Bx}_{i}\\
- P0x_i \cos B \sin C + P0y_i (\cos  A \cos  C + \sin  A \sin  B \sin  C)  +  \text{Ty} -  \text{By}_{i}\\
- -P0x_i  \sin  B + \sin  A \cos  B y  +   \text{Tz} +  \text{Z}_{home}\\
- 1 \\
+P0x_i \cos B \cos C + P0y_i (\sin A \sin B \cos C - \cos A \sin C) + \text{Tx} - \text{Bx}_{i} \\
+P0x_i \cos B \sin C + P0y_i (\sin A \sin B \sin C + \cos A \cos C) + \text{Ty} - \text{By}_{i} \\
+-P0x_i\sin B + P0y_i \sin A \cos B+ \text{Tz} + \text{Z}_{home} \\
+1 \\
 \end{array}
 \right)^T
 
@@ -129,7 +132,7 @@ $$
 And the squares of the length of the vectors are :
 
 $$
-d_{i}^2=\text{dDPx}_i^2+\text{dDPy}_i^2+\text{dDPz}_i^2
+d_{i}^2=\text{dPBx}_i^2+\text{dPBy}_i^2+\text{dPBz}_i^2
 \text{    (eq 2)}
 $$
 
@@ -138,7 +141,7 @@ For a platform using linear motors, the calculation can be done with $\text{eq 
 Now, we need to check if the arm of length $a$ and the rod of length $s$ are long enoug to actualy go to the target position :
 
 $$
-d_{i}^2 \leq  (a + s)^2
+d_{i}^2 \leq(a + s)^2
 \text{    (eq 3)}
 $$
 
