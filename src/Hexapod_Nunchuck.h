@@ -21,12 +21,15 @@
 #pragma once
 
 #include <Arduino.h>
-#include <ouilogique_Joystick.h>
+#include <WiiChuck.h>
 
-class Hexapod_Joystick : public ouilogique_Joystick
+class Hexapod_Nunchuck : public Accessory
 {
+  private:
+    double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
+
   public:
-    Hexapod_Joystick(uint8_t pinX, uint8_t pinY, uint8_t pinZ);
-    void setupJoystick();
-    void joystickControl();
+    Hexapod_Nunchuck();
+    void setupNunchuck();
+    void nunchuckControl();
 };

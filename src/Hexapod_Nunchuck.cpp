@@ -18,7 +18,7 @@
  *
  */
 
-#include <Hexapod_Joystick.h>
+#include <Hexapod_Nunchuck.h>
 #include <Hexapod_Servo.h>
 #include <Hexapod_GPIO.h>
 
@@ -29,41 +29,33 @@ extern Hexapod_GPIO hx_gpio;
 /**
  *
  */
-Hexapod_Joystick::Hexapod_Joystick(
-    uint8_t pinX, uint8_t pinY, uint8_t pinZ) : ouilogique_Joystick(pinX, pinY, pinZ)
+double Hexapod_Nunchuck::mapDouble(double x, double in_min, double in_max, double out_min, double out_max)
+{
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+/**
+ *
+ */
+Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
 {
 }
 
 /**
  *
  */
-void Hexapod_Joystick::setupJoystick()
+void Hexapod_Nunchuck::setupNunchuck()
 {
-    Serial.print("millis = ");
-    Serial.print(millis());
-    Serial.print(" | getRawValueMidX = ");
-    Serial.print(getRawValueMidX());
-    Serial.print(" | getRawValueMidY = ");
-    Serial.println(getRawValueMidY());
-
-    calibrate();
-    delay(10);
-    setLimits(HX_X_MIN, HX_X_MAX, HX_X_MID, HX_Y_MIN, HX_Y_MAX, HX_Y_MID);
-    int8_t movOK = hx_servo.home(servo_angles);
-    hx_servo.updateServos(movOK);
-
-    Serial.print("millis = ");
-    Serial.print(millis());
-    Serial.print(" | getRawValueMidX = ");
-    Serial.print(getRawValueMidX());
-    Serial.print(" | getRawValueMidY = ");
-    Serial.println(getRawValueMidY());
+    begin();
+    type = NUNCHUCK;
+    readData();    // Read inputs and update maps
+    printInputs(); // Print all inputs
 }
 
 /**
  *
  */
-void Hexapod_Joystick::joystickControl()
+void Hexapod_Nunchuck::nunchuckControl()
 {
     static double joyX = 0;
     static double joyY = 0;
@@ -74,22 +66,28 @@ void Hexapod_Joystick::joystickControl()
     static uint8_t joyMode = 0;
     static const uint8_t nbJoyMode = 4;
 
-    joyX = getX();
-    joyY = getY();
-    joyZ = getZ();
+    static double joyXmin = HX_X_MIN;
+    static double joyXmax = HX_X_MAX;
+    static double joyYmin = HX_Y_MIN;
+    static double joyYmax = HX_Y_MAX;
 
-    // Exit if joystick X, Y and Z did not change.
+    readData();
+    joyX = mapDouble(getJoyX(), 0, 255, joyXmin, joyXmax);
+    joyY = mapDouble(getJoyY(), 0, 255, joyYmin, joyYmax);
+    joyZ = getButtonC();
+
+    // Exit if nunchuck X, Y and Z did not change.
     static bool joyStill;
     joyStill = ((joyX == lastJoyX) && (joyY == lastJoyY) && (joyZ == lastJoyZ));
     if (joyStill)
     {
-        // Don’t check the joystick states too fast.
+        // Don’t check the nunchuck states too fast.
         // This is needed to remove noise.
         delay(10);
         return;
     }
 
-    // Change joystick mode if button pressed.
+    // Change nunchuck mode if button pressed.
     if (joyZ != 0)
     {
         joyMode = (joyMode + 1) % nbJoyMode;
@@ -98,21 +96,41 @@ void Hexapod_Joystick::joystickControl()
 
         // Set new limits.
         if (joyMode == 0)
-            setLimits(HX_X_MIN, HX_X_MAX, HX_X_MID, HX_Y_MIN, HX_Y_MAX, HX_Y_MID);
+        {
+            joyXmin = HX_X_MIN;
+            joyXmax = HX_X_MAX;
+            joyYmin = HX_Y_MIN;
+            joyYmax = HX_Y_MAX;
+        }
         else if (joyMode == 1)
-            setLimits(HX_C_MIN, HX_C_MAX, HX_C_MID, HX_Z_MIN, HX_Z_MAX, HX_Z_MID);
+        {
+            joyXmin = HX_C_MIN;
+            joyXmax = HX_C_MAX;
+            joyYmin = HX_Z_MIN;
+            joyYmax = HX_Z_MAX;
+        }
         else if (joyMode == 2)
-            setLimits(HX_C_MIN, HX_C_MAX, HX_C_MID, HX_Z_MIN, HX_Z_MAX, HX_Z_MID);
+        {
+            joyXmin = HX_C_MIN;
+            joyXmax = HX_C_MAX;
+            joyYmin = HX_Z_MIN;
+            joyYmax = HX_Z_MAX;
+        }
         else if (joyMode == 3)
-            setLimits(HX_A_MIN, HX_A_MAX, HX_A_MID, HX_B_MIN, HX_B_MAX, HX_B_MID);
-
-        // Blink built in LED (joyMode + 1) times.
-        hx_gpio.blinkBuitInLED(joyMode + 1, 150, 75);
+        {
+            joyXmin = HX_A_MIN;
+            joyXmax = HX_A_MAX;
+            joyYmin = HX_B_MIN;
+            joyYmax = HX_B_MAX;
+        }
 
         // Debounce.
-        while (getZ())
+        while (getButtonC())
         {
+            readData();
+            delay(20);
         }
+        delay(200);
 
         return;
     }
@@ -137,13 +155,13 @@ void Hexapod_Joystick::joystickControl()
 
     hx_servo.updateServos(movOK);
 
-    // Save last joystick values.
+    // Save last nunchuck values.
     lastJoyX = joyX;
     lastJoyY = joyY;
     lastJoyZ = joyZ;
 
-#if SEND_JOYSTICK_INFO_TO_SERIAL
-    // Send joystick info to serial.
+#if SEND_NUNCHUCK_INFO_TO_SERIAL
+    // Send nunchuck info to serial.
     Serial.print("\n\njoyX     = ");
     Serial.print(joyX);
     Serial.print(" | joyY     = ");
@@ -157,16 +175,6 @@ void Hexapod_Joystick::joystickControl()
     Serial.print(lastJoyY);
     Serial.print(" | lastJoyZ = ");
     Serial.println(lastJoyZ);
-
-    Serial.print("getRawX = ");
-    Serial.print(getRawX());
-    Serial.print(" | getRawY = ");
-    Serial.println(getRawY());
-
-    Serial.print("joyX == lastJoyX = ");
-    Serial.println(joyX == lastJoyX);
-    Serial.print("joyY == lastJoyY = ");
-    Serial.println(joyY == lastJoyY);
 
     Serial.print("joyStill = ");
     Serial.println(joyStill);

@@ -21,25 +21,21 @@
 // External libs.
 #include <Arduino.h>
 #include <ESP32Servo.h>
+#include <WiiChuck.h>
 
 // Hexapod libs.
 #include <Hexapod_Demo.h>
 #include <Hexapod_GPIO.h>
-#include <Hexapod_Joystick.h>
+#include <Hexapod_Nunchuck.h>
 #include <Hexapod_Kinematics.h>
 #include <Hexapod_Serial.h>
 #include <Hexapod_Servo.h>
-
-// Joystick pins.
-#define X_PIN 26
-#define Y_PIN 12
-#define Z_PIN 32
 
 // Global variables.
 angle_t servo_angles[NB_SERVOS];
 Hexapod_Servo hx_servo; // Servo pins are defined in Hexapod_Config_`x`.h (where `x` is the file number)
 Hexapod_Serial hx_serial;
-Hexapod_Joystick hx_joystick(X_PIN, Y_PIN, Z_PIN);
+Hexapod_Nunchuck hx_nunchuck;
 Hexapod_Demo hx_demo;
 Hexapod_GPIO hx_gpio;
 
@@ -52,20 +48,8 @@ void setup()
     hx_gpio.setupGPIO();
     hx_serial.setupSerial();
     hx_servo.setupServo();
-    hx_joystick.setupJoystick();
-
-    // Demo movements => move in circles until joystick button pressed.
-#define endlessLoop false
-#if endlessLoop == true
-    while (!hx_joystick.getZ())
-        hx_demo.demoMov_circles(1);
-    while (hx_joystick.getZ())
-    {
-    }
-    delay(200);
-#else
+    hx_nunchuck.setupNunchuck();
     hx_demo.demoMov_circles(3);
-#endif
 
     // Go to home position.
     uint8_t movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);
@@ -83,8 +67,8 @@ void setup()
  */
 void loop()
 {
-#if ENABLE_JOYSTICK_READ
-    hx_joystick.joystickControl();
+#if ENABLE_NUNCHUCK_READ
+    hx_nunchuck.nunchuckControl();
 #endif
 
 #if ENABLE_SERIAL_READ
