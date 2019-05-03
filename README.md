@@ -2,7 +2,7 @@
 # S T E W A R T    P L A T F O R M    O N    E S P 3 2
 
 <p align="center">
-<img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/stewart-plateforme.jpg" />
+<img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/stewart-plateform.jpg" />
 </p>
 
 ## ABSTRACT
