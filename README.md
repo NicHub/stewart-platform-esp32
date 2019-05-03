@@ -3,15 +3,15 @@
 
 ## ABSTRACT
 
-Implementation of the Stewart Platform — a 6-degrees of freedom hexapod — on the ESP32. The actuators are PWM rotary servo motors and the program is written in Arduino C for Platform IO.
+This is an implementation of a 6-degrees of freedom hexapod — also called *Stewart Platform* — on the ESP32. The actuators are PWM rotary servo motors and the program is written in Arduino C for Platform IO. This project is done is the frame of the *P19 project* at the [Microclub](https://microclub.ch).
 
 Currently the platform can be operated:
 
 - with a Nunchuck
-- with C++ code (see `Hexapod_Demo.cpp`)
-- with G-Code through serial (see `python/gcode2serial.py`)
+- with C++ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
+- with G-Code through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
 
-The kinematics calculation is done in `Hexapod_Kinematics.cpp` and can be also be used in a desktop C++ program. I managed to compile it with `g++` on *macOS Mojave*. See `hexapod_app/hexapod_app.cpp`.
+The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be used in a desktop C++ program. I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_app/hexapod_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_app/hexapod_app.cpp).
 
 ## HOME PAGE OF THE PROJECT
 
@@ -21,7 +21,7 @@ The home page is a work in progress, but the video shows what the platform can d
 
 ## GEOMETRY SETTINGS
 
-Geometry settings are defined in `Hexapod_Config_1.h`. The meaning of the parameters is also explained in [`doc/hexapod_parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
+Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h). The meaning of the parameters is also explained in [`doc/hexapod_parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
 
 ## COMPONANTS & WIRING
 
@@ -29,6 +29,9 @@ Geometry settings are defined in `Hexapod_Config_1.h`. The meaning of the parame
 
 WeMos ESP32 WROOM <https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html>
 
+### External power supply
+
+ - I currently use a 5 V / 10 A power supply, but 5 V is not enough. I need to upgrade to 7 V. (https://aliexpress.com/af/32810906485.html)
 
 ### Rods
 
