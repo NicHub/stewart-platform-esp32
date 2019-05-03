@@ -7,7 +7,7 @@
 
 ## ABSTRACT
 
-This is an implementation of a 6-degrees of freedom hexapod — also called *Stewart Platform* — on the ESP32. The actuators are PWM rotary servo motors and the program is written in Arduino C for Platform IO. This project is done is the frame of the *P19 project* at the [Microclub](https://microclub.ch).
+This is an implementation of a 6-degrees of freedom hexapod — also called *Stewart Platform* — on the ESP32. The actuators are PWM rotary servo motors and the program is written in *Arduino C* for *Platform IO*. This project is done in the frame of the *P19 project* at the [Microclub](https://microclub.ch).
 
 Currently the platform can be operated:
 
@@ -15,7 +15,7 @@ Currently the platform can be operated:
 - with C++ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
 - with G-Code through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
 
-The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be used in a desktop C++ program. I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_app/hexapod_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_app/hexapod_app.cpp).
+The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_app/hexapod_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_app/hexapod_app.cpp).
 
 ## HOME PAGE OF THE PROJECT
 
@@ -35,7 +35,7 @@ WeMos ESP32 WROOM <https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Develo
 
 ### External power supply
 
- - I currently use a 5 V / 10 A power supply, but 5 V is not enough. I need to upgrade to 7 V. (https://aliexpress.com/af/32810906485.html)
+I currently use a 5 V / 10 A power supply, but 5 V is not enough. I need to upgrade to 7 V. (https://aliexpress.com/af/32810906485.html)
 
 ### Rods
 
@@ -51,7 +51,7 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 - I formerly used clones of the *Tower Pro MG90s* Servos, but they were also bad and too small for this application. <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
 - In the future, I will probalbly use *Parallax 900-00005* servos. It seems that these are the one used by *fullmotiondynamics* in their videos. <https://www.parallax.com/product/900-00005>
 
-> Pins are defined in `Hexapod_Config_1.h`.
+> Pins are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
 
 | servo | ESP32 pin |
 | :---- | :-------- |
