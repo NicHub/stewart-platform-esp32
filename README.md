@@ -1,6 +1,10 @@
 
 # S T E W A R T    P L A T F O R M    O N    E S P 3 2
 
+<p align="center">
+<img style="height:400px;" src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/stewart-plateforme.jpg" />
+</p>
+
 ## ABSTRACT
 
 This is an implementation of a 6-degrees of freedom hexapod — also called *Stewart Platform* — on the ESP32. The actuators are PWM rotary servo motors and the program is written in Arduino C for Platform IO. This project is done is the frame of the *P19 project* at the [Microclub](https://microclub.ch).
