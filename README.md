@@ -1,26 +1,105 @@
 
 # S T E W A R T    P L A T F O R M    O N    E S P 3 2
 
+## ABSTRACT
+
+Implementation of the Stewart Platform — a 6-degrees of freedom hexapod — on the ESP32. The actuators are PWM rotary servo motors and the program is written in Arduino C for Platform IO.
+
+Currently the platform can be operated:
+
+- with a Nunchuck
+- with C++ code (see `Hexapod_Demo.cpp`)
+- with G-Code through serial (see `python/gcode2serial.py`)
+
+The kinematics calculation is done in `Hexapod_Kinematics.cpp` and can be also be used in a desktop C++ program. I managed to compile it with `g++` on *macOS Mojave*. See `hexapod_app/hexapod_app.cpp`.
+
+## HOME PAGE OF THE PROJECT
+
+The home page is a work in progress, but the video shows what the platform can do. The original implementation used an analog joystick, but the current version uses a Wii Nunchuck.
+
 <https://ouilogique.com/plateforme-de-stewart-esp32/>
+
+## GEOMETRY SETTINGS
+
+Geometry settings are defined in `Hexapod_Config_1.h`. The meaning of the parameters is also explained in [`doc/hexapod_parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
+
+## COMPONANTS & WIRING
+
+### ESP32
+
+WeMos ESP32 WROOM <https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html>
+
+
+### Rods
+
+M3x100mm (140mm total) <https://aliexpress.com/af/32775630549.html>
+
+### Servo horn arm
+
+Tritanium color <https://aliexpress.com/af/32843432977.html>
+
+### Servos
+
+- I currently use clones of the *Tower Pro MG996R* servos, but they are bad and I don’t recommend them. <https://fr.aliexpress.com/item//32636102294.html>
+- I formerly used clones of the *Tower Pro MG90s* Servos, but they were also bad and too small for this application. <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
+- In the future, I will probalbly use *Parallax 900-00005* servos. It seems that these are the one used by *fullmotiondynamics* in their videos. <https://www.parallax.com/product/900-00005>
+
+> Pins are defined in `Hexapod_Config_1.h`.
+
+| servo | ESP32 pin |
+| :---- | :-------- |
+| 0     | 13        |
+| 1     | 15        |
+| 2     | 27        |
+| 3     | 14        |
+| 4     | 33        |
+| 5     | 25        |
+
+ ### Nunchuck
+   - Nunchuck <https://fr.aliexpress.com/item//32880983134.html>
+   - Cable extension <https://fr.aliexpress.com/item//32841281892.html>
+
+> The Nunchuck library uses `Wire.h` and standard I²C connections internaly.
+>
+> Pins are seen from left to right and top to bottom looking at the Nunchuck connector.
+>
+> Cut the cable extension to connect to the ESP32.
+
+
+| color  | signal | ESP32 pin                                              |
+| :----- | :----- | :----------------------------------------------------- |
+| white  | SCL    | IO22                                                   |
+| NC     |        |                                                        |
+| red    | GND    | GND                                                    |
+| green  | VCC    | VCC                                                    |
+| black  | ATT    | IO4 (Not required, gives VCC if Nunchuck is connected) |
+| yellow | SDA    | IO21                                                   |
+
+
+## EXTERNAL LIBRARIES
+
+    platformio lib install 4744 # ESP32Servo
+    platformio lib install 1465 # WiiChuck
 
 ## CREDITS
 
+### Primary source of inspiration
+
+ - San-José State University / Full Motion Dynamics:
+   - <https://www.youtube.com/watch?v=j4OmVLc_oDw>
+   - <http://fullmotiondynamics.com>
+
 ### Kinematics
 
-Kinematics based on 6dof-stewduino, Copyright (C) 2018  Philippe Desrosiers
-
-https://github.com/xoxota99/stewy
-
-Derived from the work of Daniel Waters
-
-https://www.youtube.com/watch?v=1jrP3_1ML9M
-
-Kinematics calculation is also explained in this document by an unknown author from the [WOKINGHAM U3A MATH GROUP](http://www.wokinghamu3a.org.uk/groups/mathematics/)
-
-https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf
+ - Hexapod kinematics of this project was originaly based on *6dof-stewduino, by Philippe Desrosiers*, althought I reworked it in depth:
+   - <https://github.com/xoxota99/stewy>
+ - He derived his implementation from the work of *Daniel Waters*:
+   - <https://www.youtube.com/watch?v=1jrP3_1ML9M>
+ - Kinematics calculation is also explained in this document by an unknown author from the *Wokingham U3A Math Group*:
+   - <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
+   - <http://www.wokinghamu3a.org.uk/groups/mathematics/>
 
 ### Serial buffer for G-Code
 
-Original implementation from MarginallyClever
-
-https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield
+ - Derived from *MarginallyClever*:
+   - <https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield>
