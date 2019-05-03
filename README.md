@@ -107,7 +107,6 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
     - <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
     - <http://www.wokinghamu3a.org.uk/groups/mathematics/>
  - The project *memememememememe* was also an excellent source of inspiration. They share the code for *RPi* and a simulator in the *Processing* langage:
-    - <https://www.youtube.com/watch?v=rD4kTW_khXQ>
     - <https://memememememememe.me/post/stewart-platform-math/>
     - <https://github.com/thiagohersan/memememe>
 
