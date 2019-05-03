@@ -11,9 +11,9 @@ This is an implementation of a 6-degrees of freedom hexapod — also called *Ste
 
 Currently the platform can be operated:
 
- - with a Nunchuck
- - with C++ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
- - with G-Code through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
+ - with a *Nunchuck*
+ - with *Arduino C* code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
+ - with *G-Code* through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
 
 The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_app/hexapod_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_app/hexapod_app.cpp).
 
@@ -25,7 +25,7 @@ The home page is a work in progress, but the video shows what the platform can d
 
 ## GEOMETRY SETTINGS
 
-Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h). The meaning of the parameters is also explained in [`doc/hexapod_parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
+Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h). The meaning of the parameters is also explained in [`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
 
 ## COMPONANTS & WIRING
 
@@ -106,7 +106,7 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
  - Kinematics calculation is also explained in this document by an unknown author from the *Wokingham U3A Math Group*:
     - <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
     - <http://www.wokinghamu3a.org.uk/groups/mathematics/>
- - The project memememememememe was also an excellent source of inspiration. They share the code for RPi and a simulator in the *Processing* langage:
+ - The project *memememememememe* was also an excellent source of inspiration. They share the code for *RPi* and a simulator in the *Processing* langage:
     - <https://www.youtube.com/watch?v=rD4kTW_khXQ>
     - <https://memememememememe.me/post/stewart-platform-math/>
     - <https://github.com/thiagohersan/memememe>
