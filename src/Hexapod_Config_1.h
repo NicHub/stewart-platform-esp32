@@ -81,33 +81,33 @@ const double THETA_S[NB_SERVOS] = {
  * different than what's defined here. These are just the absolute maximums under
  * ideal conditions (eg: max for roll when pitch is zero).
  */
-const double HX_X_MIN = -35.0; // -50
-const double HX_X_MAX = 35.0;  // 52
+const double HX_X_MIN = -30.0; // -37
+const double HX_X_MAX = 30.0;  // 38
 const double HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
 const double HX_X_BAND = HX_X_MAX - HX_X_MIN;
 
-const double HX_Y_MIN = -35.0; // -53
-const double HX_Y_MAX = 35.0;  // 53
+const double HX_Y_MIN = -30.0; // -42
+const double HX_Y_MAX = 30.0;  // 38
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -12.0; // -18
-const double HX_Z_MAX = 20.0;  // 23
+const double HX_Z_MIN = -12.0; // -21
+const double HX_Z_MAX = 12.0;  // 16
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
-const double HX_A_MIN = radians(-15.0); // radians(-22)
-const double HX_A_MAX = radians(15.0);  // radians(28)
+const double HX_A_MIN = radians(-15.0); // radians(-27)
+const double HX_A_MAX = radians(15.0);  // radians(19)
 const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
 const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
-const double HX_B_MIN = radians(-15.0); // radians(-24)
-const double HX_B_MAX = radians(15.0);  // radians(24)
+const double HX_B_MIN = radians(-15.0); // radians(-19)
+const double HX_B_MAX = radians(15.0);  // radians(19)
 const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
 const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
-const double HX_C_MIN = radians(-50.0); // radians(-61)
-const double HX_C_MAX = radians(50.0);  // radians(61)
+const double HX_C_MIN = radians(-40.0); // radians(-43)
+const double HX_C_MAX = radians(40.0);  // radians(43)
 const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 
@@ -117,4 +117,4 @@ const double P_RAD = 99.55 / 2;       // Platform radius (mm). The distance from
 const double B_RAD = 153.99 / 2;      // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
 const double ARM_LENGTH = 20.0;       // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;      // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-const double Z_HOME = 133.802903;     // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
+const double Z_HOME = 137.3501805;    // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
