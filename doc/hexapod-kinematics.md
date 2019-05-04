@@ -1,10 +1,12 @@
 <!--
+
 ---
 title: Hexapod kinematics
 author: Nicolas Jeanmonod
 header-includes: |
     \usepackage{amsmath}
 ---
+
 -->
 
 # Hexapod kinematics
@@ -107,11 +109,12 @@ $$
 $$
 
 $$
+\boxed{
 \left(
 \begin{array}{c}
-\text{dPBx}_i\\
-\text{dPBy}_i\\
-\text{dPBz}_i\\
+\text{dPBx}_i \\
+\text{dPBy}_i \\
+\text{dPBz}_i \\
 1
 \end{array}
 \right)^T
@@ -124,7 +127,7 @@ P0x_i \cos B \sin C + P0y_i (\sin A \sin B \sin C + \cos A \cos C) + \text{Ty} -
 1 \\
 \end{array}
 \right)^T
-
+}
 \text{(eq 1)}
 $$
 
@@ -132,7 +135,9 @@ $$
 And the squares of the length of the vectors are :
 
 $$
+\boxed{
 d_{i}^2=\text{dPBx}_i^2+\text{dPBy}_i^2+\text{dPBz}_i^2
+}
 \text{    (eq 2)}
 $$
 
@@ -144,5 +149,132 @@ $$
 d_{i}^2 \leq(a + s)^2
 \text{    (eq 3)}
 $$
+
+
+## Projection of the rod sphere onto the arm plane
+
+$P$ is the projection of $P_i$ on the $xy$ plane.
+
+
+$\overline{PR} =$ rod length
+
+$\overline{BR}$ is a segment that belongs to the plane formed by point A (joint at the end of servo arm) during rotation
+
+$P'$ is the projection of $P$ on $\overline{BR}$
+
+$\overline{PB'} = \text{dPBx}_i$
+
+$\overline{BB'} = \text{dPBy}_i$
+
+### Angles calculation
+$$
+\widehat{P'PB'} = \theta{s}_i - \frac{\pi}{2}
+$$
+$$
+\widehat{BPB'} = atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
+$$
+$$
+\widehat{P'PB} =
+\widehat{P'PB'} - \widehat{BPB'} =
+\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
+$$
+
+### Length calculation
+
+The intersection of the sphere formed by the rod and the plane of the rotation of the servo arm joint is a circle of radius $r_\text{cs}$.
+
+$$
+\overline{PB} = \sqrt{\text{dPBx}_i^2 + \text{dPBy}_i^2}
+$$
+$$
+\overline{P'P} = \overline{PB} \cdot cos\widehat{P'PB}
+$$
+$$
+\boxed{
+\overline{P'P} =
+\sqrt{\text{dPBx}_i^2 + \text{dPBy}_i^2}
+\cdot
+cos\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
+\right)
+}
+$$
+$$
+r_{cs}
+= \overline{P'R}
+= \sqrt{\overline{PR}^2 - \overline{P'P}^2}
+
+$$
+$$
+\boxed{
+r_{cs}
+= \sqrt{\overline{\text{Rod Length}}^2 - \overline{P'P}^2}
+}
+$$
+
+<!--
+=SQRT(rod_length^2 - (dPBx^2+dPBy^2) * (COS(theta_s - PI()/2 -ATAN(dPBy/dPBx)))^2)
+-->
+$$
+\tiny
+
+r_{cs} =
+\sqrt
+{
+\text{Rod Length}^2 -
+\left(\text{dPBx}_i^2 + \text{dPBy}_i^2\right) \cdot
+cos^2\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)
+}
+
+$$
+
+The center of this circle in the plane of the servo arm is at coordinates $c_x, c_y$ when the origin $0,0$ is set to point $B$, i.e. on the projection of the servo shaft.
+
+$$
+\boxed{
+c_y = \text{dPBz}
+}
+$$
+
+$$
+c_x
+= \overline{P'B}
+= \sqrt{\overline{PB}^2 - \overline{P'P}^2}
+$$
+
+$$
+\boxed{
+c_x
+= \sqrt{\text{dPBx}_i^2 + \text{dPBy}_i^2 - \overline{P'P}^2}
+}
+$$
+
+$$
+\tiny
+c_x =
+\sqrt{
+\text{dPBx}_i^2 + \text{dPBy}_i^2
+-
+\left(\text{dPBx}_i^2 + \text{dPBy}_i^2\right) \cdot
+cos^2\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)}
+$$
+
+## Intersection between the circle of the servo arm joint and the circle of the rod sphere
+
+The equations of these two circles in the plane they belong to are:
+
+$$
+\left
+\{
+\begin{aligned}
+
+x^2 + y^2 = arm^2
+\\
+(c_x - x)^2 + (c_y - y)^2 = r_\text{cs}^2
+\end{aligned}
+\right
+.
+$$
+
+
 
 TO BE CONTINUED...
