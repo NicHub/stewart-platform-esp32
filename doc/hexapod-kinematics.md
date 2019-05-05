@@ -258,6 +258,7 @@ c_x =
 cos^2\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)}
 $$
 
+<!--
 ## Intersection between the circle of the servo arm joint and the circle of the rod sphere
 
 The equations of these two circles in the plane they belong to are:
@@ -274,6 +275,8 @@ x^2 + y^2 = arm^2
 \right
 .
 $$
+
+-->
 
 
 
