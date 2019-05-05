@@ -7,12 +7,42 @@ header-includes: |
     \usepackage{amsmath}
 ---
 
+licensed under the GNU General Public License v3.0
+
+-->
+
+<!--
+
+/**
+ * S T E W A R T    P L A T F O R M    O N    E S P 3 2
+ *
+ * Copyright (C) 2019  Nicolas Jeanmonod, ouilogique.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ */
+
 -->
 
 # Hexapod kinematics
 
 <p style="color:red">This document is a draft</p>
-> Nicolas Jeanmonod, May 2019
+
+> Nicolas Jeanmonod, ouilogique.com, May 2019
+
+
+## Displacements of the servo pivots $\text{B}_{i}$ and the platform joints $\text{P1}_{i}$
 
 The coordinates of the platform joints at home position are called $\text{P0}_{i}$.
 
@@ -22,7 +52,7 @@ $$
 \text{P0}_{i}=\{P0x_i,P0y_i,0,1\}
 $$
 
-The platform has six degrees of freedom, three rotations and three translations with the following transformation matrices :
+The platform has six degrees of freedom, three rotations and three translations with the following transformation matrices:
 
 $$
 \begin{gathered}
@@ -75,7 +105,7 @@ $$
 \end{gathered}
 $$
 
-The coordinates of the platform joints after movement are called $\text{P1}_{i}$ and can be found by calculating the following dot product :
+The coordinates of the platform joints after movement are called $\text{P1}_{i}$ and can be found by calculating the following dot product:
 
 $$
 \text{P1}_{i}=\left(\text{P0}_{i}\cdot\text{Rx}\cdot\text{Ry}\cdot\text{Rz}\cdot\text{Txyz}\right) =
@@ -102,7 +132,7 @@ P0x_i \cos B \sin C + P0y_i (\sin A \sin B \sin C + \cos A \cos C) + \text{Ty} \
 \right)^T
 $$
 
-We can now calculate the distances between the servo pivots $\text{B}_{i}$ and the platform joints $\text{P1}_{i}$ :
+We can now calculate the distances between the servo pivots $\text{B}_{i}$ and the platform joints $\text{P1}_{i}$:
 
 $$
 \text{dPB}_{i} = \left(\text{P1}_{i} - \text{B}_{i}\right)= \left(\text{P1}_{i} - \{Bx_i,By_i,-Z_{home},1\}\right) =
@@ -132,7 +162,7 @@ P0x_i \cos B \sin C + P0y_i (\sin A \sin B \sin C + \cos A \cos C) + \text{Ty} -
 $$
 
 
-And the squares of the length of the vectors are :
+And the squares of the length of the vectors are:
 
 $$
 \boxed{
@@ -143,7 +173,7 @@ $$
 
 For a platform using linear motors, the calculation can be done with $\text{eq 1}$ and $\text{eq 2}$. In our case we have rotational motors so we need to continue. Note that it is not a good idea to compute the square root of $d_{i}^2$ because it is a computer intensive operation and we don’t need the value of $d$.
 
-Now, we need to check if the arm of length $a$ and the rod of length $s$ are long enoug to actualy go to the target position :
+Now, we need to check if the arm of length $a$ and the rod of length $s$ are long enoug to actualy go to the target position:
 
 $$
 d_{i}^2 \leq(a + s)^2
@@ -151,7 +181,12 @@ d_{i}^2 \leq(a + s)^2
 $$
 
 
-## Projection of the rod sphere onto the arm plane
+<div style="page-break-before:always;"></div>
+
+## Projection of the rod sphere on the arm plane
+
+<p style="color:red">The calculation below works when point B is between P' and R. It doesn’t work when P' is between B and R.</p>
+
 
 $P$ is the projection of $P_i$ on the $xy$ plane.
 
@@ -168,7 +203,7 @@ $\overline{BB'} = \text{dPBy}_i$
 
 ### Angles calculation
 $$
-\widehat{P'PB'} = \theta{s}_i - \frac{\pi}{2}
+\widehat{P'PB'} = \frac{\pi}{2} - \theta{s}_i
 $$
 $$
 \widehat{BPB'} = atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
@@ -176,12 +211,12 @@ $$
 $$
 \widehat{P'PB} =
 \widehat{P'PB'} - \widehat{BPB'} =
-\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
+\frac{\pi}{2} - \theta{s}_i - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
 $$
 
 ### Length calculation
 
-The intersection of the sphere formed by the rod and the plane of the rotation of the servo arm joint is a circle of radius $r_\text{cs}$.
+Projection of $P$ on the servo arm plane.
 
 $$
 \overline{PB} = \sqrt{\text{dPBx}_i^2 + \text{dPBy}_i^2}
@@ -194,10 +229,13 @@ $$
 \overline{P'P} =
 \sqrt{\text{dPBx}_i^2 + \text{dPBy}_i^2}
 \cdot
-cos\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
+cos\left(\frac{\pi}{2} - \theta{s}_i - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}
 \right)
 }
 $$
+
+The intersection of the sphere formed by the rod and the plane of the rotation of the servo arm joint is a circle of radius $r_\text{cs}$.
+
 $$
 r_{cs}
 = \overline{P'R}
@@ -222,22 +260,24 @@ r_{cs} =
 {
 \text{Rod Length}^2 -
 \left(\text{dPBx}_i^2 + \text{dPBy}_i^2\right) \cdot
-cos^2\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)
+cos^2\left(\frac{\pi}{2} - \theta{s}_i - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)
 }
 
 $$
 
-The center of this circle in the plane of the servo arm is at coordinates $c_x, c_y$ when the origin $0,0$ is set to point $B$, i.e. on the projection of the servo shaft.
+### In the arm plane
+
+The center of this circle **in the plane of the servo arm** is at coordinates $c_x, c_z$ when the origin $0,0$ is set to point $B$, i.e. on the projection of the servo shaft.
 
 $$
-\boxed{
-c_y = \text{dPBz}
-}
+
+c_z = \text{dPBz}_i
+
 $$
 
 $$
 c_x
-= \overline{P'B}
+= \overline{P'B_\text{⏥xy}}
 = \sqrt{\overline{PB}^2 - \overline{P'P}^2}
 $$
 
@@ -255,29 +295,44 @@ c_x =
 \text{dPBx}_i^2 + \text{dPBy}_i^2
 -
 \left(\text{dPBx}_i^2 + \text{dPBy}_i^2\right) \cdot
-cos^2\left(\theta{s}_i - \frac{\pi}{2} - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)}
+cos^2\left(\frac{\pi}{2} - \theta{s}_i - atan\frac{\text{dPBy}_i}{\text{dPBx}_i}\right)}
 $$
 
-<!--
-## Intersection between the circle of the servo arm joint and the circle of the rod sphere
-
-The equations of these two circles in the plane they belong to are:
 
 $$
-\left
-\{
-\begin{aligned}
-
-x^2 + y^2 = arm^2
-\\
-(c_x - x)^2 + (c_y - y)^2 = r_\text{cs}^2
-\end{aligned}
-\right
-.
+\boxed{
+\alpha = atan\left(\frac{\text{dPBz}_i}{c_x}\right)
+}
 $$
 
--->
+Cosinus theorem
+
+$$
+r_\text{cs} = \text{arm}^2 + \overline{P'B_\text{⏥arm}}^2 - 2 \text{ arm } \overline{P'B_\text{⏥arm}} \text{ } cos\beta
+$$
 
 
 
-TO BE CONTINUED...
+$$
+\boxed{
+\beta = acos\left(
+\frac{\text{arm}^2 + \overline{P'B_\text{⏥arm}}^2 - r_\text{cs}^2}
+{2 \text{ arm } \overline{P'B_\text{⏥arm}}}
+\right)
+}
+$$
+
+$$
+\boxed{
+\overline{P'B_\text{⏥arm}}
+=\sqrt{ \overline{P'B_\text{⏥xy}}^2 + \text{dPBz}_i^2}
+}
+$$
+
+
+$$
+\boxed{
+\text{servo angle} = \pi - \alpha - \beta
+}
+$$
+
