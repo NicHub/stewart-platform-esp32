@@ -47,7 +47,7 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  * and A (pitch), B (roll) and C (yaw) in radians.
  *
  * @param servo_angles : pointer to an array of struct containing
- * the calculated servos angles in radians, degrees and in pulse width (PWM).
+ * the calculated servos angles in radians, degrees and in microseconds (PWM).
  *
  * @return
  * Returns = 0 if OK
