@@ -88,7 +88,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
                 B_COORDS[sid][1];
         dPB_z = -P_COORDS[sid][0] * sinB +
                 P_COORDS[sid][1] * sinA * cosB +
-                coord.hx_z +
+                coord.hx_z -
                 Z_HOME;
 
         // Square of the new distance between platform joint and servo pivot.
@@ -111,6 +111,19 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         t = (COS_THETA_S[sid] * dPB_x +
              SIN_THETA_S[sid] * dPB_y) /
             dPB_z;
+
+        // If t <= -1, then s is undefined.
+        // Abort computation of remaining angles if the current angle is not OK.
+        // (~1 µs)
+        if (t <= -1)
+        {
+            movOK = -5;
+            break;
+        }
+
+        // Mathematically speaking, we should also test if dPB_z == 0 before calculating s.
+        // But this is impossible in practice.
+
         // (~9 µs)
         s = (d2 - D2PERP) /
             (2 * ARM_LENGTH * dPB_z * sqrt(1 + t * t));
@@ -118,7 +131,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // Tests if there are no physically possible solutions.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (abs(s) >= 1)
+        if (abs(s) > 1)
         {
             movOK = -2;
             break;

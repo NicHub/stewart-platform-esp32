@@ -58,7 +58,7 @@ void calcAndPrintResults(platform_t coords)
      {
           for (uint8_t id = 0; id < NB_SERVOS; id++)
           {
-#define WHAT_TO_PRINT 3
+#define WHAT_TO_PRINT 1
 #if WHAT_TO_PRINT == 1
                angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].deg;
 #elif WHAT_TO_PRINT == 2
@@ -115,30 +115,30 @@ int main()
      angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "" << endl;
 
      // Compute and print angles in the respective min/max ranges.
-     // for (double sway = HX_X_MIN; sway <= HX_X_MAX; sway += (HX_X_MAX - HX_X_MIN) / nb_intervals)
-     // {
-     //      for (double surge = HX_Y_MIN; surge <= HX_Y_MAX; surge += (HX_Y_MAX - HX_Y_MIN) / nb_intervals)
-     //      {
-     //           for (double heave = HX_Z_MIN; heave <= HX_Z_MAX; heave += (HX_Z_MAX - HX_Z_MIN) / nb_intervals)
-     //           {
-     //                for (double pitch = HX_A_MIN; pitch <= HX_A_MAX; pitch += (HX_A_MAX - HX_A_MIN) / nb_intervals)
-     //                {
-     //                     for (double roll = HX_B_MIN; roll <= HX_B_MAX; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals)
-     //                     {
-     //                          for (double yaw = HX_B_MIN; yaw <= HX_B_MAX; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals)
-     //                          {
-     //                               calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
-     //                          }
-     //                     }
-     //                }
-     //           }
-     //      }
-     // }
-
-     for (double heave = HX_Z_MIN; heave <= HX_Z_MAX; heave += (HX_Z_MAX - HX_Z_MIN) / 100)
+     for (double sway = HX_X_MIN; sway <= HX_X_MAX; sway += (HX_X_MAX - HX_X_MIN) / nb_intervals)
      {
-          calcAndPrintResults({heave, 0, 0, 0, 0, 0});
+          for (double surge = HX_Y_MIN; surge <= HX_Y_MAX; surge += (HX_Y_MAX - HX_Y_MIN) / nb_intervals)
+          {
+               for (double heave = HX_Z_MIN; heave <= HX_Z_MAX; heave += (HX_Z_MAX - HX_Z_MIN) / nb_intervals)
+               {
+                    for (double pitch = HX_A_MIN; pitch <= HX_A_MAX; pitch += (HX_A_MAX - HX_A_MIN) / nb_intervals)
+                    {
+                         for (double roll = HX_B_MIN; roll <= HX_B_MAX; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals)
+                         {
+                              for (double yaw = HX_B_MIN; yaw <= HX_B_MAX; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals)
+                              {
+                                   calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
+                              }
+                         }
+                    }
+               }
+          }
      }
+
+     // for (double heave = HX_Z_MIN; heave <= HX_Z_MAX; heave += (HX_Z_MAX - HX_Z_MIN) / 100)
+     // {
+     //      calcAndPrintResults({heave, 0, 0, 0, 0, 0});
+     // }
 
      // Done.
      angle_file.close();

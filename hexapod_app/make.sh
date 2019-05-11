@@ -10,6 +10,6 @@ g++                               \
     -I ../src/                    \
     ../src/Hexapod_Kinematics.cpp \
     hexapod_app.cpp               \
-    -o hexapod_app                \
+    -o $EXEC_NAME                 \
     -std=c++11                    \
     && ./$EXEC_NAME

@@ -42,7 +42,7 @@ licensed under the GNU General Public License v3.0
 > Nicolas Jeanmonod, ouilogique.com, May 2019
 
 
-## Displacements of the servo pivots $\text{B}_{i}$ and the platform joints $\text{P1}_{i}$
+## Displacements of the platform joints $\text{P1}_{i}$ relative to the servo pivots $\text{B}_{i}$
 
 The coordinates of the platform joints at home position are called $\text{P0}_{i}$.
 
