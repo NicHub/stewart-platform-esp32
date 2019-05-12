@@ -26,6 +26,8 @@ extern angle_t servo_angles[NB_SERVOS];
 extern Hexapod_Servo hx_servo;
 extern Hexapod_GPIO hx_gpio;
 
+#define NUNCHUCK_ATT_PIN 35
+
 /**
  *
  */
@@ -44,12 +46,25 @@ Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
 /**
  *
  */
-void Hexapod_Nunchuck::setupNunchuck()
+bool Hexapod_Nunchuck::connected()
 {
+    return digitalRead(NUNCHUCK_ATT_PIN);
+}
+
+/**
+ *
+ */
+int Hexapod_Nunchuck::setupNunchuck()
+{
+    pinMode(NUNCHUCK_ATT_PIN, INPUT_PULLDOWN);
+    // Abort if Nunchuck is not connected
+    if (!connected())
+        return -1;
     begin();
     type = NUNCHUCK;
     readData();    // Read inputs and update maps
     printInputs(); // Print all inputs
+    return 0;
 }
 
 /**

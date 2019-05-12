@@ -30,6 +30,7 @@ class Hexapod_Nunchuck : public Accessory
 
   public:
     Hexapod_Nunchuck();
-    void setupNunchuck();
+    int setupNunchuck();
     void nunchuckControl();
+    bool connected();
 };

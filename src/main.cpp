@@ -42,13 +42,30 @@ Hexapod_GPIO hx_gpio;
 /**
  *
  */
+void checkNunchuckConnected()
+{
+    if (!hx_nunchuck.connected())
+    {
+        Serial.println("\nNUNCHUCK NOT CONNECTED\nABORTING");
+        while (true)
+        {
+        }
+    }
+}
+
+/**
+ *
+ */
 void setup()
 {
     // Setup.
     hx_gpio.setupGPIO();
     hx_serial.setupSerial();
     hx_servo.setupServo();
+#if ENABLE_NUNCHUCK_READ
     hx_nunchuck.setupNunchuck();
+    checkNunchuckConnected();
+#endif
     hx_demo.demoMov_circles(3);
 
     // Go to home position.
@@ -68,6 +85,7 @@ void setup()
 void loop()
 {
 #if ENABLE_NUNCHUCK_READ
+    checkNunchuckConnected();
     hx_nunchuck.nunchuckControl();
 #endif
 
