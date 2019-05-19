@@ -1,5 +1,5 @@
 
-# PlatformIO commands
+# PLATFORMIO COMMANDS
 
 ## Build
 ctrl + alt + b
@@ -19,6 +19,8 @@ In terminal, run:
 platformio run --target clean
 
 # Problème WiFi
-
 ESP32 Brownout detector was triggered
 
+
+# GIT COMMAND
+git update-index --skip-worktree ./hexapod_app/hexapod_app

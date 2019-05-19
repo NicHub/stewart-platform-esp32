@@ -81,6 +81,9 @@ class Hexapod_Kinematics
     Hexapod_Kinematics(){};
     int8_t home(angle_t *servo_angles);
     int8_t calcServoAngles(platform_t coord, angle_t *servo_angles);
+    int8_t calcServoAnglesAlgo1(platform_t coord, angle_t *servo_angles);
+    int8_t calcServoAnglesAlgo2(platform_t coord, angle_t *servo_angles);
+    int8_t calcServoAnglesAlgo3(platform_t coord, angle_t *servo_angles);
     double getHX_X();
     double getHX_Y();
     double getHX_Z();

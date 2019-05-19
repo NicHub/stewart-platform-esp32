@@ -21,7 +21,7 @@
 // USER CHOICES
 
 // Number of intervals
-const int nb_intervals = 1;
+const int nb_intervals = 2;
 
 #include <iostream>
 #include <fstream>
