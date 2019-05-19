@@ -1,0 +1,68 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframEngine 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       160,          7]
+NotebookDataLength[      1634,         58]
+NotebookOptionsPosition[      1352,         45]
+NotebookOutlinePosition[      1685,         60]
+CellTagsIndexPosition[      1642,         57]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{"Solve", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"x", "-", "a"}], ")"}], "^", "2"}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"z", "-", "c"}], ")"}], "^", "2"}]}], "\[Equal]", "rmb2"}], 
+      ",", 
+      RowBox[{"x", "\[Equal]", 
+       RowBox[{"ARM_LENGTH", "*", 
+        RowBox[{"Cos", "[", "t", "]"}]}]}], ",", " ", 
+      RowBox[{"z", "\[Equal]", 
+       RowBox[{"ARM_LENGTH", "*", 
+        RowBox[{"Sin", "[", "t", "]"}]}]}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "z", ",", "t"}], "}"}]}], "]"}], "]"}]], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"04c9871c-a54c-4d21-a7d7-695a02645327"]
+},
+WindowSize->{1920, 1016},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
+FrontEndVersion->"11.3 for Linux ARM (32-bit) (May 23, 2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[560, 20, 788, 23, 31, "Input",ExpressionUUID->"04c9871c-a54c-4d21-a7d7-695a02645327"]
+}
+]
+*)
+
+(* End of internal cache information *)
+
