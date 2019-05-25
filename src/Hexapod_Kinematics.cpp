@@ -59,8 +59,8 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
     int8_t movOK = 0;
 
     // Algorithm 1 takes ~313 µs / movement.
-    // Algorithm 2 takes ~465 µs / movement.
-#define ALGO 1
+    // Algorithm 2 takes ~374 µs / movement.
+#define ALGO 2
 #if ALGO == 1
     movOK = calcServoAnglesAlgo1(coord, servo_angles);
 #elif ALGO == 2
@@ -221,14 +221,6 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
 
     angle_t new_servo_angles[NB_SERVOS];
 
-    const double angleD[NB_SERVOS] = {
-        -THETA_S[0],
-        -THETA_S[1],
-        -THETA_S[2],
-        -THETA_S[3],
-        -THETA_S[4],
-        -THETA_S[5]};
-
     // Intermediate values, to avoid recalculating sin and cos.
     // (3 µs).
     double cosA = cos(coord.hx_a),
@@ -246,22 +238,20 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
     for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
     {
         // Intermediate values, to avoid recalculating sin and cos.
-        double sinD = sin(angleD[sid]),
-               cosD = cos(angleD[sid]),
-               cosCpD = cos(coord.hx_c + angleD[sid]),
+        double cosCpD = cos(coord.hx_c + angleD[sid]),
                sinCpD = sin(coord.hx_c + angleD[sid]);
 
-        dPB_x = coord.hx_x * cosD -
-                coord.hx_y * sinD -
-                B_COORDS[sid][0] * cosD +
-                B_COORDS[sid][1] * sinD +
+        dPB_x = coord.hx_x * cosD[sid] -
+                coord.hx_y * sinD[sid] -
+                B_COORDS[sid][0] * cosD[sid] +
+                B_COORDS[sid][1] * sinD[sid] +
                 P_COORDS[sid][0] * cosB * cosCpD +
-                P_COORDS[sid][1] * (cosC * (sinA * sinB * cosD - cosA * sinD) -
-                                    sinC * (cosA * cosD + sinA * sinB * sinD));
-        dPB_y = coord.hx_x * sinD +
-                coord.hx_y * cosD -
-                B_COORDS[sid][0] * sinD -
-                B_COORDS[sid][1] * cosD +
+                P_COORDS[sid][1] * (cosC * (sinA * sinB * cosD[sid] - cosA * sinD[sid]) -
+                                    sinC * (cosA * cosD[sid] + sinA * sinB * sinD[sid]));
+        dPB_y = coord.hx_x * sinD[sid] +
+                coord.hx_y * cosD[sid] -
+                B_COORDS[sid][0] * sinD[sid] -
+                B_COORDS[sid][1] * cosD[sid] +
                 P_COORDS[sid][0] * cosB * sinCpD +
                 P_COORDS[sid][1] * (cosA * cosCpD + sinA * sinB * sinCpD);
         dPB_z = coord.hx_z -
@@ -269,10 +259,14 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
                 P_COORDS[sid][0] * sinB +
                 P_COORDS[sid][1] * sinA * cosB;
 
+        double dPB_x2 = POW(dPB_x, 2),
+               dPB_y2 = POW(dPB_y, 2),
+               dPB_z2 = POW(dPB_z, 2);
+
         // Square of the new distance between platform joint and servo pivot.
-        d2 = (POW(dPB_x, 2)) +
-             (POW(dPB_y, 2)) +
-             (POW(dPB_z, 2));
+        d2 = dPB_x2 +
+             dPB_y2 +
+             dPB_z2;
 
         // Test if the new distance between servo pivot and platform joint
         // is longer than physically possible.
@@ -285,24 +279,24 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
         }
 
         // (~5 µs)
-        i0 = POW(dPB_x, 2) + POW(dPB_z, 2);
-        i1 = i0 + POW(dPB_y, 2) - RODLENGTH2;
-        i2 = i0 - POW(dPB_y, 2) + RODLENGTH2;
+        i0 = dPB_x2 + dPB_z2;
+        i1 = i0 + dPB_y2 - RODLENGTH2;
+        i2 = i0 - dPB_y2 + RODLENGTH2;
 
         // (~49 µs)
-        i3 = -(POW(dPB_z, 2) * (POW(ARMLENGTH2, 2) + POW(i1, 2) - 2 * ARMLENGTH2 * i2));
+        i3 = -(dPB_z2 * (POW(ARMLENGTH2, 2) + POW(i1, 2) - 2 * ARMLENGTH2 * i2));
 
         // (~51 µs)
         i4 = sqrt(i3);
 
         // (~117 µs)
-        i5 = (ARMLENGTH2 * POW(dPB_z, 2) + POW(dPB_x, 2) * POW(dPB_z, 2) +
-              POW(dPB_y, 2) * POW(dPB_z, 2) + POW(dPB_z, 4) - POW(dPB_z, 2) * RODLENGTH2 -
+        i5 = (ARMLENGTH2 * dPB_z2 + dPB_x2 * dPB_z2 +
+              dPB_y2 * dPB_z2 + POW(dPB_z, 4) - dPB_z2 * RODLENGTH2 -
               dPB_x * i4);
 
         // (~32 µs)
-        i6 = (dPB_z * (ARMLENGTH2 * dPB_x + POW(dPB_x, 3) + dPB_x * POW(dPB_y, 2) +
-                       dPB_x * POW(dPB_z, 2) - dPB_x * RODLENGTH2 + i4));
+        i6 = (dPB_z * (ARMLENGTH2 * dPB_x + POW(dPB_x, 3) + dPB_x * dPB_y2 +
+                       dPB_x * dPB_z2 - dPB_x * RODLENGTH2 + i4));
 
         i7 = i5 / i6;
 

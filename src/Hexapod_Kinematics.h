@@ -39,11 +39,11 @@
 #endif
 
 // `POW` is a lot faster than `pow` defined in cmath.h.
-#define POW(base, exp)                       \
-     ( exp == 2 ? base * base                \
-     : exp == 3 ? base * base * base         \
-     : exp == 4 ? base * base * base * base  \
-     : -1 )
+#define POW(base, exp)                                          \
+    (exp == 2 ? base * base                                     \
+              : exp == 3 ? base * base * base                   \
+                         : exp == 4 ? base * base * base * base \
+                                    : -1)
 
 // angle_t
 typedef struct
@@ -77,11 +77,11 @@ typedef struct
  */
 class Hexapod_Kinematics
 {
-  private:
+private:
     // Setpoints (internal states)
     platform_t _coord;
 
-  public:
+public:
     /*
      * ======== MAIN FUNCTIONS ==========
      */
@@ -141,6 +141,31 @@ class Hexapod_Kinematics
         sin(THETA_S[3]),
         sin(THETA_S[4]),
         sin(THETA_S[5])};
+
+    // For algorithm 2
+    const double angleD[NB_SERVOS] = {
+        -THETA_S[0],
+        -THETA_S[1],
+        -THETA_S[2],
+        -THETA_S[3],
+        -THETA_S[4],
+        -THETA_S[5]};
+
+    const double sinD[NB_SERVOS] = {
+        sin(angleD[0]),
+        sin(angleD[1]),
+        sin(angleD[2]),
+        sin(angleD[3]),
+        sin(angleD[4]),
+        sin(angleD[5])};
+
+    const double cosD[NB_SERVOS] = {
+        cos(angleD[0]),
+        cos(angleD[1]),
+        cos(angleD[2]),
+        cos(angleD[3]),
+        cos(angleD[4]),
+        cos(angleD[5])};
 
     /*
      * XY cartesian coordinates of the platform joints, based on the polar
