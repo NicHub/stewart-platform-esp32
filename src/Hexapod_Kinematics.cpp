@@ -58,8 +58,9 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 {
     int8_t movOK = 0;
 
-    // Algorithm 1 is faster than algorithm 2.
-#define ALGO 2
+    // Algorithm 1 takes ~313 µs / movement.
+    // Algorithm 2 takes ~465 µs / movement.
+#define ALGO 1
 #if ALGO == 1
     movOK = calcServoAnglesAlgo1(coord, servo_angles);
 #elif ALGO == 2
@@ -214,9 +215,9 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
  */
 int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo_angles)
 {
-    double dPB_x, dPB_y, dPB_z,    // Platform joint movements relative to servo pivot.
-        d2,                        // Distance^2 between platform joint and servo pivot.
-        inter, square_root, ratio; // Intermediate values.
+    double dPB_x, dPB_y, dPB_z,         // Platform joint movements relative to servo pivot.
+        d2,                             // Distance^2 between platform joint and servo pivot.
+        i0, i1, i2, i3, i4, i5, i6, i7; // Intermediate values.
 
     angle_t new_servo_angles[NB_SERVOS];
 
@@ -236,8 +237,8 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
            sinA = sin(coord.hx_a),
            sinB = sin(coord.hx_b),
            sinC = sin(coord.hx_c),
-           ARMLENGTH2 = ARM_LENGTH * ARM_LENGTH,
-           RODLENGTH2 = ROD_LENGTH * ROD_LENGTH;
+           ARMLENGTH2 = POW(ARM_LENGTH, 2),
+           RODLENGTH2 = POW(ROD_LENGTH, 2);
 
     // Assume everything will be OK.
     int8_t movOK = 0;
@@ -269,9 +270,9 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
                 P_COORDS[sid][1] * sinA * cosB;
 
         // Square of the new distance between platform joint and servo pivot.
-        d2 = (dPB_x * dPB_x) +
-             (dPB_y * dPB_y) +
-             (dPB_z * dPB_z);
+        d2 = (POW(dPB_x, 2)) +
+             (POW(dPB_y, 2)) +
+             (POW(dPB_z, 2));
 
         // Test if the new distance between servo pivot and platform joint
         // is longer than physically possible.
@@ -283,33 +284,31 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
             break;
         }
 
-#if false
-        double ratio =
-            (ARMLENGTH2 * pow(dPB_z, 2) + pow(dPB_x, 2) * pow(dPB_z, 2) +
-             pow(dPB_y, 2) * pow(dPB_z, 2) + pow(dPB_z, 4) - pow(dPB_z, 2) * RODLENGTH2 -
-             dPB_x * sqrt(-(pow(dPB_z, 2) * (pow(ARMLENGTH2, 2) + pow(pow(dPB_x, 2) + pow(dPB_y, 2) + pow(dPB_z, 2) - RODLENGTH2, 2) -
-                                             2 * ARMLENGTH2 * (pow(dPB_x, 2) - pow(dPB_y, 2) + pow(dPB_z, 2) + RODLENGTH2))))) /
-            (dPB_z * (ARMLENGTH2 * dPB_x + pow(dPB_x, 3) + dPB_x * pow(dPB_y, 2) + dPB_x * pow(dPB_z, 2) - dPB_x * RODLENGTH2 +
-                      sqrt(-(pow(dPB_z, 2) * (pow(ARMLENGTH2, 2) + pow(pow(dPB_x, 2) + pow(dPB_y, 2) + pow(dPB_z, 2) - RODLENGTH2, 2) -
-                                              2 * ARMLENGTH2 * (pow(dPB_x, 2) - pow(dPB_y, 2) + pow(dPB_z, 2) + RODLENGTH2))))));
-#endif
+        // (~5 µs)
+        i0 = POW(dPB_x, 2) + POW(dPB_z, 2);
+        i1 = i0 + POW(dPB_y, 2) - RODLENGTH2;
+        i2 = i0 - POW(dPB_y, 2) + RODLENGTH2;
 
-        inter = dPB_x * dPB_x + dPB_y * dPB_y + dPB_z * dPB_z - RODLENGTH2;
-        square_root =
-            sqrt(-(dPB_z * dPB_z *
-                   (ARMLENGTH2 * ARMLENGTH2 +
-                    inter * inter -
-                    2 * ARMLENGTH2 * (dPB_x * dPB_x - dPB_y * dPB_y + dPB_z * dPB_z + RODLENGTH2))));
-        ratio =
-            (ARMLENGTH2 * dPB_z * dPB_z + dPB_x * dPB_x * dPB_z * dPB_z +
-             dPB_y * dPB_y * dPB_z * dPB_z + dPB_z * dPB_z * dPB_z * dPB_z - dPB_z * dPB_z * RODLENGTH2 -
-             dPB_x * square_root) /
-            (dPB_z * (ARMLENGTH2 * dPB_x + dPB_x * dPB_x * dPB_x + dPB_x * dPB_y * dPB_y + dPB_x * dPB_z * dPB_z - dPB_x * RODLENGTH2 +
-                      square_root));
+        // (~49 µs)
+        i3 = -(POW(dPB_z, 2) * (POW(ARMLENGTH2, 2) + POW(i1, 2) - 2 * ARMLENGTH2 * i2));
 
-        // double ratio = 0;
+        // (~51 µs)
+        i4 = sqrt(i3);
+
+        // (~117 µs)
+        i5 = (ARMLENGTH2 * POW(dPB_z, 2) + POW(dPB_x, 2) * POW(dPB_z, 2) +
+              POW(dPB_y, 2) * POW(dPB_z, 2) + POW(dPB_z, 4) - POW(dPB_z, 2) * RODLENGTH2 -
+              dPB_x * i4);
+
+        // (~32 µs)
+        i6 = (dPB_z * (ARMLENGTH2 * dPB_x + POW(dPB_x, 3) + dPB_x * POW(dPB_y, 2) +
+                       dPB_x * POW(dPB_z, 2) - dPB_x * RODLENGTH2 + i4));
+
+        i7 = i5 / i6;
+
         // Compute servo angle.
-        new_servo_angles[sid].rad = atan(ratio);
+        // (~22 µs)
+        new_servo_angles[sid].rad = atan(i7);
 
         // Rotate the angle.
         // (~1 µs)

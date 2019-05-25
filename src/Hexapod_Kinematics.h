@@ -38,6 +38,13 @@
 #include "Hexapod_Config_3.h"
 #endif
 
+// `POW` is a lot faster than `pow` defined in cmath.h.
+#define POW(base, exp)                       \
+     ( exp == 2 ? base * base                \
+     : exp == 3 ? base * base * base         \
+     : exp == 4 ? base * base * base * base  \
+     : -1 )
+
 // angle_t
 typedef struct
 {
