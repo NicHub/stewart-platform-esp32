@@ -58,14 +58,181 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 {
     int8_t movOK = 0;
 
-    // Algorithm 1 takes ~313 µs / movement.
-    // Algorithm 2 takes ~374 µs / movement.
-#define ALGO 2
-#if ALGO == 1
+    // Algorithm 1 takes ~280 µs / movement.
+    // Algorithm 2 takes ~433 µs / movement.
+#define ALGO 0
+#if ALGO == 0
+    movOK = calcServoAnglesAlgo0(coord, servo_angles);
+#elif ALGO == 1
     movOK = calcServoAnglesAlgo1(coord, servo_angles);
 #elif ALGO == 2
     movOK = calcServoAnglesAlgo2(coord, servo_angles);
 #endif
+
+    return movOK;
+}
+
+/**
+ *
+ */
+int8_t Hexapod_Kinematics::calcServoAnglesAlgo0(platform_t coord, angle_t *servo_angles)
+{
+
+    double pivot_x, pivot_y, pivot_z, // Global XYZ coordinates of platform pivot points.
+        d2,                           // Distance^2 between servo pivot and platform link.
+        k, m, n,                      // Intermediate values.
+        servo_rad;                    // Angle (radians) to turn each servo.
+
+    // Intermediate values, to avoid recalculating sin and cos.
+    // (3 µs).
+    double cosB = cos(coord.hx_b),
+           cosA = cos(coord.hx_a),
+           cosC = cos(coord.hx_c),
+           sinB = sin(coord.hx_b),
+           sinA = sin(coord.hx_a),
+           sinC = sin(coord.hx_c);
+
+    // Assume everything will be OK.
+    int8_t movOK = 0;
+
+    // Compute new angle values.
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        // Coordinates of platform joints (pivots) after movement.
+        // Minus B_COORDS.x for pivot_x.
+        // Minus B_COORDS.y for pivot_y.
+        // (~7 µs)
+        pivot_x = P_COORDS[sid][0] * cosB * cosC +
+                  P_COORDS[sid][1] * (sinA * sinB * cosC - cosA * sinC) +
+                  coord.hx_x -
+                  B_COORDS[sid][0];
+        pivot_y = P_COORDS[sid][0] * cosB * sinC +
+                  P_COORDS[sid][1] * (cosA * cosC + sinA * sinB * sinC) +
+                  coord.hx_y -
+                  B_COORDS[sid][1];
+        pivot_z = -P_COORDS[sid][0] * sinB +
+                  P_COORDS[sid][1] * sinA * cosB +
+                  Z_HOME +
+                  coord.hx_z;
+
+        // Square of the virtual arm length, i.e. the distance
+        // between the base joint and the platform joint.
+        // (~3 µs)
+        d2 = (pivot_x * pivot_x) +
+             (pivot_y * pivot_y) +
+             (pivot_z * pivot_z);
+
+        // Test if the required virtual arm length is longer than physically possible.
+        // Abort computation of remaining angles if this one is not OK.
+        // (~1 µs)
+        if (d2 > ((ARM_LENGTH + ROD_LENGTH) * (ARM_LENGTH + ROD_LENGTH)))
+        {
+            movOK = -1;
+            break;
+        }
+
+        // Calculation of intermediate values.
+        // (~1 µs)
+        k = d2 -
+            (ROD_LENGTH * ROD_LENGTH) +
+            (ARM_LENGTH * ARM_LENGTH);
+        // (~2 µs)
+        m = (COS_THETA_S[sid] * pivot_x +
+             SIN_THETA_S[sid] * pivot_y);
+        // (~9 µs)
+        n = k / (2 * ARM_LENGTH * sqrt(pivot_z * pivot_z + m * m));
+
+        // Test if other bad things happened.
+        // Abort computation of remaining angles if this one is not OK.
+        // (~1 µs)
+        if (abs(n) >= 1)
+        {
+            movOK = -2;
+            break;
+        }
+
+        // Compute servo angle.
+        // (22-32 µs This calculation takes half of the total computation time !)
+        servo_rad = asin(n) - atan(m / pivot_z);
+
+        // Convert radians to an angle between SERVO_MIN_ANGLE and SERVO_MAX_ANGLE.
+        // (~1 µs)
+        servo_rad = this->mapDouble(servo_rad,
+                                    -HALF_PI, HALF_PI,
+                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE);
+
+        // Scale values by aggro.
+        // (~6 µs)
+        const double AGGRO = 1.0;
+        servo_rad = SERVO_MID_ANGLE + (servo_rad - SERVO_MID_ANGLE) * AGGRO;
+
+        // Check if the angle is in min/max.
+        // Abort computation of remaining angles if this one is not OK.
+        // (~1 µs)
+        if (servo_rad > SERVO_MAX_ANGLE)
+        {
+            movOK = -3;
+            break;
+        }
+        else if (servo_rad < SERVO_MIN_ANGLE)
+        {
+            movOK = -4;
+            break;
+        }
+
+        // Apply reverse if needed.
+        // (~1 µs)
+        const int8_t SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
+        if (SERVO_REVERSE[sid])
+        {
+            servo_angles[sid].rad = SERVO_MIN_ANGLE +
+                                    SERVO_MAX_ANGLE -
+                                    servo_rad;
+        }
+        else
+        {
+            servo_angles[sid].rad = servo_rad;
+        }
+
+        // Convert radians to degrees.
+        // (~2 µs)
+        servo_angles[sid].deg = degrees(servo_angles[sid].rad);
+
+        // Convert radians to pulse width.
+        // (~5 µs)
+        servo_angles[sid].us = (int)this->mapDouble(servo_angles[sid].rad,
+                                                    SERVO_MIN_ANGLE, SERVO_MAX_ANGLE,
+                                                    SERVO_MIN_US, SERVO_MAX_US);
+
+        // Apply trim values.
+        // (~1 µs)
+        const int ANGLE_TRIM[] = {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0};
+        servo_angles[sid].us += ANGLE_TRIM[sid];
+
+        // Constrain PW to min/max.
+        // (~2 µs)
+        servo_angles[sid].us = (int)constrain(servo_angles[sid].us,
+                                              SERVO_MIN_US, SERVO_MAX_US);
+    }
+
+    // Update platform coordinates if there are no errors.
+    // (~1 µs)
+    if (movOK == 0)
+    {
+        // Otherwise update platform coordinates.
+        _coord.hx_x = coord.hx_x;
+        _coord.hx_y = coord.hx_y;
+        _coord.hx_z = coord.hx_z;
+        _coord.hx_a = coord.hx_a;
+        _coord.hx_b = coord.hx_b;
+        _coord.hx_c = coord.hx_c;
+    }
 
     return movOK;
 }
@@ -163,6 +330,20 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
         // Rotate the angle.
         // (~1 µs)
         new_servo_angles[sid].rad += SERVO_MID_ANGLE;
+
+#if false
+        const int8_t SERVO_REVERSE[6] = {0, 0, 1, 0, 1, 0};
+        if (SERVO_REVERSE[sid])
+        {
+            new_servo_angles[sid].rad = SERVO_MIN_ANGLE +
+                                        SERVO_MAX_ANGLE -
+                                        new_servo_angles[sid].rad;
+        }
+        else
+        {
+            new_servo_angles[sid].rad = new_servo_angles[sid].rad;
+        }
+#endif
 
         // Convert radians to degrees.
         // (~2 µs)

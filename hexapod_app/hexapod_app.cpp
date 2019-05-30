@@ -21,13 +21,14 @@
 // USER CHOICES
 
 // Number of intervals
-const int nb_intervals = 2;
+const int nb_intervals = 1;
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <string>
+#include <time.h>
 #include "Hexapod_Kinematics.h"
 
 using namespace std;
@@ -37,6 +38,9 @@ Hexapod_Kinematics hk; // Stewart platform object.
 angle_t servo_angles[NB_SERVOS];
 int movOK = -1;
 ofstream angle_file;
+clock_t T1, T2;
+double cpu_time_used;
+long counter = 0;
 
 // Print dimensions
 const uint8_t SMALL_WIDTH = 7;
@@ -45,7 +49,14 @@ const uint8_t ALL_WIDTH = 151;
 
 void calcAndPrintResults(platform_t coords)
 {
+     T1 = clock();
      movOK = hk.calcServoAngles(coords, servo_angles);
+     // movOK = hk.calcServoAnglesAlgo1(coords, servo_angles);
+     // movOK = hk.calcServoAnglesAlgo2(coords, servo_angles);
+     T2 = clock();
+     cpu_time_used += ((double) (T2 - T1));
+     counter++;
+
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.hx_x;
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.hx_y;
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.hx_z;
@@ -149,5 +160,8 @@ int main()
      while (getline(cin, line))
           cout << line << endl;
 
+     cpu_time_used = cpu_time_used * 1.0E6 / CLOCKS_PER_SEC;
+     cout << "\nTime elapsed = " << cpu_time_used << " µs";
+     cout << "\nTime per calculation = " << cpu_time_used / counter << " µs\n";
      return 0;
 }

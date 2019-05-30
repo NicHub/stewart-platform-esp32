@@ -28,14 +28,12 @@
 #endif
 
 // Choose configuration file.
-#define HEXAPOD_CONFIG 1
+#define HEXAPOD_CONFIG 2
 
 #if HEXAPOD_CONFIG == 1
 #include "Hexapod_Config_1.h"
 #elif HEXAPOD_CONFIG == 2
 #include "Hexapod_Config_2.h"
-#elif HEXAPOD_CONFIG == 3
-#include "Hexapod_Config_3.h"
 #endif
 
 // `POW` is a lot faster than `pow` defined in cmath.h.
@@ -88,9 +86,9 @@ public:
     Hexapod_Kinematics(){};
     int8_t home(angle_t *servo_angles);
     int8_t calcServoAngles(platform_t coord, angle_t *servo_angles);
+    int8_t calcServoAnglesAlgo0(platform_t coord, angle_t *servo_angles);
     int8_t calcServoAnglesAlgo1(platform_t coord, angle_t *servo_angles);
     int8_t calcServoAnglesAlgo2(platform_t coord, angle_t *servo_angles);
-    int8_t calcServoAnglesAlgo3(platform_t coord, angle_t *servo_angles);
     double getHX_X();
     double getHX_Y();
     double getHX_Z();
