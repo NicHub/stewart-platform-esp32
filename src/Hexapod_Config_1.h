@@ -74,6 +74,33 @@ const double THETA_S[NB_SERVOS] = {
     radians(60),
     radians(-120)};
 
+// calibration_t
+typedef struct
+{
+    double gain;
+    double offset;
+} calibration_t;
+
+/*
+ * The gain in µs/rad (=~ 518 µs/rad).
+ */
+const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
+                    (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE);
+
+/*
+ * Calibration factors. These values take into account the fact
+ * that the odd and even arms are a reflection of each other.
+ * The calibration is linear:
+ * pulse width (µs) = gain (µs/rad) + offset (µs)
+ */
+const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
+    {-gain, SERVO_MAX_US + PW_OFFSET[0]},
+    {gain, SERVO_MIN_US + PW_OFFSET[1]},
+    {-gain, SERVO_MAX_US + PW_OFFSET[2]},
+    {gain, SERVO_MIN_US + PW_OFFSET[3]},
+    {-gain, SERVO_MAX_US + PW_OFFSET[4]},
+    {gain, SERVO_MIN_US + PW_OFFSET[5]}};
+
 /*
  * MIN/MAX COORDINATES
  * NOTE: The actual min and max for each DOF are interdependent. eg:

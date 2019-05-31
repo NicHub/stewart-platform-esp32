@@ -239,6 +239,8 @@ void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
             }
         }
     }
+    Serial.print("Algorithm = ");
+    Serial.println(ALGO);
     Serial.print("total time elapsed (us) = ");
     Serial.println(TTot);
     Serial.print("time per calculation (us) = ");

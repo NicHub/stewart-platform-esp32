@@ -74,6 +74,33 @@ const double THETA_S[NB_SERVOS] = {
     radians(60),
     radians(-120)};
 
+// calibration_t
+typedef struct
+{
+    double gain;
+    double offset;
+} calibration_t;
+
+/*
+ * The gain in µs/rad (=~ 518 µs/rad).
+ */
+const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
+                    (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE);
+
+/*
+ * Calibration factors. These values take into account the fact
+ * that the odd and even arms are a reflection of each other.
+ * The calibration is linear:
+ * pulse width (µs) = gain (µs/rad) + offset (µs)
+ */
+const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
+    {gain, SERVO_MIN_US + PW_OFFSET[0]}, // This servo is not of the same type as the others and its direction of rotation is reversed.
+    {gain, SERVO_MIN_US + PW_OFFSET[1]},
+    {-gain, SERVO_MAX_US + PW_OFFSET[2]},
+    {gain, SERVO_MIN_US + PW_OFFSET[3]},
+    {-gain, SERVO_MAX_US + PW_OFFSET[4]},
+    {gain, SERVO_MIN_US + PW_OFFSET[5]}};
+
 /*
  * MIN/MAX COORDINATES
  * NOTE: The actual min and max for each DOF are interdependent. eg:
@@ -91,23 +118,23 @@ const double HX_Y_MAX = 24;
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -5.0;
-const double HX_Z_MAX = 11.0;
+const double HX_Z_MIN = -11.0;
+const double HX_Z_MAX = 16.0;
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
-const double HX_A_MIN = radians(-11);
-const double HX_A_MAX = radians(11);
+const double HX_A_MIN = radians(-12.0);
+const double HX_A_MAX = radians(17.0);
 const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
 const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
-const double HX_B_MIN = radians(-11);
-const double HX_B_MAX = radians(11);
+const double HX_B_MIN = radians(-12.0);
+const double HX_B_MAX = radians(17.0);
 const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
 const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
-const double HX_C_MIN = radians(-30.0);
-const double HX_C_MAX = radians(30.0);
+const double HX_C_MIN = radians(-43.0);
+const double HX_C_MAX = radians(43.0);
 const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 
@@ -117,4 +144,4 @@ const double P_RAD = 99.61 / 2;          // Platform radius (mm). The distance f
 const double B_RAD = 153.99 / 2;         // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
 const double ARM_LENGTH = 15.0;          // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;         // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-const double Z_HOME = 132.9435912;       // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
+const double Z_HOME = -132.9435912;      // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
