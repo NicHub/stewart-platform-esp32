@@ -22,15 +22,47 @@
 
 #include <Arduino.h>
 #include <WiiChuck.h>
+#include <Hexapod_Servo.h>
+
+// nunchuck_t
+typedef struct
+{
+    double joy_x;
+    double joy_y;
+    bool btn_c;
+    bool btn_z;
+    double acc_x;
+    double acc_y;
+    double acc_z;
+    double roll_angle;
+    double pitch_angle;
+} nunchuck_t;
 
 class Hexapod_Nunchuck : public Accessory
 {
-  private:
-    double mapDouble(double x, double in_min, double in_max, double out_min, double out_max);
+private:
+    double joyXmin = HX_X_MIN;
+    double joyXmax = HX_X_MAX;
+    double joyYmin = HX_Y_MIN;
+    double joyYmax = HX_Y_MAX;
 
-  public:
+public:
     Hexapod_Nunchuck();
     int setupNunchuck();
     void nunchuckControl();
     bool connected();
+    int readNunchuck(nunchuck_t *nckVal);
+};
+
+class Average
+{
+private:
+    static const uint8_t nbPoints = 10;
+    uint8_t index = 0;
+    double sum = 0;
+    double valHistory[nbPoints];
+
+public:
+    Average();
+    double MovingAverage(double val, double in_low, double in_high, double out_low, double out_high);
 };

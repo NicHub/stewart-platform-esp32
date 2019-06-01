@@ -124,12 +124,12 @@ const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
 const double HX_A_MIN = radians(-12.0);
-const double HX_A_MAX = radians(17.0);
+const double HX_A_MAX = radians(12.0);
 const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
 const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
 const double HX_B_MIN = radians(-12.0);
-const double HX_B_MAX = radians(17.0);
+const double HX_B_MAX = radians(12.0);
 const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
 const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
