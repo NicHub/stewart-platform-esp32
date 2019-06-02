@@ -26,10 +26,11 @@ extern angle_t servo_angles[NB_SERVOS];
 extern Hexapod_Servo hx_servo;
 extern Hexapod_GPIO hx_gpio;
 
+// The ATT pin is used to check if the Nunchuck is connected.
 #define NUNCHUCK_ATT_PIN 35
 
 /**
- *
+ * General stuff.
  */
 double mapDouble(double x, double in_min, double in_max, double out_min, double out_max)
 {
@@ -37,38 +38,7 @@ double mapDouble(double x, double in_min, double in_max, double out_min, double 
 }
 
 /**
- *
- */
-Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
-{
-}
-
-/**
- *
- */
-bool Hexapod_Nunchuck::connected()
-{
-    return digitalRead(NUNCHUCK_ATT_PIN);
-}
-
-/**
- *
- */
-int Hexapod_Nunchuck::setupNunchuck()
-{
-    pinMode(NUNCHUCK_ATT_PIN, INPUT_PULLDOWN);
-    // Abort if Nunchuck is not connected
-    if (!connected())
-        return -1;
-    begin();
-    type = NUNCHUCK;
-    readData();    // Read inputs and update maps
-    printInputs(); // Print all inputs
-    return 0;
-}
-
-/**
- *
+ * Average class. Used to smooth the signals of the accelerometer with a moving average.
  */
 Average::Average()
 {
@@ -92,24 +62,54 @@ double Average::MovingAverage(double val, double in_low, double in_high, double 
 }
 
 /**
+ * Hexapod_Nunchuck class.
+ */
+Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
+{
+}
+
+/**
+ *
+ */
+bool Hexapod_Nunchuck::connected()
+{
+    return digitalRead(NUNCHUCK_ATT_PIN);
+}
+
+/**
+ *
+ */
+int Hexapod_Nunchuck::setupNunchuck()
+{
+    pinMode(NUNCHUCK_ATT_PIN, INPUT_PULLDOWN);
+    // Abort if the Nunchuck is not connected
+    if (!connected())
+        return -1;
+    begin();
+    type = NUNCHUCK;
+    readData();    // Read inputs and update maps
+    printInputs(); // Print all inputs
+    return 0;
+}
+
+/**
  *
  */
 int Hexapod_Nunchuck::readNunchuck(nunchuck_t *nck)
 {
     readData();
-    nck->joy_x = mapDouble(getJoyX(), 0.0, 255.0, joyXmin, joyXmax);
-    nck->joy_y = mapDouble(getJoyY(), 0.0, 255.0, joyYmin, joyYmax);
+    nck->joy_x = mapDouble(getJoyX(), 0.0, 255.0, nckXmin, nckXmax);
+    nck->joy_y = mapDouble(getJoyY(), 0.0, 255.0, nckYmin, nckYmax);
     nck->btn_c = getButtonC();
     nck->btn_z = getButtonZ();
-    nck->acc_x = mapDouble(getAccelX(), 0.0, 255.0, joyXmin, joyXmax);
-    nck->acc_y = mapDouble(getAccelY(), 0.0, 255.0, joyYmin, joyYmax);
-    nck->acc_z = mapDouble(getAccelZ(), 0.0, 255.0, joyXmin, joyXmax);
+    nck->acc_x = mapDouble(getAccelX(), 0.0, 255.0, nckXmin, nckXmax);
+    nck->acc_y = mapDouble(getAccelY(), 0.0, 255.0, nckYmin, nckYmax);
+    nck->acc_z = mapDouble(getAccelZ(), 0.0, 255.0, nckXmin, nckXmax);
     static const double limit = 45.0;
     static Average avPitchAngle;
-    nck->pitch_angle = avPitchAngle.MovingAverage((double)getPitchAngle(), -limit, limit, joyXmin, joyXmax);
+    nck->pitch_angle = avPitchAngle.MovingAverage((double)getPitchAngle(), -limit, limit, nckAmin, nckAmax);
     static Average avRollAngle;
-    nck->roll_angle = avRollAngle.MovingAverage((double)getRollAngle(), -limit, limit, joyYmin, joyYmax);
-
+    nck->roll_angle = avRollAngle.MovingAverage((double)getRollAngle(), -limit, limit, nckBmin, nckBmax);
     return 0;
 }
 
@@ -128,55 +128,64 @@ void Hexapod_Nunchuck::nunchuckControl()
     static nunchuck_t nck;
     readNunchuck(&nck);
 
-    static uint8_t joyMode = 0;
-    static const uint8_t nbJoyMode = 5;
+    static int8_t joyMode = 0;
+    static const int8_t nbJoyMode = 5;
 
-    // Change nunchuck mode if button pressed.
-    if (nck.btn_c != 0)
+    // Change nunchuck mode if button C or Z are pressed.
+    // Button C increments joyMode.
+    // Button Z decrements joyMode.
+    if (nck.btn_c != 0 || nck.btn_z != 0)
     {
-        joyMode = (joyMode + 1) % nbJoyMode;
+        if (nck.btn_c != 0)
+            ++joyMode;
+        else if (nck.btn_z != 0)
+            --joyMode;
+        if (joyMode == nbJoyMode)
+            joyMode = 0;
+        else if (joyMode < 0)
+            joyMode = nbJoyMode - 1;
         Serial.print("JOYSTICK MODE = ");
         Serial.println(joyMode);
 
         // Set new limits.
         if (joyMode == 0)
         {
-            joyXmin = HX_X_MIN;
-            joyXmax = HX_X_MAX;
-            joyYmin = HX_Y_MIN;
-            joyYmax = HX_Y_MAX;
+            nckXmin = HX_X_MIN;
+            nckXmax = HX_X_MAX;
+            nckYmin = HX_Y_MIN;
+            nckYmax = HX_Y_MAX;
         }
         else if (joyMode == 1)
         {
-            joyXmin = HX_C_MIN;
-            joyXmax = HX_C_MAX;
-            joyYmin = HX_Z_MIN;
-            joyYmax = HX_Z_MAX;
+            nckXmin = HX_C_MIN;
+            nckXmax = HX_C_MAX;
+            nckYmin = HX_Z_MIN;
+            nckYmax = HX_Z_MAX;
         }
         else if (joyMode == 2)
         {
-            joyXmin = HX_C_MIN;
-            joyXmax = HX_C_MAX;
-            joyYmin = HX_Z_MIN;
-            joyYmax = HX_Z_MAX;
+            nckXmin = HX_C_MIN;
+            nckXmax = HX_C_MAX;
+            nckYmin = HX_Z_MIN;
+            nckYmax = HX_Z_MAX;
         }
         else if (joyMode == 3)
         {
-            joyXmin = HX_A_MIN;
-            joyXmax = HX_A_MAX;
-            joyYmin = HX_B_MIN;
-            joyYmax = HX_B_MAX;
+            nckXmin = HX_A_MIN;
+            nckXmax = HX_A_MAX;
+            nckYmin = HX_B_MIN;
+            nckYmax = HX_B_MAX;
         }
         else if (joyMode == 4)
         {
-            joyXmin = HX_A_MIN;
-            joyXmax = HX_A_MAX;
-            joyYmin = HX_B_MIN;
-            joyYmax = HX_B_MAX;
+            nckAmin = HX_A_MIN;
+            nckAmax = HX_A_MAX;
+            nckBmin = HX_B_MIN;
+            nckBmax = HX_B_MAX;
         }
 
         // Debounce.
-        while (nck.btn_c)
+        while (nck.btn_c || nck.btn_z)
         {
             readNunchuck(&nck);
             delay(20);
@@ -187,25 +196,35 @@ void Hexapod_Nunchuck::nunchuckControl()
     }
 
     // Move according to joyMode.
-    // TODO: Remember the previous joyMode positions when
-    // changing joyMode instead of setting them to 0.
+    // Mode 0 to 3 use the joytick.
+    // Mode 4 uses the joytick and the accelerometer.
     static int8_t movOK;
     movOK = -1;
     if (joyMode == 0)
         // X, Y
-        movOK = hx_servo.calcServoAngles({nck.joy_x, nck.joy_y, 0, 0, 0, 0}, servo_angles);
+        movOK = hx_servo.calcServoAngles({nck.joy_x, nck.joy_y,
+                                          0, 0, 0, 0},
+                                         servo_angles);
     else if (joyMode == 1)
         // Z
-        movOK = hx_servo.calcServoAngles({0, 0, nck.joy_y, 0, 0, 0}, servo_angles);
+        movOK = hx_servo.calcServoAngles({0, 0, nck.joy_y,
+                                          0, 0, 0},
+                                         servo_angles);
     else if (joyMode == 2)
         // tiltZ
-        movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, nck.joy_x}, servo_angles);
+        movOK = hx_servo.calcServoAngles({0, 0, 0,
+                                          0, 0, nck.joy_x},
+                                         servo_angles);
     else if (joyMode == 3)
         // tilt X, tilt Y
-        movOK = hx_servo.calcServoAngles({0, 0, 0, nck.joy_x, nck.joy_y, 0}, servo_angles);
+        movOK = hx_servo.calcServoAngles({0, 0, 0,
+                                          nck.joy_x, nck.joy_y, 0},
+                                         servo_angles);
     else if (joyMode == 4)
-        // tilt X, tilt Y
-        movOK = hx_servo.calcServoAngles({0, 0, 0, nck.pitch_angle, nck.roll_angle, 0}, servo_angles);
+        // X, Y, tilt X, tilt Y
+        movOK = hx_servo.calcServoAngles({nck.joy_x, nck.joy_y, 0,
+                                          nck.pitch_angle, nck.roll_angle, 0},
+                                         servo_angles);
 
     hx_servo.updateServos(movOK);
 

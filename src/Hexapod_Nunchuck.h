@@ -41,10 +41,14 @@ typedef struct
 class Hexapod_Nunchuck : public Accessory
 {
 private:
-    double joyXmin = HX_X_MIN;
-    double joyXmax = HX_X_MAX;
-    double joyYmin = HX_Y_MIN;
-    double joyYmax = HX_Y_MAX;
+    double nckXmin = HX_X_MIN;
+    double nckXmax = HX_X_MAX;
+    double nckYmin = HX_Y_MIN;
+    double nckYmax = HX_Y_MAX;
+    double nckAmin = HX_A_MIN;
+    double nckAmax = HX_A_MAX;
+    double nckBmin = HX_B_MIN;
+    double nckBmax = HX_B_MAX;
 
 public:
     Hexapod_Nunchuck();
