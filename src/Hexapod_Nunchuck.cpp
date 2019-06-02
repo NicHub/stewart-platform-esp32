@@ -178,6 +178,10 @@ void Hexapod_Nunchuck::nunchuckControl()
         }
         else if (joyMode == 4)
         {
+            nckXmin = HX_X_MIN;
+            nckXmax = HX_X_MAX;
+            nckYmin = HX_Y_MIN;
+            nckYmax = HX_Y_MAX;
             nckAmin = HX_A_MIN;
             nckAmax = HX_A_MAX;
             nckBmin = HX_B_MIN;
