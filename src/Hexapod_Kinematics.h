@@ -24,7 +24,7 @@
 #ifdef PLATFORMIO
 #include <Arduino.h>
 #else
-#include "../hexapod_app/hexapod_app.h"
+#include "../hexapod_desktop_app/hexapod_desktop_app.h"
 #endif
 
 // Choose configuration file.
@@ -36,7 +36,7 @@
 #include "Hexapod_Config_2.h"
 #endif
 
-// Choose algorithm
+// Choose algorithm for servo angle calculations.
 #define ALGO 1
 
 // `POW` is a lot faster than `pow` defined in cmath.h.

@@ -54,7 +54,7 @@ public:
     Hexapod_Nunchuck();
     int setupNunchuck();
     void nunchuckControl();
-    bool connected();
+    bool stopIfNotConnected();
     int readNunchuck(nunchuck_t *nckVal);
 };
 

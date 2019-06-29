@@ -71,9 +71,16 @@ Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
 /**
  *
  */
-bool Hexapod_Nunchuck::connected()
+bool Hexapod_Nunchuck::stopIfNotConnected()
 {
-    return digitalRead(NUNCHUCK_ATT_PIN);
+    if (!digitalRead(NUNCHUCK_ATT_PIN))
+    {
+        Serial.println("\nNUNCHUCK NOT CONNECTED!\nABORTING");
+        while (true)
+        {
+            yield();
+        }
+    }
 }
 
 /**
@@ -83,8 +90,7 @@ int Hexapod_Nunchuck::setupNunchuck()
 {
     pinMode(NUNCHUCK_ATT_PIN, INPUT_PULLDOWN);
     // Abort if the Nunchuck is not connected
-    if (!connected())
-        return -1;
+    stopIfNotConnected();
     begin();
     type = NUNCHUCK;
     readData();    // Read inputs and update maps

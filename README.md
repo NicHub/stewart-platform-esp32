@@ -15,7 +15,7 @@ Currently the platform can be operated:
  - with *Arduino C* code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
  - with *G-Code* through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
 
-The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_app/hexapod_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_app/hexapod_app.cpp).
+The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
 
 ## HOME PAGE OF THE PROJECT
 
@@ -85,6 +85,8 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 
 
 ## EXTERNAL LIBRARIES
+
+The external libraries should be installed automatically during the first build because they are declared under `lib_deps` in `platformio.ini`. You can also install them manually with the following commands:
 
     platformio lib install 4744 # ESP32Servo
     platformio lib install 1465 # WiiChuck

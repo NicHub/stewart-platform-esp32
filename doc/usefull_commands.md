@@ -23,4 +23,4 @@ ESP32 Brownout detector was triggered
 
 
 # GIT COMMAND
-git update-index --skip-worktree ./hexapod_app/hexapod_app
+git update-index --skip-worktree ./hexapod_desktop_app/hexapod_desktop_app
