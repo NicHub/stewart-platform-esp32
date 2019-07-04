@@ -74,7 +74,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
 int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo_angles)
 {
     double BP_x, BP_y, BP_z, // Platform joint coordinates relative to servo pivot.
-        d2,                  // Distance^2 between platform joint and servo pivot.
+        BP2,                 // Distance^2 between servo pivot (B) and platform joint (P).
         s, t;                // Intermediate values.
 
     angle_t new_servo_angles[NB_SERVOS];
@@ -108,16 +108,14 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
                coord.hx_z -
                Z_HOME;
 
-        // Square of the new distance between platform joint and servo pivot.
-        d2 = POW(BP_x, 2) +
-             POW(BP_y, 2) +
-             POW(BP_z, 2);
+        // Distance^2 between servo pivot (B) and platform joint (P).
+        BP2 = POW(BP_x, 2) + POW(BP_y, 2) + POW(BP_z, 2);
 
         // Test if the new distance between servo pivot and platform joint
         // is longer than physically possible.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (d2 > D2MAX)
+        if (BP2 > BP2_MAX)
         {
             movOK = -1;
             break;
@@ -129,7 +127,8 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
              SIN_THETA_S[sid] * BP_y) /
             BP_z;
 
-        // If t <= -1, then s is undefined.
+        // If t <= -1, then s is undefined. This case is almost impossible
+        // in practice, so maybe the test should be removed.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
         if (t <= -1)
@@ -140,9 +139,8 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
 
         // Mathematically speaking, we should also test if BP_z == 0 before calculating s.
         // But BP_z == 0 is impossible in practice.
-
         // (~9 µs)
-        s = (d2 - D2PERP) /
+        s = (BP2 - BP2_PERP) /
             (2 * ARM_LENGTH * BP_z * sqrt(1 + t * t));
 
         // Tests if there are no physically possible solutions.
@@ -187,6 +185,18 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
             movOK = -4;
             break;
         }
+
+#if false
+        // Calculate Z_HOME so that the arm is horizontal.
+        // The result is valid only for the home position
+        // (first line of table calculated by desktop app).
+        double Z_HOME_CALC =
+            BP_z - sqrt(POW(ROD_LENGTH, 2) -
+                        POW((ARM_LENGTH - (COS_THETA_S[sid] * BP_x + SIN_THETA_S[sid] * BP_y)), 2) -
+                        POW((-SIN_THETA_S[sid] * BP_x + COS_THETA_S[sid] * BP_y), 2));
+        Z_HOME_CALC += Z_HOME;
+        new_servo_angles[sid].debug = Z_HOME_CALC;
+#endif
     }
 
     // Update platform coordinates if there are no errors.
@@ -214,7 +224,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
 int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo_angles)
 {
     double BP_x, BP_y, BP_z,            // Platform joint coordinates relative to servo pivot.
-        d2,                             // Distance^2 between platform joint and servo pivot.
+        BP2,                            // Distance^2 between platform joint and servo pivot.
         i0, i1, i2, i3, i4, i5, i6, i7; // Intermediate values.
 
     angle_t new_servo_angles[NB_SERVOS];
@@ -262,15 +272,13 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
                BP_z2 = POW(BP_z, 2);
 
         // Square of the new distance between platform joint and servo pivot.
-        d2 = BP_x2 +
-             BP_y2 +
-             BP_z2;
+        BP2 = BP_x2 + BP_y2 + BP_z2;
 
         // Test if the new distance between servo pivot and platform joint
         // is longer than physically possible.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (d2 > D2MAX)
+        if (BP2 > BP2_MAX)
         {
             movOK = -1;
             break;

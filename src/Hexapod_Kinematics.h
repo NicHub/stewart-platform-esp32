@@ -188,13 +188,12 @@ public:
 
     /*
      * Square of the longest physically possible distance
-     * between servo pivot and platform joint (called “d”).
+     * between servo pivot and platform joint.
      */
-    const double D2MAX = POW((ARM_LENGTH + ROD_LENGTH), 2);
+    const double BP2_MAX = POW((ARM_LENGTH + ROD_LENGTH), 2);
 
     /*
-     * Square of the length of d when the servo arm is perpendicular to d
-     * and the rod is the hypotenuse.
+     * Square of the length of BP when the servo arm is perpendicular to BP.
      */
-    const double D2PERP = POW(ROD_LENGTH, 2) - POW(ARM_LENGTH, 2);
+    const double BP2_PERP = POW(ROD_LENGTH, 2) - POW(ARM_LENGTH, 2);
 };

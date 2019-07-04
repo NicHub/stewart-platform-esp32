@@ -541,8 +541,8 @@ The length of the vector
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-a^{2}+b^{2}+c^{2} & =BP_{x}^{2}+BP_{y}^{2}+BP_{z}^{2}=d2\\
-\varphi & =\arcsin\frac{d2+arm^{2}-rod^{2}}{2\cdot arm\cdot c\cdot\sqrt{1+\left(\frac{a}{c}\right)^{2}}}-\arctan\frac{a}{c}
+a^{2}+b^{2}+c^{2} & =BP_{x}^{2}+BP_{y}^{2}+BP_{z}^{2}=BP^{2}\\
+\varphi & =\arcsin\frac{BP^{2}+arm^{2}-rod^{2}}{2\cdot arm\cdot c\cdot\sqrt{1+\left(\frac{a}{c}\right)^{2}}}-\arctan\frac{a}{c}
 \end{align}
 
 \end_inset
