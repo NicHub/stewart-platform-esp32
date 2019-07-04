@@ -227,11 +227,6 @@ Tx & Ty & Tz & 1
 \end_inset
 
 The servo pivots have the following coordinates.
- Note that 
-\begin_inset Formula $Zhome$
-\end_inset
-
- is negative.
 \end_layout
 
 \begin_layout Standard
@@ -307,8 +302,8 @@ Px_{i}\cos B\sin C & + & Py_{i}\left(\sin A\sin B\sin C+\cos A\cos C\right) & + 
 \end_layout
 
 \begin_layout Standard
-This equation is the solution of the forward kinematics of platform actuated
- by linear motors.
+This set of equations is the solution of the forward kinematics of platforms
+ actuated by linear motors.
 \end_layout
 
 \begin_layout Part
