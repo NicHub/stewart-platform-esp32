@@ -396,7 +396,7 @@ The end of the rod is somewhere on a sphere.
 \end_inset
 
  and 
-\begin_inset Formula $u$
+\begin_inset Formula $z$
 \end_inset
 
 , so 
@@ -442,7 +442,7 @@ The end of the rod is somewhere on a sphere.
 \begin_inset Formula $y$
 \end_inset
 
- and that explains the 
+ and that explains the sign of the term 
 \begin_inset Formula $+b^{2}$
 \end_inset
 
