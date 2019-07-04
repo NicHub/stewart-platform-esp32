@@ -76,6 +76,8 @@ void calcAndPrintResults(platform_t coords)
                angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].us;
 #elif WHAT_TO_PRINT == 3
                angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].rad;
+#elif WHAT_TO_PRINT == 4
+               angle_file << fixed << setprecision(6) << setw(LARGE_WIDTH) << setfill(' ') << servo_angles[id].debug;
 #endif
           }
      }

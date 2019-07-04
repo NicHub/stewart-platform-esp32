@@ -71,7 +71,7 @@ Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
 /**
  *
  */
-bool Hexapod_Nunchuck::stopIfNotConnected()
+void Hexapod_Nunchuck::stopIfNotConnected()
 {
     if (!digitalRead(NUNCHUCK_ATT_PIN))
     {

@@ -5,10 +5,15 @@
 \save_transient_properties true
 \origin unavailable
 \textclass amsart
+\begin_preamble
+\usepackage{pdfpages}
+\end_preamble
 \use_default_options true
+\begin_removed_modules
+eqs-within-sections
+\end_removed_modules
 \begin_modules
 theorems-ams
-eqs-within-sections
 figs-within-sections
 \end_modules
 \maintain_unincluded_children false
@@ -35,7 +40,16 @@ figs-within-sections
 \index_command default
 \paperfontsize default
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize a4paper
 \use_geometry true
 \use_package amsmath 1
@@ -90,19 +104,56 @@ figs-within-sections
 \begin_body
 
 \begin_layout Title
-Hexapod kinematics
+Forward kinematics solution 
+\begin_inset Newline newline
+\end_inset
+
+of a Stewart platform
+\begin_inset Newline newline
+\end_inset
+
+actuated by rotary motors
+\begin_inset Newline newline
+\end_inset
+
+(DRAFT)
 \end_layout
 
 \begin_layout Author
 Nicolas Jeanmonod, ouilogique.com, May 2019
 \end_layout
 
-\begin_layout Quotation
-This document is a draft
+\begin_layout Part
+Abstract
+\end_layout
+
+\begin_layout Standard
+This paper presents an algorithm for the calculation of the forward kinematics
+ solution of a Stewart platform actuated by rotary motors.
+ It is based on the following paper by an unknown author from the Wokingham
+ U3A Math Group: 
+\begin_inset CommandInset href
+LatexCommand href
+name "https://bit.ly/2FU3rUJ"
+target "https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf"
+literal "false"
+
+\end_inset
+
+.
+ This algorithm was implemented on an ESP32 microcontroler: 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/NicHub/stewart-platform-esp32"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Part
-Displacements of the platform joints 
+Positions of the platform joints 
 \begin_inset Formula $P_{i}$
 \end_inset
 
@@ -118,22 +169,22 @@ Let’s consider an orthogonal system of axis
 \begin_inset Formula $xyz$
 \end_inset
 
- with origin in the middle of the moving platform.
- The
-\begin_inset space ~
+ with origin in the middle of the moving platform and the 
+\begin_inset Formula $z$
 \end_inset
 
-coordinates of the platform joints at home position are called 
+ axis pointing downwards.
+ The coordinates of the platform joints are called 
 \begin_inset Formula $P_{i}$
 \end_inset
 
-.
- Note that 
-\begin_inset Formula $Pz_{i}=0$
+ where 
+\begin_inset Formula $i=\text{motor index}=0..5$
 \end_inset
 
- and 
-\begin_inset Formula $i=\text{motor index}=0..5$
+.
+ Note that at home position 
+\begin_inset Formula $Pz_{i}=0$
 \end_inset
 
 .
@@ -144,8 +195,8 @@ P_{i}=\left\{ Px_{i},Py_{i},0,1\right\}
 
 \end_inset
 
-Movements of the platform: the platform has six degrees of freedom, three
- rotations and three translations with the following transformation matrices:
+The platform has six degrees of freedom, three rotations and three translations
+ with the following transformation matrices:
 \end_layout
 
 \begin_layout Standard
@@ -191,13 +242,17 @@ B_{i}=\left\{ Bx_{i},By_{i},Zhome,1\right\}
 
 \end_inset
 
-Position of platform joints relative to servo pivots:
+Translation of servo pivots 
+\begin_inset Formula $B_{i}$
+\end_inset
+
+ relative to the origin:
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-TPB=\begin{pmatrix}1 & 0 & 0 & 0\\
+TB=\begin{pmatrix}1 & 0 & 0 & 0\\
 0 & 1 & 0 & 0\\
 0 & 0 & 1 & 0\\
 -Bx & -By & -Zhome & 1
@@ -206,16 +261,16 @@ TPB=\begin{pmatrix}1 & 0 & 0 & 0\\
 
 \end_inset
 
-The distances between the servo pivots 
+The positions of the platform joints 
+\begin_inset Formula $P_{i}$
+\end_inset
+
+ relative to the servo pivots 
 \begin_inset Formula $B_{i}$
 \end_inset
 
- and the platform joints 
-\begin_inset Formula $P0_{i}$
-\end_inset
-
  after movement are called 
-\begin_inset Formula $P1_{i}$
+\begin_inset Formula $BP_{i}$
 \end_inset
 
  and can be found by calculating the following dot product:
@@ -224,7 +279,7 @@ The distances between the servo pivots
 \begin_layout Standard
 \begin_inset Formula 
 \[
-PB_{i}=P{}_{i}\cdot Rx\cdot Ry\cdot Rz\cdot Txyz\cdot TPB=
+PB_{i}=P{}_{i}\cdot Rx\cdot Ry\cdot Rz\cdot Txyz\cdot TB=
 \]
 
 \end_inset
@@ -234,17 +289,329 @@ PB_{i}=P{}_{i}\cdot Rx\cdot Ry\cdot Rz\cdot Txyz\cdot TPB=
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\begin{pmatrix}PBx_{i}\\
-PBy_{i}\\
-PBz_{i}\\
+\begin{equation}
+\begin{pmatrix}BPx_{i}\\
+BPy_{i}\\
+BPz_{i}\\
 1
 \end{pmatrix}^{T}=\begin{pmatrix}Px_{i}\cos B\cos C & + & Py_{i}\left(\sin A\sin B\cos C-\cos A\sin C\right) & + & Tx & - & Bx_{i}\\
 Px_{i}\cos B\sin C & + & Py_{i}\left(\sin A\sin B\sin C+\cos A\cos C\right) & + & Ty & - & By_{i}\\
 -Px_{i}\sin B & + & Py_{i}\sin A\cos B & + & Tz & - & Zhome\\
  &  & 1
 \end{pmatrix}^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation is the solution of the forward kinematics of platform actuated
+ by linear motors.
+\end_layout
+
+\begin_layout Part
+Rotation of the vector 
+\begin_inset Formula $PB$
+\end_inset
+
+ in the plane of the servo arm
+\end_layout
+
+\begin_layout Standard
+The arm plane is rotated by a negative angle 
+\begin_inset Formula $\Theta_{s}$
+\end_inset
+
+ and it defines a new system of coordinates that is also rotated.
+ Let’s find the coordinates of 
+\begin_inset Formula $BP$
+\end_inset
+
+ in this new reference system:
+\begin_inset Formula 
+\[
+\begin{pmatrix}BPx_{i}\\
+BPy_{i}\\
+BPz_{i}\\
+1
+\end{pmatrix}^{T}\cdot\begin{pmatrix}\phantom{-}\cos\Theta_{s} & \sin\Theta_{s} & 0 & 0\\
+-\sin\Theta_{s} & \cos\Theta_{s} & 0 & 0\\
+0 & 0 & 1 & 0\\
+0 & 0 & 0 & 1
+\end{pmatrix}=\begin{pmatrix}\cos\Theta_{s}BPx_{i}-\sin\Theta_{s}BPy_{i}\\
+\sin\Theta_{s}BPx_{i}+\cos\Theta_{s}BPy_{i}\\
+BPz_{i}\\
+1
+\end{pmatrix}^{T}=\begin{pmatrix}a\\
+b\\
+c\\
+1
+\end{pmatrix}^{T}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the original algorithm,
+\begin_inset Formula $\Theta_{s}$
+\end_inset
+
+ is positive, so we can rewrite:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{pmatrix}a\\
+b\\
+c\\
+1
+\end{pmatrix}^{T}=\begin{pmatrix}\phantom{-}\cos\Theta_{s}BPx_{i}+\sin\Theta_{s}BPy_{i}\\
+-\sin\Theta_{s}BPx_{i}+\cos\Theta_{s}BPy_{i}\\
+BPz_{i}\\
+1
+\end{pmatrix}^{T}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Intersection between servo arm circle and rod sphere in the plane of the
+ servo arm circle
+\end_layout
+
+\begin_layout Standard
+The end of the rod is somewhere on a sphere.
+ This sphere will intersect the circle of the servo arm 0, 1 or 2 times.
+ This circle lies in a plane which has two axis 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $u$
+\end_inset
+
+, so 
+\begin_inset Formula $y=0$
+\end_inset
+
+.
+ This plane is rotated by an angle 
+\begin_inset Formula $\Theta_{s}$
+\end_inset
+
+ along the 
+\begin_inset Formula $z$
+\end_inset
+
+ axis.
+ We applied the rotation to the 
+\begin_inset Formula $BP$
+\end_inset
+
+ vector in the previous section to find the values of 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $b$
+\end_inset
+
+ and
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $c$
+\end_inset
+
+.
+ The rotation implies that 
+\begin_inset Formula $BP$
+\end_inset
+
+ is in the negative region of 
+\begin_inset Formula $y$
+\end_inset
+
+ and that explains the 
+\begin_inset Formula $+b^{2}$
+\end_inset
+
+ in the equation of the sphere below.
+\end_layout
+
+\begin_layout Standard
+Now we will find the intersection of the rod sphere and the arm circle.
+ The circle is expressed in parametric coordinates, but is also possible
+ to solve this problem by expressing it in Cartesian coordinates.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{cases}
+\left(x-a\right)^{2}+b^{2}+(z-c)^{2} & =rod^{2}\\
+arm\:\cos\varphi & =x\\
+arm\:\sin\varphi & =z
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left(arm\:\cos\varphi-a\right)^{2}+b^{2}+\left(arm\:\sin\varphi-c\right)^{2} & =rod^{2}\\
+\left(arm^{2}\cos^{2}\varphi-2\:arm\:\cos\varphi\:a+a^{2}\right) & +\\
+\left(arm^{2}\sin^{2}\varphi-2\:arm\:\sin\varphi\:c+c^{2}\right) & =rod^{2}-b^{2}\\
+\left(\cos^{2}\varphi-2\frac{a}{arm}\cos\varphi+\frac{a^{2}}{arm^{2}}\right) & +\\
+\left(\sin^{2}\varphi-2\frac{c}{arm}\sin\varphi+\frac{c^{2}}{arm^{2}}\right) & =\frac{rod^{2}-b^{2}}{arm^{2}}\\
+d & =\frac{a}{arm}\\
+e & =\frac{c}{arm}\\
+\left(\cos^{2}\varphi-2d\cos\varphi+d^{2}\right) & +\\
+\left(\sin^{2}\varphi-2e\sin\varphi+e^{2}\right) & =\frac{rod^{2}+b^{2}}{arm^{2}}\\
+\cos^{2}\varphi+\sin^{2}\varphi & =1\\
+d\cos\varphi+e\sin\varphi & =\frac{1}{2}\left(1+d^{2}+e^{2}-\frac{rod^{2}-b^{2}}{arm^{2}}\right)\\
+d\cos\varphi+e\sin\varphi & =\frac{1}{2}\left(\frac{arm^{2}}{arm^{2}}+\frac{a^{2}}{arm^{2}}+\frac{c^{2}}{arm^{2}}-\frac{rod^{2}-b^{2}}{arm^{2}}\right)\\
+d\cos\varphi+e\sin\varphi & =\frac{a^{2}+b^{2}+c^{2}+arm^{2}-rod^{2}}{2\:arm^{2}}=f
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Identity
+\begin_inset Formula 
+\begin{align*}
+m\sin\alpha+n\cos\alpha & =o\sin\left(\alpha+p\right)\\
+o & =\sqrt{m^{2}+n^{2}}\\
+\tan p & =\frac{n}{m}\\
+n\cos\alpha+m\sin\alpha & =\pm\sqrt{m^{2}+n^{2}}\sin\left(\alpha+\arctan\frac{n}{m}\right)\\
+if\:-\frac{\pi}{2}<\arctan\frac{n}{m}<\frac{\pi}{2} & \:then\\
+n\cos\alpha+m\sin\alpha & =\sqrt{m^{2}+n^{2}}\sin\left(\alpha+\arctan\frac{n}{m}\right)=f
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+f & =\sqrt{d^{2}+e^{2}}\sin\left(\varphi+\arctan\frac{d}{e}\right)\\
+\varphi & =\arcsin\frac{f}{\sqrt{d^{2}+e^{2}}}-\arctan\frac{d}{e}\\
+\varphi & =\arcsin\frac{\frac{a^{2}+b^{2}+c^{2}+arm^{2}-rod^{2}}{2\:arm^{2}}}{\sqrt{\frac{a^{2}}{arm^{2}}+\frac{c^{2}}{arm^{2}}}}-\arctan\frac{a}{c}\\
+\varphi & =\arcsin\frac{a^{2}+b^{2}+c^{2}+arm^{2}-rod^{2}}{2\:arm\sqrt{a^{2}+c^{2}}}-\arctan\frac{a}{c}\\
+\varphi & =\arcsin\frac{a^{2}+b^{2}+c^{2}+arm^{2}-rod^{2}}{2\cdot arm\cdot c\cdot\sqrt{1+\left(\frac{a}{c}\right)^{2}}}-\arctan\frac{a}{c}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The length of the vector 
+\begin_inset Formula $BP$
+\end_inset
+
+ is the same in both systems of coordinates (arm and platform).
+ So we calculate it in the platform system because this allows us to drop
+ the calculation of 
+\begin_inset Formula $b$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+a^{2}+b^{2}+c^{2} & =BP_{x}^{2}+BP_{y}^{2}+BP_{z}^{2}=d2\\
+\varphi & =\arcsin\frac{d2+arm^{2}-rod^{2}}{2\cdot arm\cdot c\cdot\sqrt{1+\left(\frac{a}{c}\right)^{2}}}-\arctan\frac{a}{c}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The angle 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ equals 
+\begin_inset Formula $0$
+\end_inset
+
+ when the arm is horizontal, but we want it to be 
+\begin_inset Formula $0$
+\end_inset
+
+ when the arm is at half of its full angular range:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\varphi_{final}=\varphi+\frac{servo\:full\:angular\:range}{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quotation
+\begin_inset Float figure
+placement t
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename hexapod-parameters.png
+	lyxscale 10
+	width 18cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Hexapod parameters
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 

@@ -82,7 +82,6 @@ public:
     Hexapod_Kinematics(){};
     int8_t home(angle_t *servo_angles);
     int8_t calcServoAngles(platform_t coord, angle_t *servo_angles);
-    int8_t calcServoAnglesAlgo0(platform_t coord, angle_t *servo_angles);
     int8_t calcServoAnglesAlgo1(platform_t coord, angle_t *servo_angles);
     int8_t calcServoAnglesAlgo2(platform_t coord, angle_t *servo_angles);
     double getHX_X();
@@ -137,7 +136,7 @@ public:
         sin(THETA_S[5])};
 
     // For algorithm 2
-    const double angleD[NB_SERVOS] = {
+    const double M_THETA_S[NB_SERVOS] = {
         -THETA_S[0],
         -THETA_S[1],
         -THETA_S[2],
@@ -146,20 +145,20 @@ public:
         -THETA_S[5]};
 
     const double sinD[NB_SERVOS] = {
-        sin(angleD[0]),
-        sin(angleD[1]),
-        sin(angleD[2]),
-        sin(angleD[3]),
-        sin(angleD[4]),
-        sin(angleD[5])};
+        sin(M_THETA_S[0]),
+        sin(M_THETA_S[1]),
+        sin(M_THETA_S[2]),
+        sin(M_THETA_S[3]),
+        sin(M_THETA_S[4]),
+        sin(M_THETA_S[5])};
 
     const double cosD[NB_SERVOS] = {
-        cos(angleD[0]),
-        cos(angleD[1]),
-        cos(angleD[2]),
-        cos(angleD[3]),
-        cos(angleD[4]),
-        cos(angleD[5])};
+        cos(M_THETA_S[0]),
+        cos(M_THETA_S[1]),
+        cos(M_THETA_S[2]),
+        cos(M_THETA_S[3]),
+        cos(M_THETA_S[4]),
+        cos(M_THETA_S[5])};
 
     /*
      * XY cartesian coordinates of the platform joints, based on the polar
@@ -191,11 +190,11 @@ public:
      * Square of the longest physically possible distance
      * between servo pivot and platform joint (called “d”).
      */
-    const double D2MAX = ((ARM_LENGTH + ROD_LENGTH) * (ARM_LENGTH + ROD_LENGTH));
+    const double D2MAX = POW((ARM_LENGTH + ROD_LENGTH), 2);
 
     /*
      * Square of the length of d when the servo arm is perpendicular to d
      * and the rod is the hypotenuse.
      */
-    const double D2PERP = (ROD_LENGTH * ROD_LENGTH) - (ARM_LENGTH * ARM_LENGTH);
+    const double D2PERP = POW(ROD_LENGTH, 2) - POW(ARM_LENGTH, 2);
 };
