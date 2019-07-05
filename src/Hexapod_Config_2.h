@@ -31,9 +31,8 @@
  * These values should not be used to restrict servo movements.
  * Use MIN/MAX COORDINATES below for that.
  */
-const double SERVO_MIN_ANGLE = radians(0);
-const double SERVO_MAX_ANGLE = radians(180);
-const double SERVO_MID_ANGLE = (SERVO_MIN_ANGLE + SERVO_MAX_ANGLE) / 2;
+const double SERVO_FULL_ANGULAR_RANGE = radians(180);
+const double SERVO_HALF_ANGULAR_RANGE = SERVO_FULL_ANGULAR_RANGE / 2;
 const double SERVO_MIN_US = 600;
 const double SERVO_MAX_US = 2300;
 
@@ -85,7 +84,7 @@ typedef struct
  * The gain in µs/rad (=~ 518 µs/rad).
  */
 const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
-                    (SERVO_MAX_ANGLE - SERVO_MIN_ANGLE);
+                    (SERVO_FULL_ANGULAR_RANGE);
 
 /*
  * Calibration factors. These values take into account the fact

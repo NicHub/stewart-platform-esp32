@@ -158,7 +158,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
 
         // Rotate the angle.
         // (~1 µs)
-        new_servo_angles[sid].rad += SERVO_MID_ANGLE;
+        new_servo_angles[sid].rad += SERVO_HALF_ANGULAR_RANGE;
 
         // Convert radians to degrees.
         // (~2 µs)
@@ -312,7 +312,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
 
         // Rotate the angle.
         // (~1 µs)
-        new_servo_angles[sid].rad += SERVO_MID_ANGLE;
+        new_servo_angles[sid].rad += SERVO_HALF_ANGULAR_RANGE;
 
         // Convert radians to degrees.
         // (~2 µs)

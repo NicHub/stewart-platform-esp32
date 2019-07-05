@@ -104,19 +104,31 @@ figs-within-sections
 \begin_body
 
 \begin_layout Title
-Forward kinematics solution 
-\begin_inset Newline newline
+Forward kinematics solution of
+\begin_inset space ~
 \end_inset
 
-of a Stewart platform
-\begin_inset Newline newline
+a
+\begin_inset space ~
 \end_inset
 
-actuated by rotary motors
-\begin_inset Newline newline
+Stewart
+\begin_inset space ~
 \end_inset
 
-(DRAFT)
+platform actuated
+\begin_inset space ~
+\end_inset
+
+by
+\begin_inset space ~
+\end_inset
+
+rotary
+\begin_inset space ~
+\end_inset
+
+motors (DRAFT)
 \end_layout
 
 \begin_layout Author
@@ -131,7 +143,7 @@ Abstract
 This paper presents an algorithm for the calculation of the forward kinematics
  solution of a Stewart platform actuated by rotary motors.
  It is based on the following paper by an unknown author from the Wokingham
- U3A Math Group: 
+ U3A Math Group:
 \begin_inset CommandInset href
 LatexCommand href
 name "https://bit.ly/2FU3rUJ"
@@ -141,7 +153,7 @@ literal "false"
 \end_inset
 
 .
- This algorithm was implemented on an ESP32 microcontroler: 
+ This algorithm has been implemented on an ESP32 microcontroller:
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/NicHub/stewart-platform-esp32"
@@ -188,6 +200,7 @@ Let’s consider an orthogonal system of axis
 \end_inset
 
 .
+ 
 \begin_inset Formula 
 \[
 P_{i}=\left\{ Px_{i},Py_{i},0,1\right\} 
@@ -200,6 +213,7 @@ The platform has six degrees of freedom, three rotations and three translations
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{align*}
 Rx & =\left(\begin{array}{cccc}
@@ -230,6 +244,7 @@ The servo pivots have the following coordinates.
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \[
 B_{i}=\left\{ Bx_{i},By_{i},Zhome,1\right\} 
@@ -245,6 +260,7 @@ Translation of servo pivots
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \[
 TB=\begin{pmatrix}1 & 0 & 0 & 0\\
@@ -268,13 +284,16 @@ The positions of the platform joints
 \begin_inset Formula $BP_{i}$
 \end_inset
 
- and can be found by calculating the following dot product:
+ and can be found by calculating the dot product below.
+ Note that the result is the solution of the forward kinematics of platforms
+ actuated by linear motors.
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \[
-PB_{i}=P{}_{i}\cdot Rx\cdot Ry\cdot Rz\cdot Txyz\cdot TB=
+BP_{i}=P{}_{i}\cdot Rx\cdot Ry\cdot Rz\cdot Txyz\cdot TB=
 \]
 
 \end_inset
@@ -283,6 +302,7 @@ PB_{i}=P{}_{i}\cdot Rx\cdot Ry\cdot Rz\cdot Txyz\cdot TB=
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{equation}
 \begin{pmatrix}BPx_{i}\\
@@ -301,14 +321,9 @@ Px_{i}\cos B\sin C & + & Py_{i}\left(\sin A\sin B\sin C+\cos A\cos C\right) & + 
 
 \end_layout
 
-\begin_layout Standard
-This set of equations is the solution of the forward kinematics of platforms
- actuated by linear motors.
-\end_layout
-
 \begin_layout Part
 Rotation of the vector 
-\begin_inset Formula $PB$
+\begin_inset Formula $BP$
 \end_inset
 
  in the plane of the servo arm
@@ -324,7 +339,7 @@ The arm plane is rotated by a negative angle
 \begin_inset Formula $BP$
 \end_inset
 
- in this new reference system:
+ in this new reference system: 
 \begin_inset Formula 
 \[
 \begin{pmatrix}BPx_{i}\\
@@ -352,7 +367,7 @@ c\\
 \end_layout
 
 \begin_layout Standard
-In the original algorithm,
+In the original algorithm, 
 \begin_inset Formula $\Theta_{s}$
 \end_inset
 
@@ -360,6 +375,7 @@ In the original algorithm,
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{equation}
 \begin{pmatrix}a\\
@@ -424,7 +440,7 @@ The end of the rod is somewhere on a sphere.
 \begin_inset space ~
 \end_inset
 
-
+ 
 \begin_inset Formula $c$
 \end_inset
 
@@ -451,6 +467,7 @@ Now we will find the intersection of the rod sphere and the arm circle.
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \[
 \begin{cases}
@@ -466,6 +483,7 @@ arm\:\sin\varphi & =z
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{align*}
 \left(arm\:\cos\varphi-a\right)^{2}+b^{2}+\left(arm\:\sin\varphi-c\right)^{2} & =rod^{2}\\
@@ -489,7 +507,7 @@ d\cos\varphi+e\sin\varphi & =\frac{a^{2}+b^{2}+c^{2}+arm^{2}-rod^{2}}{2\:arm^{2}
 \end_layout
 
 \begin_layout Standard
-Identity
+Identity 
 \begin_inset Formula 
 \begin{align*}
 m\sin\alpha+n\cos\alpha & =o\sin\left(\alpha+p\right)\\
@@ -510,6 +528,7 @@ Thus
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{align*}
 f & =\sqrt{d^{2}+e^{2}}\sin\left(\varphi+\arctan\frac{d}{e}\right)\\
@@ -539,6 +558,7 @@ The length of the vector
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{align}
 a^{2}+b^{2}+c^{2} & =BP_{x}^{2}+BP_{y}^{2}+BP_{z}^{2}=BP^{2}\\
@@ -567,6 +587,7 @@ The angle
 \end_layout
 
 \begin_layout Standard
+ 
 \begin_inset Formula 
 \begin{equation}
 \varphi_{final}=\varphi+\frac{servo\:full\:angular\:range}{2}
@@ -575,6 +596,115 @@ The angle
 \end_inset
 
 
+\end_layout
+
+\begin_layout Part
+Conversion from radian to PWM microseconds and mirroring
+\end_layout
+
+\begin_layout Standard
+The conversion of the angle in radian to an angle expressed in PWM microseconds
+ is done with a simple linear relation that is different for odd and even
+ servomotors:
+\end_layout
+
+\begin_layout Standard
+ 
+\begin_inset Formula 
+\begin{equation}
+\varphi_{PWM\mu s}=\begin{cases}
+\phantom{+}gain\cdot\varphi_{final}+servo\:min\:pwm\:\mu s+offset\\
+-gain\cdot\varphi_{final}+servo\:max\:pwm\:\mu s+offset
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\end_layout
+
+\begin_layout Standard
+ 
+\begin_inset Formula 
+\begin{equation}
+gain=\frac{servo\:max\:pwm\:\mu s-servo\:min\:pwm\:\mu s}{servo\:full\:angular\:range\:rad}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A typical value for the gain is 
+\begin_inset Formula $\left(2000-1000\right)/\pi=318\:\mu s/rad$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The offset will be typically 
+\begin_inset Formula $0$
+\end_inset
+
+, but can be adjusted to take into account that the arms cannot be mounted
+ exactly at the correct angle.
+ Care must be taken to make sure that
+\end_layout
+
+\begin_layout Standard
+ 
+\begin_inset Formula 
+\begin{align*}
+servo\:min\:pwm\:\mu s+offset & \geqslant servo\:min\:pwm\:\mu s\\
+servo\:max\:pwm\:\mu s+offset & \leqslant servo\:max\:pwm\:\mu s
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The sign of 
+\begin_inset Formula $gain$
+\end_inset
+
+ takes into account the fact that the odd and even arms are a reflection
+ of each other.
+ Thus, odd and even servomotors must have opposite gain values.
+\end_layout
+
+\begin_layout Part
+Calculation of 
+\begin_inset Formula $Zhome$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ 
+\begin_inset Formula $Zhome$
+\end_inset
+
+ must be calculated for each platform geometry so that when the platform
+ is at home position, i.e.
+ with no translation and no rotation, the arm are horizontal or tilted at
+ any value that makes sense.
+\end_layout
+
+\begin_layout Standard
+TO DO: calculation of 
+\begin_inset Formula $Zhome$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Quotation
