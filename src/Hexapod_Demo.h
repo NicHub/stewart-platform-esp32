@@ -31,6 +31,6 @@ class Hexapod_Demo
     void demoMov_shakeHeave();
     void testNaN();
     void testCalculations();
-    void testCalcSpeed(uint16_t nb_iter);
+    void testCalcSpeed();
     void findMinMax();
 };

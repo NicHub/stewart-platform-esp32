@@ -37,7 +37,7 @@
 #endif
 
 // Choose algorithm for servo angle calculations.
-#define ALGO 1
+#define ALGO 3
 
 // `POW` is a lot faster than `pow` defined in cmath.h.
 #define POW(base, exp)                                                  \
@@ -84,6 +84,7 @@ public:
     int8_t calcServoAngles(platform_t coord, angle_t *servo_angles);
     int8_t calcServoAnglesAlgo1(platform_t coord, angle_t *servo_angles);
     int8_t calcServoAnglesAlgo2(platform_t coord, angle_t *servo_angles);
+    int8_t calcServoAnglesAlgo3(platform_t coord, angle_t *servo_angles);
     double getHX_X();
     double getHX_Y();
     double getHX_Z();
@@ -196,4 +197,10 @@ public:
      * Square of the length of BP when the servo arm is perpendicular to BP.
      */
     const double BP2_PERP = POW(ROD_LENGTH, 2) - POW(ARM_LENGTH, 2);
+
+    double const
+        ARM_LENGTH2 = POW(ARM_LENGTH, 2),
+        ARM_LENGTH4 = POW(ARM_LENGTH, 4),
+        ROD_LENGTH2 = POW(ROD_LENGTH, 2),
+        ROD_LENGTH4 = POW(ROD_LENGTH, 4);
 };

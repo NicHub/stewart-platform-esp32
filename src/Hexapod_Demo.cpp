@@ -207,10 +207,10 @@ void Hexapod_Demo::testCalculations()
 /**
  *
  */
-void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
+void Hexapod_Demo::testCalcSpeed()
 {
     Serial.println("\n########## TEST CALCULATION SPEED ##########");
-    unsigned long T1 = 0, T2 = 0, TTot = 0;
+    unsigned long T1 = 0, T2 = 0, TTot = 0, dT = 0, Tmin = 10000, Tmax = 0;
     const int nb_intervals = 2;
     const double divide = 3;
     int count = 0;
@@ -224,14 +224,19 @@ void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
                 {
                     for (double roll = HX_B_MIN / divide; roll <= HX_B_MAX / divide; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals / divide)
                     {
-                        for (double yaw = HX_B_MIN / divide; yaw <= HX_B_MAX / divide; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals / divide)
+                        for (double yaw = HX_C_MIN / divide; yaw <= HX_C_MAX / divide; yaw += (HX_C_MAX - HX_C_MIN) / nb_intervals / divide)
                         {
                             T1 = micros();
                             hx_servo.calcServoAngles({sway, surge, heave, pitch, roll, yaw}, servo_angles);
                             // hx_servo.calcServoAnglesAlgo1({sway, surge, heave, pitch, roll, yaw}, servo_angles);
                             // hx_servo.calcServoAnglesAlgo2({sway, surge, heave, pitch, roll, yaw}, servo_angles);
+                            // hx_servo.calcServoAnglesAlgo3({sway, surge, heave, pitch, roll, yaw}, servo_angles);
                             T2 = micros();
-                            TTot += (T2 - T1);
+                            dT = T2- T1;
+                            Serial.println(dT);
+                            if(dT > Tmax) Tmax = dT;
+                            else if (dT < Tmin) Tmin = dT;
+                            TTot += (dT);
                             count++;
                         }
                     }
@@ -239,12 +244,18 @@ void Hexapod_Demo::testCalcSpeed(uint16_t nb_iter)
             }
         }
     }
-    Serial.print("Algorithm = ");
+    Serial.print("Algorithm                 = ");
     Serial.println(ALGO);
-    Serial.print("total time elapsed (us) = ");
+    Serial.print("nb iterations             = ");
+    Serial.println(count);
+    Serial.print("total time elapsed (us)   = ");
     Serial.println(TTot);
     Serial.print("time per calculation (us) = ");
     Serial.println(TTot / count);
+    Serial.print("Tmin (us)                 = ");
+    Serial.println(Tmin);
+    Serial.print("Tmax (us)                 = ");
+    Serial.println(Tmax);
 }
 
 /**

@@ -61,7 +61,7 @@ void setup()
     hx_demo.findMinMax();
 
     // Test calculation speed.
-    hx_demo.testCalcSpeed(3);
+    hx_demo.testCalcSpeed();
 }
 
 /**

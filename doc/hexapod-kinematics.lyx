@@ -695,7 +695,7 @@ Calculation of
 
  must be calculated for each platform geometry so that when the platform
  is at home position, i.e.
- with no translation and no rotation, the arm are horizontal or tilted at
+ with no translation and no rotation, the arms are horizontal or tilted at
  any value that makes sense.
 \end_layout
 
