@@ -172,7 +172,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
         new_servo_angles[sid].us =
-            SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad +
+            (int)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
@@ -326,7 +326,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
         new_servo_angles[sid].us =
-            SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad +
+            (int)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
@@ -450,7 +450,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo3(platform_t coord, angle_t *servo
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
         new_servo_angles[sid].us =
-            SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad +
+            (int)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.

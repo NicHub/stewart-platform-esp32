@@ -33,8 +33,8 @@
  */
 const double SERVO_FULL_ANGULAR_RANGE = radians(180);
 const double SERVO_HALF_ANGULAR_RANGE = SERVO_FULL_ANGULAR_RANGE / 2;
-const double SERVO_MIN_US = 600;
-const double SERVO_MAX_US = 2300;
+const int SERVO_MIN_US = 600;
+const int SERVO_MAX_US = 2300;
 
 /*
  * Offset values in µs to compensate for arm angle errors.
@@ -77,7 +77,7 @@ const double THETA_S[NB_SERVOS] = {
 typedef struct
 {
     double gain;
-    double offset;
+    int offset;
 } calibration_t;
 
 /*

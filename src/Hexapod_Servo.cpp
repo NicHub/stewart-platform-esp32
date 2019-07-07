@@ -74,6 +74,14 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
         {
             servos[sid].writeMicroseconds(servo_angles[sid].us);
         }
+#if false
+        // Write servo angles to Serial for debug.
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+        {
+            Serial.printf("%4d ", servo_angles[sid].us);
+        }
+        Serial.println("");
+#endif
     }
     else
     {

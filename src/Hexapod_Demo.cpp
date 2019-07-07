@@ -115,7 +115,7 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
             }
             T1 = millis();
             movOK = hx_servo.calcServoAngles(coords[cnt], servo_angles);
-            hx_servo.updateServos(movOK, 0UL);
+            hx_servo.updateServos(movOK, 15UL);
         }
     }
     Serial.println("demoMov_circles DONE");

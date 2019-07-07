@@ -32,7 +32,7 @@ class Hexapod_Servo : public Hexapod_Kinematics
   public:
     Hexapod_Servo();
     void setupServo();
-    void updateServos(int8_t movOK, unsigned long safetyWait_ms = 0UL);
+    void updateServos(int8_t movOK, unsigned long safetyWait_ms = 15UL);
     void printServoAngles();
     void printJointAndServoAxisCoord();
 };
