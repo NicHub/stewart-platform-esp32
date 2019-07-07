@@ -50,6 +50,77 @@ void Hexapod_Servo::setupServo()
 /**
  * Set servo values to the angles in servo_angles[].
  */
+void Hexapod_Servo::updateServosIncremental(int8_t movOK, unsigned long safetyWait_ms)
+{
+    static bool first_run = true;
+
+    static angle_t _servo_angles_prev[NB_SERVOS];
+    if (first_run)
+    {
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+        {
+            _servo_angles_prev[sid].us = servo_angles[sid].us;
+        }
+        first_run = false;
+        return;
+    }
+
+    static angle_t _servo_angles_target[NB_SERVOS];
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        _servo_angles_target[sid].us = servo_angles[sid].us;
+    }
+    const int increment = 5;
+    int8_t moving = B00111111;
+    Serial.println("### MOVING START ");
+
+    Serial.println("### ANGLE PREV ");
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.printf("%4d ", _servo_angles_prev[sid].us);
+    }
+    Serial.println("\n### ANGLE TARGET ");
+    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+    {
+        Serial.printf("%4d ", _servo_angles_target[sid].us);
+    }
+    Serial.println("");
+
+    while (moving)
+    {
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+        {
+            double err = _servo_angles_target[sid].us - _servo_angles_prev[sid].us;
+
+            if (err >= increment)
+                _servo_angles_prev[sid].us += increment;
+            else if (err <= -increment)
+                _servo_angles_prev[sid].us -= increment;
+            else
+            {
+                _servo_angles_prev[sid].us = _servo_angles_target[sid].us;
+                bitClear(moving, sid);
+            }
+
+            Serial.printf("%4d ", _servo_angles_prev[sid].us);
+        }
+        // Write to servos.
+        for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
+        {
+            servos[sid].writeMicroseconds(_servo_angles_prev[sid].us);
+        }
+
+        delay(5);
+
+        Serial.print("\n");
+    }
+
+    Serial.println(" MOVING DONE ###");
+}
+
+/**
+ * Set servo values to the angles in servo_angles[].
+ */
 void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
 {
     // Statistics of errors.

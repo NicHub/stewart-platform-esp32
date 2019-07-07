@@ -115,7 +115,8 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
             }
             T1 = millis();
             movOK = hx_servo.calcServoAngles(coords[cnt], servo_angles);
-            hx_servo.updateServos(movOK, 15UL);
+            // hx_servo.updateServos(movOK, 15UL);
+            hx_servo.updateServosIncremental(movOK, 0UL);
         }
     }
     Serial.println("demoMov_circles DONE");
@@ -233,7 +234,7 @@ void Hexapod_Demo::testCalcSpeed()
                             // hx_servo.calcServoAnglesAlgo3({sway, surge, heave, pitch, roll, yaw}, servo_angles);
                             T2 = micros();
                             dT = T2- T1;
-                            Serial.println(dT);
+                            // Serial.println(dT);
                             if(dT > Tmax) Tmax = dT;
                             else if (dT < Tmin) Tmin = dT;
                             TTot += (dT);
