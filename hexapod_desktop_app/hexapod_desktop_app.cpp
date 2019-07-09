@@ -21,7 +21,9 @@
 // USER CHOICES
 
 // Number of intervals
-const int nb_intervals = 2;
+const double nb_intervals = 1;
+// Reduce min/max
+const double shrink = 3;
 
 #include <iostream>
 #include <fstream>
@@ -38,9 +40,8 @@ Hexapod_Kinematics hk; // Stewart platform object.
 angle_t servo_angles[NB_SERVOS];
 int movOK = -1;
 ofstream angle_file;
-clock_t T1, T2;
 double cpu_time_used;
-long counter = 0;
+double counter = 0;
 
 // Print dimensions
 const uint8_t SMALL_WIDTH = 7;
@@ -49,12 +50,13 @@ const uint8_t ALL_WIDTH = 151;
 
 void calcAndPrintResults(platform_t coords)
 {
-     T1 = clock();
+     clock_t T1 = clock();
      movOK = hk.calcServoAngles(coords, servo_angles);
      // movOK = hk.calcServoAnglesAlgo1(coords, servo_angles);
      // movOK = hk.calcServoAnglesAlgo2(coords, servo_angles);
-     T2 = clock();
-     cpu_time_used += ((double) (T2 - T1));
+     // movOK = hk.calcServoAnglesAlgo3(coords, servo_angles);
+     clock_t T2 = clock();
+     cpu_time_used += (double)(T2 - T1);
      counter++;
 
      angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.hx_x;
@@ -129,17 +131,17 @@ int main()
      angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "" << endl;
 
      // Compute and print angles in the respective min/max ranges.
-     for (double sway = HX_X_MIN; sway <= HX_X_MAX; sway += (HX_X_MAX - HX_X_MIN) / nb_intervals)
+     for (double sway = HX_X_MIN / shrink; sway <= HX_X_MAX / shrink; sway += (HX_X_MAX - HX_X_MIN) / nb_intervals / shrink)
      {
-          for (double surge = HX_Y_MIN; surge <= HX_Y_MAX; surge += (HX_Y_MAX - HX_Y_MIN) / nb_intervals)
+          for (double surge = HX_Y_MIN / shrink; surge <= HX_Y_MAX / shrink; surge += (HX_Y_MAX - HX_Y_MIN) / nb_intervals / shrink)
           {
-               for (double heave = HX_Z_MIN; heave <= HX_Z_MAX; heave += (HX_Z_MAX - HX_Z_MIN) / nb_intervals)
+               for (double heave = HX_Z_MIN / shrink; heave <= HX_Z_MAX / shrink; heave += (HX_Z_MAX - HX_Z_MIN) / nb_intervals / shrink)
                {
-                    for (double pitch = HX_A_MIN; pitch <= HX_A_MAX; pitch += (HX_A_MAX - HX_A_MIN) / nb_intervals)
+                    for (double pitch = HX_A_MIN / shrink; pitch <= HX_A_MAX / shrink; pitch += (HX_A_MAX - HX_A_MIN) / nb_intervals / shrink)
                     {
-                         for (double roll = HX_B_MIN; roll <= HX_B_MAX; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals)
+                         for (double roll = HX_B_MIN / shrink; roll <= HX_B_MAX / shrink; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals / shrink)
                          {
-                              for (double yaw = HX_B_MIN; yaw <= HX_B_MAX; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals)
+                              for (double yaw = HX_B_MIN / shrink; yaw <= HX_B_MAX / shrink; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals / shrink)
                               {
                                    calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
                               }
