@@ -143,7 +143,7 @@ Abstract
 This paper presents an algorithm for the calculation of the forward kinematics
  solution of a Stewart platform actuated by rotary motors.
  It is based on the following paper by an unknown author from the Wokingham
- U3A Math Group:
+ U3A Math Group: 
 \begin_inset CommandInset href
 LatexCommand href
 name "https://bit.ly/2FU3rUJ"
@@ -153,7 +153,7 @@ literal "false"
 \end_inset
 
 .
- This algorithm has been implemented on an ESP32 microcontroller:
+ This algorithm has been implemented on an ESP32 microcontroller: 
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/NicHub/stewart-platform-esp32"
@@ -641,37 +641,24 @@ gain=\frac{servo\:max\:pwm\:\mu s-servo\:min\:pwm\:\mu s}{servo\:full\:angular\:
 
 \begin_layout Standard
 A typical value for the gain is 
-\begin_inset Formula $\left(2000-1000\right)/\pi=318\:\mu s/rad$
+\begin_inset Formula $\left(2000-1000\right)/\pi\thickapprox318\:\mu s/rad\thickapprox5.6\:\text{\mu s/°}$
 \end_inset
 
 .
 \end_layout
 
 \begin_layout Standard
-The offset will be typically 
+The 
+\begin_inset Formula $offset$
+\end_inset
+
+ will be typically 
 \begin_inset Formula $0$
 \end_inset
 
 , but can be adjusted to take into account that the arms cannot be mounted
  exactly at the correct angle.
- Care must be taken to make sure that
-\end_layout
-
-\begin_layout Standard
- 
-\begin_inset Formula 
-\begin{align*}
-servo\:min\:pwm\:\mu s+offset & \geqslant servo\:min\:pwm\:\mu s\\
-servo\:max\:pwm\:\mu s+offset & \leqslant servo\:max\:pwm\:\mu s
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The sign of 
+ The sign of 
 \begin_inset Formula $gain$
 \end_inset
 
@@ -695,8 +682,8 @@ Calculation of
 
  must be calculated for each platform geometry so that when the platform
  is at home position, i.e.
- with no translation and no rotation, the arms are horizontal or tilted at
- any value that makes sense.
+ with no translation and no rotation, the arms are horizontal or tilted
+ at any value that makes sense.
 \end_layout
 
 \begin_layout Standard

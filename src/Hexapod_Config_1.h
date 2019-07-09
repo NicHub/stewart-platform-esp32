@@ -40,12 +40,42 @@ const double SERVO_MAX_US = 2100;
  * Offset values in µs to compensate for arm angle errors.
  */
 const int PW_OFFSET[] = {
-    0,  // -50,
-    0,  // 50,
-    0,  // 50,
-    0,  // 0,
-    0,  // -50,
-    0}; // 0};
+    0,
+    0,
+    0,
+    0,
+    0,
+    0};
+
+/*
+ * The gain in µs/rad
+ * Typical gain =~ 318 µs/rad =~ 5.6 µs/°
+ */
+const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
+                    (SERVO_FULL_ANGULAR_RANGE);
+
+/*
+ * calibration_t
+ */
+typedef struct
+{
+    double gain;
+    int offset;
+} calibration_t;
+
+/*
+ * Calibration factors. These values take into account the fact
+ * that the odd and even arms are a reflection of each other.
+ * The calibration is linear:
+ * pulse width (µs) = gain (µs/rad) + offset (µs)
+ */
+const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
+    {-gain, SERVO_MAX_US + PW_OFFSET[0]},
+    {gain, SERVO_MIN_US + PW_OFFSET[1]},
+    {-gain, SERVO_MAX_US + PW_OFFSET[2]},
+    {gain, SERVO_MIN_US + PW_OFFSET[3]},
+    {-gain, SERVO_MAX_US + PW_OFFSET[4]},
+    {gain, SERVO_MIN_US + PW_OFFSET[5]}};
 
 /*
  * Pin numbers for each servo signal.
@@ -73,33 +103,6 @@ const double THETA_S[NB_SERVOS] = {
     radians(60),
     radians(-120)};
 
-// calibration_t
-typedef struct
-{
-    double gain;
-    double offset;
-} calibration_t;
-
-/*
- * The gain in µs/rad (=~ 518 µs/rad).
- */
-const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
-                    (SERVO_FULL_ANGULAR_RANGE);
-
-/*
- * Calibration factors. These values take into account the fact
- * that the odd and even arms are a reflection of each other.
- * The calibration is linear:
- * pulse width (µs) = gain (µs/rad) + offset (µs)
- */
-const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
-    {-gain, SERVO_MAX_US + PW_OFFSET[0]},
-    {gain, SERVO_MIN_US + PW_OFFSET[1]},
-    {-gain, SERVO_MAX_US + PW_OFFSET[2]},
-    {gain, SERVO_MIN_US + PW_OFFSET[3]},
-    {-gain, SERVO_MAX_US + PW_OFFSET[4]},
-    {gain, SERVO_MIN_US + PW_OFFSET[5]}};
-
 /*
  * MIN/MAX COORDINATES
  * NOTE: The actual min and max for each DOF are interdependent. eg:
@@ -107,33 +110,33 @@ const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
  * different than what's defined here. These are just the absolute maximums under
  * ideal conditions (eg: max for roll when pitch is zero).
  */
-const double HX_X_MIN = -30.0; // -37
-const double HX_X_MAX = 30.0;  // 38
+const double HX_X_MIN = -30.0;
+const double HX_X_MAX = 30.0;
 const double HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
 const double HX_X_BAND = HX_X_MAX - HX_X_MIN;
 
-const double HX_Y_MIN = -30.0; // -42
-const double HX_Y_MAX = 30.0;  // 38
+const double HX_Y_MIN = -30.0;
+const double HX_Y_MAX = 30.0;
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -12.0; // -21
-const double HX_Z_MAX = 12.0;  // 16
+const double HX_Z_MIN = -12.0;
+const double HX_Z_MAX = 12.0;
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
-const double HX_A_MIN = radians(-15.0); // radians(-27)
-const double HX_A_MAX = radians(15.0);  // radians(19)
+const double HX_A_MIN = radians(-15.0);
+const double HX_A_MAX = radians(15.0);
 const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
 const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
-const double HX_B_MIN = radians(-15.0); // radians(-19)
-const double HX_B_MAX = radians(15.0);  // radians(19)
+const double HX_B_MIN = radians(-15.0);
+const double HX_B_MAX = radians(15.0);
 const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
 const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
-const double HX_C_MIN = radians(-40.0); // radians(-43)
-const double HX_C_MAX = radians(40.0);  // radians(43)
+const double HX_C_MIN = radians(-40.0);
+const double HX_C_MAX = radians(40.0);
 const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 
