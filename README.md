@@ -7,7 +7,7 @@
 
 ## ABSTRACT
 
-This is an implementation of a 6-degrees of freedom hexapod — also called *Stewart Platform* — on the ESP32. The actuators are PWM rotary servo motors and the program is written in *Arduino C* for *Platform IO*. This project is done in the frame of the *P19 project* at the [Microclub](https://microclub.ch).
+This is an implementation of a 6-degrees of freedom hexapod — also called *Stewart Platform* — on the ESP32. The actuators are PWM rotary servo motors and the program is written in *Arduino C* for *PlatformIO Core 4.0*. This project is done in the frame of the *P19 project* at the [Microclub](https://microclub.ch).
 
 Currently the platform can be operated:
 
@@ -16,6 +16,10 @@ Currently the platform can be operated:
  - with *G-Code* through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
 
 The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
+
+## PlatformIO version
+
+The `platformio.ini` file is written for *PlatformIO Core 4.0*. If your *PlatformIO* version is older, you can upgrade with the command `platformio upgrade`. If you don’t want to upgrade, you can pick the old `platformio.ini` file here : <https://github.com/NicHub/stewart-platform-esp32/blob/bc47243335e571190a0a5bb4c3ecf3de08c9b6ca/platformio.ini>.
 
 ## HOME PAGE OF THE PROJECT
 
@@ -83,7 +87,6 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 | black  | ATT    | IO4 (Not required, gives VCC if Nunchuck is connected) |
 | yellow | SDA    | IO21                                                   |
 
-
 ## EXTERNAL LIBRARIES
 
 The external libraries should be installed automatically during the first build because they are declared under `lib_deps` in `platformio.ini`. You can also install them manually with the following commands:
@@ -116,3 +119,11 @@ The external libraries should be installed automatically during the first build 
 
  - Derived from *MarginallyClever*:
    - <https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield>
+
+## FURTHER READING
+
+ - PID Control System Analysis and Design, By YUN LI, KIAM HEONG ANG, and GREGORY C.Y. CHONG
+   - See Table 1, p.33 <http://eprints.gla.ac.uk/3815/1/IEEE_CS_PID_01580152.pdf>
+ - Understanding PID Control, Part 1: What is PID Control?
+   - <https://www.youtube.com/watch?v=wkfEZmsQqiA>
+
