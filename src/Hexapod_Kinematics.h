@@ -58,11 +58,11 @@ typedef struct
 // Platform coordinates.
 typedef struct
 {
-    double hx_x; // Sway, translation along X axis (mm)
-    double hx_y; // Surge, translation along Y axis (mm)
+    double hx_x; // Surge, translation along X axis (mm)
+    double hx_y; // Sway, translation along Y axis (mm)
     double hx_z; // Heave, translation along Z axis (mm)
-    double hx_a; // Pitch, rotation around X axis (rad)
-    double hx_b; // Roll, rotation around Y axis (rad)
+    double hx_a; // Roll, rotation around X axis (rad)
+    double hx_b; // Pitch, rotation around Y axis (rad)
     double hx_c; // Yaw, rotation around Z axis (rad)
 } platform_t;
 

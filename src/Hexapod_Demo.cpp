@@ -42,32 +42,32 @@ void Hexapod_Demo::demoMov_MinMaxAllAxis()
     Serial.println("\n########## demoMov_MinMaxAllAxis START ##########");
 
     const platform_t coords[] = {
-        // X sway
+        // X
         {HX_X_MAX, 0, 0, 0, 0, 0},
         {HX_X_MIN, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // Y surge
+        // Y
         {0, HX_Y_MAX, 0, 0, 0, 0},
         {0, HX_Y_MIN, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // Z heave
+        // Z
         {0, 0, HX_Z_MAX, 0, 0, 0},
         {0, 0, HX_Z_MIN, 0, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // A pitch
+        // A
         {0, 0, 0, HX_A_MAX, 0, 0},
         {0, 0, 0, HX_A_MIN, 0, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // B roll
+        // B
         {0, 0, 0, 0, HX_B_MAX, 0},
         {0, 0, 0, 0, HX_B_MIN, 0},
         {0, 0, 0, 0, 0, 0},
 
-        // C yaw
+        // C
         {0, 0, 0, 0, 0, HX_C_MAX},
         {0, 0, 0, 0, 0, HX_C_MIN},
         {0, 0, 0, 0, 0, 0}};
@@ -215,23 +215,23 @@ void Hexapod_Demo::testCalcSpeed()
     const int nb_intervals = 2;
     const double divide = 3;
     int count = 0;
-    for (double sway = HX_X_MIN / divide; sway <= HX_X_MAX / divide; sway += (HX_X_MAX - HX_X_MIN) / nb_intervals / divide)
+    for (double hx_x = HX_X_MIN / divide; hx_x <= HX_X_MAX / divide; hx_x += (HX_X_MAX - HX_X_MIN) / nb_intervals / divide)
     {
-        for (double surge = HX_Y_MIN / divide; surge <= HX_Y_MAX / divide; surge += (HX_Y_MAX - HX_Y_MIN) / nb_intervals / divide)
+        for (double hx_y = HX_Y_MIN / divide; hx_y <= HX_Y_MAX / divide; hx_y += (HX_Y_MAX - HX_Y_MIN) / nb_intervals / divide)
         {
-            for (double heave = HX_Z_MIN / divide; heave <= HX_Z_MAX / divide; heave += (HX_Z_MAX - HX_Z_MIN) / nb_intervals / divide)
+            for (double hx_z = HX_Z_MIN / divide; hx_z <= HX_Z_MAX / divide; hx_z += (HX_Z_MAX - HX_Z_MIN) / nb_intervals / divide)
             {
-                for (double pitch = HX_A_MIN / divide; pitch <= HX_A_MAX / divide; pitch += (HX_A_MAX - HX_A_MIN) / nb_intervals / divide)
+                for (double hx_a = HX_A_MIN / divide; hx_a <= HX_A_MAX / divide; hx_a += (HX_A_MAX - HX_A_MIN) / nb_intervals / divide)
                 {
-                    for (double roll = HX_B_MIN / divide; roll <= HX_B_MAX / divide; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals / divide)
+                    for (double hx_b = HX_B_MIN / divide; hx_b <= HX_B_MAX / divide; hx_b += (HX_B_MAX - HX_B_MIN) / nb_intervals / divide)
                     {
-                        for (double yaw = HX_C_MIN / divide; yaw <= HX_C_MAX / divide; yaw += (HX_C_MAX - HX_C_MIN) / nb_intervals / divide)
+                        for (double hx_c = HX_C_MIN / divide; hx_c <= HX_C_MAX / divide; hx_c += (HX_C_MAX - HX_C_MIN) / nb_intervals / divide)
                         {
                             T1 = micros();
-                            hx_servo.calcServoAngles({sway, surge, heave, pitch, roll, yaw}, servo_angles);
-                            // hx_servo.calcServoAnglesAlgo1({sway, surge, heave, pitch, roll, yaw}, servo_angles);
-                            // hx_servo.calcServoAnglesAlgo2({sway, surge, heave, pitch, roll, yaw}, servo_angles);
-                            // hx_servo.calcServoAnglesAlgo3({sway, surge, heave, pitch, roll, yaw}, servo_angles);
+                            hx_servo.calcServoAngles({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c}, servo_angles);
+                            // hx_servo.calcServoAnglesAlgo1({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c}, servo_angles);
+                            // hx_servo.calcServoAnglesAlgo2({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c}, servo_angles);
+                            // hx_servo.calcServoAnglesAlgo3({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c}, servo_angles);
                             T2 = micros();
                             dT = T2- T1;
                             // Serial.println(dT);

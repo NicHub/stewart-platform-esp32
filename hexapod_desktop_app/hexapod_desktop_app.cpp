@@ -131,30 +131,25 @@ int main()
      angle_file << fixed << setw(ALL_WIDTH) << setfill('=') << "" << endl;
 
      // Compute and print angles in the respective min/max ranges.
-     for (double sway = HX_X_MIN / shrink; sway <= HX_X_MAX / shrink; sway += (HX_X_MAX - HX_X_MIN) / nb_intervals / shrink)
+     for (double hx_x = HX_X_MIN / shrink; hx_x <= HX_X_MAX / shrink; hx_x += (HX_X_MAX - HX_X_MIN) / nb_intervals / shrink)
      {
-          for (double surge = HX_Y_MIN / shrink; surge <= HX_Y_MAX / shrink; surge += (HX_Y_MAX - HX_Y_MIN) / nb_intervals / shrink)
+          for (double hx_y = HX_Y_MIN / shrink; hx_y <= HX_Y_MAX / shrink; hx_y += (HX_Y_MAX - HX_Y_MIN) / nb_intervals / shrink)
           {
-               for (double heave = HX_Z_MIN / shrink; heave <= HX_Z_MAX / shrink; heave += (HX_Z_MAX - HX_Z_MIN) / nb_intervals / shrink)
+               for (double hx_z = HX_Z_MIN / shrink; hx_z <= HX_Z_MAX / shrink; hx_z += (HX_Z_MAX - HX_Z_MIN) / nb_intervals / shrink)
                {
-                    for (double pitch = HX_A_MIN / shrink; pitch <= HX_A_MAX / shrink; pitch += (HX_A_MAX - HX_A_MIN) / nb_intervals / shrink)
+                    for (double hx_a = HX_A_MIN / shrink; hx_a <= HX_A_MAX / shrink; hx_a += (HX_A_MAX - HX_A_MIN) / nb_intervals / shrink)
                     {
-                         for (double roll = HX_B_MIN / shrink; roll <= HX_B_MAX / shrink; roll += (HX_B_MAX - HX_B_MIN) / nb_intervals / shrink)
+                         for (double hx_b = HX_B_MIN / shrink; hx_b <= HX_B_MAX / shrink; hx_b += (HX_B_MAX - HX_B_MIN) / nb_intervals / shrink)
                          {
-                              for (double yaw = HX_B_MIN / shrink; yaw <= HX_B_MAX / shrink; yaw += (HX_B_MAX - HX_B_MIN) / nb_intervals / shrink)
+                              for (double hx_c = HX_C_MIN / shrink; hx_c <= HX_C_MAX / shrink; hx_c += (HX_C_MAX - HX_C_MIN) / nb_intervals / shrink)
                               {
-                                   calcAndPrintResults({sway, surge, heave, pitch, roll, yaw});
+                                   calcAndPrintResults({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c});
                               }
                          }
                     }
                }
           }
      }
-
-     // for (double heave = HX_Z_MIN; heave <= HX_Z_MAX; heave += (HX_Z_MAX - HX_Z_MIN) / 100)
-     // {
-     //      calcAndPrintResults({heave, 0, 0, 0, 0, 0});
-     // }
 
      // Done.
      angle_file.close();

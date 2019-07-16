@@ -43,8 +43,8 @@ int8_t Hexapod_Kinematics::home(angle_t *servo_angles)
  * given the desired target platform coordinates.
  *
  * @param coord : the desired target platform coordinates.
- * A struct containing X (sway), Y (surge), Z (heave) in mm
- * and A (pitch), B (roll) and C (yaw) in radians.
+ * A struct containing X (surge), Y (sway), Z (heave) in mm
+ * and A (roll), B (pitch) and C (yaw) in radians.
  *
  * @param servo_angles : pointer to an array of struct containing
  * the calculated servos angles in radians, degrees and in microseconds (PWM).
