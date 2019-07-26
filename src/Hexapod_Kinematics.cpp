@@ -368,6 +368,10 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
  */
 int8_t Hexapod_Kinematics::calcServoAnglesAlgo3(platform_t coord, angle_t *servo_angles)
 {
+    // Number of time the function was called.
+    static uint64_t nb_call = 0;
+    ++nb_call;
+
     angle_t new_servo_angles[NB_SERVOS];
 
     // Intermediate values, to avoid recalculating sin and cos.

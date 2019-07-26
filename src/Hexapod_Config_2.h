@@ -81,12 +81,12 @@ const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
  * Pin numbers for each servo signal.
  */
 const int SERVO_PINS[] = {
-    13,
-    15,
+    4,
     27,
-    14,
+    26,
+    25,
     33,
-    25};
+    32};
 
 /*
  * ======== GEOMETRY SETTINGS ==========

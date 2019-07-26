@@ -236,8 +236,8 @@ void Hexapod_Nunchuck::nunchuckControl()
                                           nck.pitch_angle, nck.roll_angle, 0},
                                          servo_angles);
 
-    // hx_servo.updateServos(movOK);
-    hx_servo.updateServosIncremental(movOK, 5UL);
+    hx_servo.updateServos(movOK);
+    // hx_servo.updateServosIncremental(movOK, 0UL);
 
 #if SEND_NUNCHUCK_INFO_TO_SERIAL
     // Send nunchuck info to serial.
