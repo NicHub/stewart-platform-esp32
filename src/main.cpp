@@ -58,12 +58,16 @@ void setup()
     hx_gpio.setupGPIO();
     hx_serial.setupSerial();
     hx_servo.setupServo();
+
 #if ENABLE_NUNCHUCK_READ
     hx_nunchuck.setupNunchuck();
 #endif
+
+#if ENABLE_IMU_READ
     scanNetwork();
     setupWebServer();
     imu1.setupIMU(fifoRate);
+#endif
 
     hx_demo.demoMov_circles(3);
 
