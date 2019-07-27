@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>• MPU9250 •</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="mui.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: monospace;
+        }
+
+        h1 {
+            font-weight: bold;
+            font-size: 20pt;
+            line-height: initial;
+            margin: initial;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        #scene3dcontainer {
+            height: 420px;
+            padding: 0;
+            border: 1px solid transparent;
+        }
+
+        .infoPanel {
+            overflow: scroll;
+            color: chartreuse;
+        }
+
+        .axisLabel {
+            border-radius: 10px;
+            color: black;
+        }
+
+        .axisX {
+            background-color: orangered;
+            border: 1px solid orangered;
+        }
+
+        .axisY {
+            background-color: mediumseagreen;
+            border: 1px solid mediumseagreen;
+        }
+
+        .axisZ {
+            background-color: dodgerblue;
+            border: 1px solid dodgerblue;
+        }
+
+        header {
+            display: table;
+            margin: 10px auto 30px;
+            width: 33.3%;
+        }
+
+        header div {
+            padding: 5px;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .logo {
+            height: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <a href="/">
+        <header>
+            <div>
+                <img class="logo" src="logo-white.png" alt="logo" />
+            </div>
+            <div>
+                <h1>MPU9250</h1>
+            </div>
+            <div>
+                <img class="logo" src="logo-white.png" alt="logo" />
+            </div>
+        </header>
+    </a>
+
+    <div class="mui-container-fluid">
+        <div class="mui-row">
+            <div class="mui-col-md-12 mui--text-center" id="divsvg1">
+                <svg width="100%" height="170px" viewbox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <style type="text/css">
+                        text {
+                            font-size: 18pt;
+                            font-stretch: normal;
+                            text-align: middle;
+                            text-anchor: middle;
+                            font-family: monospace;
+                            dominant-baseline: central;
+                        }
+
+                        circle {
+                            fill: none;
+                        }
+
+                        path {
+                            stroke-linecap: round;
+                            stroke-linejoin: round;
+                        }
+
+                        circle,
+                        path {
+                            stroke-width: 5px;
+                        }
+
+                        text.dialA,
+                        circle.dialA,
+                        path.dialA {
+                            stroke: orangered;
+                        }
+
+                        text.dialA {
+                            fill: orangered;
+                        }
+
+                        text.dialB,
+                        circle.dialB,
+                        path.dialB {
+                            stroke: mediumseagreen;
+                        }
+
+                        text.dialB {
+                            fill: mediumseagreen;
+                        }
+
+                        text.dialC,
+                        circle.dialC,
+                        path.dialC {
+                            stroke: dodgerblue;
+                        }
+
+                        text.dialC {
+                            fill: dodgerblue;
+                        }
+
+                    </style>
+                    <g transform="translate(60,120)">
+                        <text class="dialA" x="0" y="-100">X</text>
+                        <text class="dialA" id="dialAangle" x="0" y="-67">0°</text>
+                        <g id="dialA" transform="rotate(0)">
+                            <circle class="dialA" cx="0" cy="0" r="40" />
+                            <path class="dialA" d="m 0,0  0,-25" />
+                        </g>
+                    </g>
+
+                    <g transform="translate(210,120)">
+                        <text class="dialB" x="0" y="-100">Y</text>
+                        <text class="dialB" id="dialBangle" x="0" y="-67">0°</text>
+                        <g id="dialB" transform="rotate(0)">
+                            <circle class="dialB" cx="0" cy="0" r="40" />
+                            <path class="dialB" d="m 0,0  0,-25" />
+                        </g>
+                    </g>
+
+                    <g transform="translate(360,120)">
+                        <text class="dialC" x="0" y="-100">Z</text>
+                        <text class="dialC" id="dialCangle" x="0" y="-67">0°</text>
+                        <g id="dialC" transform="rotate(0)">
+                            <circle class="dialC" cx="0" cy="0" r="40" />
+                            <path class="dialC" d="m 0,0  0,-25" />
+                        </g>
+                    </g>
+                </svg>
+            </div>
+        </div>
+        <div class="mui-row">
+            <div class="mui-col-md-12" id="scene3dcontainer"></div>
+        </div>
+        <div class="mui-row">
+            <div class="mui-col-md-12 mui-col-xl-6 mui-col-xl-offset-3 infoPanel" id="infoPanel"></div>
+        </div>
+    </div>
+    <script src="three.min.js"></script>
+    <script src="mpu9250-dashboard.js"></script>
+</body>
+
+</html>

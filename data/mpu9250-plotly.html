@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>MPU9250</title>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: monospace;
+            background-color: white;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+
+        a {
+            color: black;
+        }
+
+        .container {
+            margin: 0 auto;
+            display: block;
+            width: 90%;
+            text-align: center;
+            height: 90%;
+        }
+
+        .divgraph {
+            width: 100%;
+            height: 100%;
+        }
+
+        img.logo {
+            height: 30px;
+        }
+
+        header {
+            display: table;
+            margin: 0 auto;
+            width: 33.3%;
+        }
+
+        header div {
+            padding: 5px;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <a href="/">
+            <header>
+                <div>
+                    <img class="logo" src="logo.png" alt="logo" />
+                </div>
+                <div>
+                    <h1>MPU9250</h1>
+                </div>
+                <div>
+                    <img class="logo" src="logo.png" alt="logo" />
+                </div>
+            </header>
+        </a>
+        <div id="divgraph1" class="divgraph"></div>
+    </div>
+
+    <!-- plotly.js is too big (3.1 MB) to fit on the SPIFFS of the ESP -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="mpu9250-plotly.js"></script>
+</body>
+
+</html>
