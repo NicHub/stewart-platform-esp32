@@ -94,6 +94,17 @@ The external libraries should be installed automatically during the first build 
     platformio lib install 4744 # ESP32Servo
     platformio lib install 1465 # WiiChuck
 
+## I²C Addresses
+
+| Default address | New address   | Device                 |
+| :---            | :---          | :----                  |
+| 0x40            | 0x41          | PCA9685                |
+| 0x70            | =             | PCA9685 (broadcast)    |
+| 0x40            | =             | Nunchuck (accel)       |
+| 0x52            | =             | Nunchuck (joystick)    |
+| 0x68            | =             | GY-91 (MPU9250)        |
+| 0x76            | =             | GY-91 (BMP280)         |
+
 ## CREDITS
 
 ### Primary source of inspiration
