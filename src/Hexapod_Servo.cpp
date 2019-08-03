@@ -38,10 +38,13 @@ Hexapod_Servo::Hexapod_Servo()
  */
 void Hexapod_Servo::setupServo()
 {
-    for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
-    {
-        servos[sid].attach(SERVO_PINS[sid], SERVO_MIN_US, SERVO_MAX_US);
-    }
+    Wire.begin();          // Wire must be started first
+    Wire.setClock(100000); // Supported baud rates are 100kHz, 400kHz, and 1000kHz
+
+    pwmController.resetDevices();      // Software resets all PCA9685 devices on Wire line
+    pwmController.init(B000001);       // Address pins A5-A0 set to B000000
+    pwmController.setPWMFrequency(50); // Default is 200Hz, supports 24Hz to 1526Hz
+
     int8_t movOK = home(servo_angles);
     this->updateServos(movOK);
     delay(500);
@@ -52,6 +55,7 @@ void Hexapod_Servo::setupServo()
  */
 void Hexapod_Servo::updateServosIncremental(int8_t movOK, unsigned long safetyWait_ms)
 {
+#if false
     static bool first_run = true;
 
     static angle_t _servo_angles_prev[NB_SERVOS];
@@ -116,6 +120,7 @@ void Hexapod_Servo::updateServosIncremental(int8_t movOK, unsigned long safetyWa
     }
 
     Serial.println(" MOVING DONE ###");
+#endif
 }
 
 /**
@@ -141,10 +146,13 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
         T1 = millis();
 
         // Write to servos.
+        static uint16_t pwms[NB_SERVOS];
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            servos[sid].writeMicroseconds(servo_angles[sid].us);
+            pwms[sid] = servo_angles[sid].pwm;
         }
+        pwmController.setChannelsPWM(0, NB_SERVOS, pwms);
+
 #if false
         // Write servo angles to Serial for debug.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)

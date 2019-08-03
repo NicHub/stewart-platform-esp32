@@ -110,13 +110,13 @@ void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
         for (uint8_t cnt = 0; cnt < nb_points; cnt++)
         {
             static unsigned long T1;
-            while ((millis() - T1) < 8UL)
+            while ((millis() - T1) < 2UL)
             {
             }
             T1 = millis();
             movOK = hx_servo.calcServoAngles(coords[cnt], servo_angles);
-            // hx_servo.updateServos(movOK, 15UL);
-            hx_servo.updateServosIncremental(movOK, 0UL);
+            hx_servo.updateServos(movOK, 0UL);
+            // hx_servo.updateServosIncremental(movOK, 0UL);
         }
     }
     Serial.println("demoMov_circles DONE");

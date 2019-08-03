@@ -4,7 +4,7 @@
 
 """
 
-S T E W A R T    P L A T F O R M    O N    E S P 1 2
+S T E W A R T    P L A T F O R M    O N    E S P 3 2
 
 run with:
 python gcode2serial.py -p /dev/cu.SLAB_USBtoUART -f demo_1.gcode

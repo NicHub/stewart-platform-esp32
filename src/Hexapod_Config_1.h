@@ -31,10 +31,10 @@
  * These values should not be used to restrict servo movements.
  * Use MIN/MAX COORDINATES below for that.
  */
-const double SERVO_FULL_ANGULAR_RANGE = radians(155);
+const double SERVO_FULL_ANGULAR_RANGE = radians(180);
 const double SERVO_HALF_ANGULAR_RANGE = SERVO_FULL_ANGULAR_RANGE / 2;
-const double SERVO_MIN_US = 700;
-const double SERVO_MAX_US = 2100;
+const int SERVO_MIN_PWM = 183;
+const int SERVO_MAX_PWM = 467;
 
 /*
  * Offset values in µs to compensate for arm angle errors.
@@ -51,7 +51,7 @@ const int PW_OFFSET[] = {
  * The gain in µs/rad
  * Typical gain =~ 318 µs/rad =~ 5.6 µs/°
  */
-const double gain = (SERVO_MAX_US - SERVO_MIN_US) /
+const double gain = (SERVO_MAX_PWM - SERVO_MIN_PWM) /
                     (SERVO_FULL_ANGULAR_RANGE);
 
 /*
@@ -70,23 +70,23 @@ typedef struct
  * pulse width (µs) = gain (µs/rad) + offset (µs)
  */
 const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
-    {-gain, SERVO_MAX_US + PW_OFFSET[0]},
-    {gain, SERVO_MIN_US + PW_OFFSET[1]},
-    {-gain, SERVO_MAX_US + PW_OFFSET[2]},
-    {gain, SERVO_MIN_US + PW_OFFSET[3]},
-    {-gain, SERVO_MAX_US + PW_OFFSET[4]},
-    {gain, SERVO_MIN_US + PW_OFFSET[5]}};
+    {gain, SERVO_MIN_PWM + PW_OFFSET[0]}, // This servo is not of the same type as the others and its direction of rotation is reversed.
+    {gain, SERVO_MIN_PWM + PW_OFFSET[1]},
+    {-gain, SERVO_MAX_PWM + PW_OFFSET[2]},
+    {gain, SERVO_MIN_PWM + PW_OFFSET[3]},
+    {-gain, SERVO_MAX_PWM + PW_OFFSET[4]},
+    {gain, SERVO_MIN_PWM + PW_OFFSET[5]}};
 
 /*
  * Pin numbers for each servo signal.
  */
 const int SERVO_PINS[] = {
-    13,
-    15,
+    4,
     27,
-    14,
+    26,
+    25,
     33,
-    25};
+    32};
 
 /*
  * ======== GEOMETRY SETTINGS ==========
@@ -110,33 +110,33 @@ const double THETA_S[NB_SERVOS] = {
  * different than what's defined here. These are just the absolute maximums under
  * ideal conditions (eg: max for roll when pitch is zero).
  */
-const double HX_X_MIN = -30.0;
-const double HX_X_MAX = 30.0;
+const double HX_X_MIN = -24;
+const double HX_X_MAX = 24;
 const double HX_X_MID = (HX_X_MAX + HX_X_MIN) / 2;
 const double HX_X_BAND = HX_X_MAX - HX_X_MIN;
 
-const double HX_Y_MIN = -30.0;
-const double HX_Y_MAX = 30.0;
+const double HX_Y_MIN = -24;
+const double HX_Y_MAX = 24;
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -12.0;
-const double HX_Z_MAX = 12.0;
+const double HX_Z_MIN = -11.0;
+const double HX_Z_MAX = 16.0;
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
-const double HX_A_MIN = radians(-15.0);
-const double HX_A_MAX = radians(15.0);
+const double HX_A_MIN = radians(-12.0);
+const double HX_A_MAX = radians(12.0);
 const double HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2;
 const double HX_A_BAND = HX_A_MAX - HX_A_MIN;
 
-const double HX_B_MIN = radians(-15.0);
-const double HX_B_MAX = radians(15.0);
+const double HX_B_MIN = radians(-12.0);
+const double HX_B_MAX = radians(12.0);
 const double HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2;
 const double HX_B_BAND = HX_B_MAX - HX_B_MIN;
 
-const double HX_C_MIN = radians(-40.0);
-const double HX_C_MAX = radians(40.0);
+const double HX_C_MIN = radians(-43.0);
+const double HX_C_MAX = radians(43.0);
 const double HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2;
 const double HX_C_BAND = HX_C_MAX - HX_C_MIN;
 
@@ -144,6 +144,6 @@ const double THETA_P = radians(48.4099); // Platform joint angle (radians) offse
 const double THETA_B = radians(22.9492); // Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
 const double P_RAD = 99.61 / 2;          // Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
 const double B_RAD = 153.99 / 2;         // Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
-const double ARM_LENGTH = 20.0;          // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
+const double ARM_LENGTH = 15.0;          // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;         // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
-const double Z_HOME = -136.435974;       // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
+const double Z_HOME = -132.943591247488; // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.

@@ -20,7 +20,7 @@
 
 // External libs.
 #include <Arduino.h>
-#include <ESP32Servo.h>
+#include <PCA9685.h>
 #include <WiiChuck.h>
 
 // Hexapod libs.

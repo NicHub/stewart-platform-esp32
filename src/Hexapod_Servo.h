@@ -21,19 +21,20 @@
 #pragma once
 
 #include <Arduino.h>
-#include <ESP32Servo.h>
+#include <PCA9685.h>
 #include <Hexapod_Kinematics.h>
 
 class Hexapod_Servo : public Hexapod_Kinematics
 {
   private:
-    Servo servos[NB_SERVOS]; // Array of servo objects.
+    // Servo servos[NB_SERVOS]; // Array of servo objects.
+    PCA9685 pwmController;
 
   public:
     Hexapod_Servo();
     void setupServo();
     void updateServosIncremental(int8_t movOK, unsigned long safetyWait_ms = 0UL);
-    void updateServos(int8_t movOK, unsigned long safetyWait_ms = 5UL);
+    void updateServos(int8_t movOK, unsigned long safetyWait_ms = 0UL);
     void printServoAngles();
     void printJointAndServoAxisCoord();
 };

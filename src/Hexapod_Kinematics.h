@@ -28,7 +28,7 @@
 #endif
 
 // Choose configuration file.
-#define HEXAPOD_CONFIG 2
+#define HEXAPOD_CONFIG 1
 
 #if HEXAPOD_CONFIG == 1
 #include "Hexapod_Config_1.h"
@@ -52,6 +52,7 @@ typedef struct
     double rad;   // Servo angle in radian.
     double deg;   // Servo angle in degrees.
     int us;       // Servo angle in µs (PWM).
+    uint16_t pwm; // Servo angle in range 0 to 4096 (PWM).
     double debug; // Used for debug.
 } angle_t;
 
