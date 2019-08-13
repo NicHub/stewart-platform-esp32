@@ -17,7 +17,7 @@ Currently the platform can be operated:
 
 The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on *macOS Mojave*. See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
 
-## PlatformIO version
+## PlatformIO VERSION
 
 The `platformio.ini` file is written for *PlatformIO Core 4.0*. If your *PlatformIO* version is older, you can upgrade with the command `platformio upgrade`. If you don’t want to upgrade, you can pick the old `platformio.ini` file here : <https://github.com/NicHub/stewart-platform-esp32/blob/bc47243335e571190a0a5bb4c3ecf3de08c9b6ca/platformio.ini>.
 
@@ -36,6 +36,10 @@ Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHu
 ### ESP32
 
 WeMos ESP32 WROOM <https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html>
+
+### PCA9685
+
+<https://www.mouser.ch/ProductDetail/adafruit/3416/?qs=F5EMLAvA7ICYzX4Av%252bhRHw==>
 
 ### External power supply
 
@@ -89,10 +93,7 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 
 ## EXTERNAL LIBRARIES
 
-The external libraries should be installed automatically during the first build because they are declared under `lib_deps` in `platformio.ini`. You can also install them manually with the following commands:
-
-    platformio lib install 4744 # ESP32Servo
-    platformio lib install 1465 # WiiChuck
+The external libraries are installed automatically during the first build because they are declared under `lib_deps` in `platformio.ini`.
 
 ## I²C Addresses
 
