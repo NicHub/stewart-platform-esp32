@@ -212,8 +212,8 @@ void Hexapod_Nunchuck::nunchuckControl()
     movOK = -1;
     if (joyMode == 0)
         // X, Y
-        movOK = hx_servo.calcServoAngles({nck.joy_x, nck.joy_y,
-                                          0, 0, 0, 0},
+        movOK = hx_servo.calcServoAngles({nck.joy_x, nck.joy_y, 0,
+                                          0, 0, 0},
                                          servo_angles);
     else if (joyMode == 1)
         // Z

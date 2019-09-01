@@ -89,6 +89,9 @@ void Hexapod_Demo::demoMov_MinMaxAllAxis()
  */
 void Hexapod_Demo::demoMov_circles(uint8_t nb_turn = 1)
 {
+    if (nb_turn == 0)
+        return;
+
     // Move in circles in the horizontal plane.
     Serial.println("\n########## demoMov_circles START ##########");
 
@@ -233,10 +236,12 @@ void Hexapod_Demo::testCalcSpeed()
                             // hx_servo.calcServoAnglesAlgo2({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c}, servo_angles);
                             // hx_servo.calcServoAnglesAlgo3({hx_x, hx_y, hx_z, hx_a, hx_b, hx_c}, servo_angles);
                             T2 = micros();
-                            dT = T2- T1;
+                            dT = T2 - T1;
                             // Serial.println(dT);
-                            if(dT > Tmax) Tmax = dT;
-                            else if (dT < Tmin) Tmin = dT;
+                            if (dT > Tmax)
+                                Tmax = dT;
+                            else if (dT < Tmin)
+                                Tmin = dT;
                             TTot += (dT);
                             count++;
                         }

@@ -69,7 +69,7 @@ void setup()
     imu1.setupIMU(fifoRate);
 #endif
 
-    hx_demo.demoMov_circles(3);
+    hx_demo.demoMov_circles(DEMO_CIRCLES_NB_TURN);
 
     // Go to home position.
     uint8_t movOK = hx_servo.calcServoAngles({0, 0, 0, 0, 0, 0}, servo_angles);

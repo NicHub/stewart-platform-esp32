@@ -70,7 +70,7 @@ typedef struct
  * pulse width (µs) = gain (µs/rad) + offset (µs)
  */
 const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
-    {gain, SERVO_MIN_PWM + PW_OFFSET[0]}, // This servo is not of the same type as the others and its direction of rotation is reversed.
+    {-gain, SERVO_MAX_PWM + PW_OFFSET[0]},
     {gain, SERVO_MIN_PWM + PW_OFFSET[1]},
     {-gain, SERVO_MAX_PWM + PW_OFFSET[2]},
     {gain, SERVO_MIN_PWM + PW_OFFSET[3]},
