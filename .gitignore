@@ -3,3 +3,4 @@
 .piolibdeps
 *.bak
 .ipynb_checkpoints
+.vscode
