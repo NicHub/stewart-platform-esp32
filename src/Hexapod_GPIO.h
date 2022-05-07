@@ -24,10 +24,10 @@
 
 class Hexapod_GPIO
 {
-  private:
+private:
     bool builtInLEDState;
 
-  public:
+public:
     void setupGPIO();
     void setBuiltInLED();
     void clearBuiltInLED();

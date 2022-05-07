@@ -24,7 +24,7 @@
 
 class Hexapod_Demo
 {
-  public:
+public:
     Hexapod_Demo();
     void demoMov_MinMaxAllAxis();
     void demoMov_circles(uint8_t nb_turn);

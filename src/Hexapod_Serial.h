@@ -27,11 +27,11 @@
 
 class Hexapod_Serial
 {
-  private:
-    char buffer[MAX_BUF];         // where we store the message until we get a ';'
-    int sofar = 0;                // how much is in the buffer
+private:
+    char buffer[MAX_BUF];          // where we store the message until we get a ';'
+    int sofar = 0;                 // how much is in the buffer
     double px, py, pz, pa, pb, pc; // positions
-    char mode_abs = 1;            // absolute mode?
+    char mode_abs = 1;             // absolute mode?
     long line_number = 0;
 
     void ready();
@@ -45,7 +45,7 @@ class Hexapod_Serial
     void M100();
     void M114();
 
-  public:
+public:
     Hexapod_Serial();
     void setupSerial();
     void serialRead();

@@ -26,11 +26,11 @@
 
 class Hexapod_Servo : public Hexapod_Kinematics
 {
-  private:
+private:
     // Servo servos[NB_SERVOS]; // Array of servo objects.
     PCA9685 pwmController;
 
-  public:
+public:
     Hexapod_Servo();
     void setupServo();
     void updateServosIncremental(int8_t movOK, unsigned long safetyWait_ms = 0UL);

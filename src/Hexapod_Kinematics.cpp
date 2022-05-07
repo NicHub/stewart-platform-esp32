@@ -171,19 +171,19 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo1(platform_t coord, angle_t *servo
         // The calibration values take into account the fact
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
-        new_servo_angles[sid].us =
+        new_servo_angles[sid].pwm_us =
             (int)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (new_servo_angles[sid].us > SERVO_MAX_PWM)
+        if (new_servo_angles[sid].pwm_us > SERVO_MAX_PWM)
         {
             movOK = -3;
             break;
         }
-        else if (new_servo_angles[sid].us < SERVO_MIN_PWM)
+        else if (new_servo_angles[sid].pwm_us < SERVO_MIN_PWM)
         {
             movOK = -4;
             break;
@@ -325,19 +325,19 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
         // The calibration values take into account the fact
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
-        new_servo_angles[sid].us =
+        new_servo_angles[sid].pwm_us =
             (int)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (new_servo_angles[sid].us > SERVO_MAX_PWM)
+        if (new_servo_angles[sid].pwm_us > SERVO_MAX_PWM)
         {
             movOK = -3;
             break;
         }
-        else if (new_servo_angles[sid].us < SERVO_MIN_PWM)
+        else if (new_servo_angles[sid].pwm_us < SERVO_MIN_PWM)
         {
             movOK = -4;
             break;
@@ -453,19 +453,19 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo3(platform_t coord, angle_t *servo
         // The calibration values take into account the fact
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
-        new_servo_angles[sid].pwm =
+        new_servo_angles[sid].pwm_us =
             (uint16_t)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
         // Abort computation of remaining angles if the current angle is not OK.
         // (~1 µs)
-        if (new_servo_angles[sid].pwm > SERVO_MAX_PWM)
+        if (new_servo_angles[sid].pwm_us > SERVO_MAX_PWM)
         {
             movOK = -3;
             break;
         }
-        else if (new_servo_angles[sid].pwm < SERVO_MIN_PWM)
+        else if (new_servo_angles[sid].pwm_us < SERVO_MIN_PWM)
         {
             movOK = -4;
             break;

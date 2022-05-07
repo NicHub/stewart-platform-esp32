@@ -36,24 +36,21 @@
 #include "Hexapod_Config_2.h"
 #endif
 
-// Choose algorithm for servo angle calculations.
-#define ALGO 3
-
 // `POW` is a lot faster than `pow` defined in cmath.h.
-#define POW(base, exp)                                                  \
-    (exp == 2 ? (base) * (base)                                         \
-              : exp == 3 ? (base) * (base) * (base)                     \
-                         : exp == 4 ? (base) * (base) * (base) * (base) \
-                                    : -1)
+#define POW(base, exp)                              \
+    (exp == 2   ? (base) * (base)                   \
+     : exp == 3 ? (base) * (base) * (base)          \
+     : exp == 4 ? (base) * (base) * (base) * (base) \
+                : -1)
 
 // angle_t
 typedef struct
 {
-    double rad;   // Servo angle in radian.
-    double deg;   // Servo angle in degrees.
-    int us;       // Servo angle in µs (PWM).
-    uint16_t pwm; // Servo angle in range 0 to 4096 (PWM).
-    double debug; // Used for debug.
+    double rad;      // Servo angle in radian.
+    double deg;      // Servo angle in degrees.
+    int us;          // Servo angle in µs (PWM).
+    uint16_t pwm_us; // Servo angle in range 0 to 4096 (PWM).
+    double debug;    // Used for debug.
 } angle_t;
 
 // Platform coordinates.

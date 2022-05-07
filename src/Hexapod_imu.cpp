@@ -101,12 +101,12 @@ void IMU::toJSON(char *jsonMsg)
         imu.calcQuat(imu.qy),
         imu.calcQuat(imu.qz)};
 
-#define ALGO EUCLIDEANSPACE
-#if ALGO == SPARKFUN
+#define EULER_ALGO EUCLIDEANSPACE
+#if EULER_ALGO == SPARKFUN
     eulerAngles = {imu.roll, imu.pitch, imu.yaw};
-#elif ALGO == WIKIPEDIA
+#elif EULER_ALGO == WIKIPEDIA
     eulerAngles = quatToEulerWikipedia(quat);
-#elif ALGO == EUCLIDEANSPACE
+#elif EULER_ALGO == EUCLIDEANSPACE
     eulerAngles = quatToEulerEuclideanspace(quat);
 #endif
 

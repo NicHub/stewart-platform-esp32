@@ -27,7 +27,7 @@ class Hexapod_GCode
     // Currently all the G-Code handling is done in the Hexapod_Serial class.
     // This must be changed so that we have a G-Code class that can be used
     // in communication classes (Serial, Bluetooth, Wifi).
-  public:
+public:
     Hexapod_GCode();
 };
 

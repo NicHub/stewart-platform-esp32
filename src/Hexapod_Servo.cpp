@@ -149,7 +149,7 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
         static uint16_t pwms[NB_SERVOS];
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            pwms[sid] = servo_angles[sid].pwm;
+            pwms[sid] = servo_angles[sid].pwm_us;
         }
         pwmController.setChannelsPWM(0, NB_SERVOS, pwms);
 
@@ -157,7 +157,7 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
         // Write servo angles to Serial for debug.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
-            Serial.printf("%4d ", servo_angles[sid].us);
+            Serial.printf("%4d ", servo_angles[sid].pwm_us);
         }
         Serial.println("");
 #endif

@@ -80,6 +80,11 @@ void setup()
 
     // Test calculation speed.
     hx_demo.testCalcSpeed();
+
+#if false
+    // Test calculations.
+    hx_demo.testCalculations();
+#endif
 }
 
 /**

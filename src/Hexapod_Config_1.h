@@ -21,7 +21,7 @@
 #pragma once
 
 /*
- * ======== SERVO SETTINGS ==========
+ * ======== SERVO SETTINGS ========
  */
 
 #define NB_SERVOS 6
@@ -78,18 +78,7 @@ const calibration_t SERVO_CALIBRATION[NB_SERVOS] = {
     {gain, SERVO_MIN_PWM + PW_OFFSET[5]}};
 
 /*
- * Pin numbers for each servo signal.
- */
-const int SERVO_PINS[] = {
-    4,
-    27,
-    26,
-    25,
-    33,
-    32};
-
-/*
- * ======== GEOMETRY SETTINGS ==========
+ * ======== GEOMETRY SETTINGS ========
  */
 
 /*
@@ -120,8 +109,8 @@ const double HX_Y_MAX = 24;
 const double HX_Y_MID = (HX_Y_MAX + HX_Y_MIN) / 2;
 const double HX_Y_BAND = HX_Y_MAX - HX_Y_MIN;
 
-const double HX_Z_MIN = -11.0;
-const double HX_Z_MAX = 16.0;
+const double HX_Z_MIN = -12.0;
+const double HX_Z_MAX = 12.0;
 const double HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2;
 const double HX_Z_BAND = HX_Z_MAX - HX_Z_MIN;
 
@@ -147,3 +136,8 @@ const double B_RAD = 153.99 / 2;         // Base radius (mm). Distance from the 
 const double ARM_LENGTH = 15.0;          // Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.
 const double ROD_LENGTH = 140.0;         // Push rod length (mm). Distance between pushrod ball joints (servo to platform).
 const double Z_HOME = -132.943591247488; // Default Z height of the platform (above the base), with servo arms horizontal. Formally, the distance from the plane described by the collection of servo pinion gear centers, to the plane described by the collection of platform / pushrod joints. Must Be fine tuned manualy or computed with a numerical solver.
+
+/*
+ * ======== ALGORITHM FOR SERVO ANGLE CALCULATIONS ========
+ */
+#define ALGO 3

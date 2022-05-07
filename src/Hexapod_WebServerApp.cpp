@@ -296,26 +296,29 @@ void setupWebServer()
     /**
      *
      */
-    ArduinoOTA.onStart([]() { events.send("Update Start", "ota"); });
+    ArduinoOTA.onStart([]()
+                       { events.send("Update Start", "ota"); });
 
     /**
      *
      */
-    ArduinoOTA.onEnd([]() { events.send("Update End", "ota"); });
+    ArduinoOTA.onEnd([]()
+                     { events.send("Update End", "ota"); });
 
     /**
      *
      */
-    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total)
+                          {
         char p[32];
         sprintf(p, "Progress: %u%%\n", (progress / (total / 100)));
-        events.send(p, "ota");
-    });
+        events.send(p, "ota"); });
 
     /**
      *
      */
-    ArduinoOTA.onError([](ota_error_t error) {
+    ArduinoOTA.onError([](ota_error_t error)
+                       {
         if (error == OTA_AUTH_ERROR)
             events.send("Auth Failed", "ota");
         else if (error == OTA_BEGIN_ERROR)
@@ -325,8 +328,7 @@ void setupWebServer()
         else if (error == OTA_RECEIVE_ERROR)
             events.send("Recieve Failed", "ota");
         else if (error == OTA_END_ERROR)
-            events.send("End Failed", "ota");
-    });
+            events.send("End Failed", "ota"); });
 
     /**
      *
@@ -362,9 +364,8 @@ void setupWebServer()
     /**
      *
      */
-    events.onConnect([](AsyncEventSourceClient *client) {
-        client->send("hello!", NULL, millis(), 1000);
-    });
+    events.onConnect([](AsyncEventSourceClient *client)
+                     { client->send("hello!", NULL, millis(), 1000); });
 
     /**
      *
@@ -379,16 +380,16 @@ void setupWebServer()
     /**
      *
      */
-    server.on("/heap", HTTP_GET, [](AsyncWebServerRequest *request) {
-        request->send(200, "text/plain", String(ESP.getFreeHeap()));
-    });
+    server.on("/heap", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(200, "text/plain", String(ESP.getFreeHeap())); });
 
     /**
      * Scan available networks
      * First request will return 0 results unless you start scan from somewhere else (loop/setup)
      * Do not request more often than 3-5 seconds
      */
-    server.on("/scan", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/scan", HTTP_GET, [](AsyncWebServerRequest *request)
+              {
         String json = "[";
         int n = WiFi.scanComplete();
         if (n == -2)
@@ -417,8 +418,7 @@ void setupWebServer()
         }
         json += "\n]";
         request->send(200, "application/json", json);
-        json = String();
-    });
+        json = String(); });
 
     /**
      *
@@ -428,7 +428,8 @@ void setupWebServer()
     /**
      *
      */
-    server.onNotFound([](AsyncWebServerRequest *request) {
+    server.onNotFound([](AsyncWebServerRequest *request)
+                      {
         Serial.printf("NOT_FOUND: ");
         if (request->method() == HTTP_GET)
             Serial.printf("GET");
@@ -480,30 +481,29 @@ void setupWebServer()
             }
         }
 
-        request->send(404);
-    });
+        request->send(404); });
 
     /**
      *
      */
-    server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final) {
+    server.onFileUpload([](AsyncWebServerRequest *request, const String &filename, size_t index, uint8_t *data, size_t len, bool final)
+                        {
         if (!index)
             Serial.printf("UploadStart: %s\n", filename.c_str());
         Serial.printf("%s", (const char *)data);
         if (final)
-            Serial.printf("UploadEnd: %s (%u)\n", filename.c_str(), index + len);
-    });
+            Serial.printf("UploadEnd: %s (%u)\n", filename.c_str(), index + len); });
 
     /**
      *
      */
-    server.onRequestBody([](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+    server.onRequestBody([](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
+                         {
         if (!index)
             Serial.printf("BodyStart: %u\n", total);
         Serial.printf("%s", (const char *)data);
         if (index + len == total)
-            Serial.printf("BodyEnd: %u\n", total);
-    });
+            Serial.printf("BodyEnd: %u\n", total); });
 
     /**
      *
