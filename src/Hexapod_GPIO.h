@@ -21,6 +21,12 @@
 #pragma once
 
 #include <Arduino.h>
+#define DEBUG_PIN_0 19
+#define DEBUG_PIN_1 18
+#define DEBUG_PIN_2 5
+#define DEBUG_PIN_3 17
+#define DEBUG_PIN_4 16
+#define DEBUG_PIN_5 4
 
 class Hexapod_GPIO
 {
@@ -33,4 +39,5 @@ public:
     void clearBuiltInLED();
     void clearBuiltInLEDDelayed(unsigned long dt);
     void blinkBuitInLED(uint8_t nb_iter, unsigned long tON, unsigned long tOFF);
+    void chaseDebug();
 };

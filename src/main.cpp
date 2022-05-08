@@ -92,6 +92,9 @@ void setup()
  */
 void loop()
 {
+digitalWrite(DEBUG_PIN_1, LOW);
+digitalWrite(DEBUG_PIN_1, HIGH);
+
 #if ENABLE_NUNCHUCK_READ
     hx_nunchuck.stopIfNotConnected();
     hx_nunchuck.nunchuckControl();

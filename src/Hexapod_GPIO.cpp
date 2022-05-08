@@ -26,7 +26,14 @@
 void Hexapod_GPIO::setupGPIO()
 {
     pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(DEBUG_PIN_0, OUTPUT);
+    pinMode(DEBUG_PIN_1, OUTPUT);
+    pinMode(DEBUG_PIN_2, OUTPUT);
+    pinMode(DEBUG_PIN_3, OUTPUT);
+    pinMode(DEBUG_PIN_4, OUTPUT);
+    pinMode(DEBUG_PIN_5, OUTPUT);
     clearBuiltInLED();
+    chaseDebug();
 }
 
 /**
@@ -71,5 +78,38 @@ void Hexapod_GPIO::blinkBuitInLED(uint8_t nb_iter, unsigned long tON, unsigned l
         delay(tON);
         clearBuiltInLED();
         delay(tOFF);
+    }
+}
+
+/**
+ *
+ */
+void Hexapod_GPIO::chaseDebug()
+{
+#define wait 10
+    for (size_t _i = 0; _i < 6; _i++)
+    {
+        digitalWrite(DEBUG_PIN_0, HIGH);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_1, HIGH);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_2, HIGH);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_3, HIGH);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_4, HIGH);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_5, HIGH);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_4, LOW);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_3, LOW);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_2, LOW);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_1, LOW);
+        delay(wait);
+        digitalWrite(DEBUG_PIN_0, LOW);
+        delay(wait);
     }
 }

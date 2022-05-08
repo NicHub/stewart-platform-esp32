@@ -125,11 +125,12 @@ int Hexapod_Nunchuck::readNunchuck(nunchuck_t *nck)
 void Hexapod_Nunchuck::nunchuckControl()
 {
     // Don’t check the nunchuck states too fast.
-    static long T1 = millis();
-    if (millis() - T1 < 10)
+    static unsigned long T1 = micros();
+    static unsigned long dT = micros() - T1;
+    if (dT < 1)
         return;
     else
-        T1 = millis();
+        T1 = micros();
 
     static nunchuck_t nck;
     readNunchuck(&nck);
