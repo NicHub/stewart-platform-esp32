@@ -11,5 +11,11 @@ g++                               \
     ../src/Hexapod_Kinematics.cpp \
     hexapod_desktop_app.cpp       \
     -o $EXEC_NAME                 \
-    -std=c++11                    \
-    && ./$EXEC_NAME
+    -std=c++11
+
+status=$?
+if [ $status -ne 0 ]; then
+    exit $status
+fi
+
+./$EXEC_NAME

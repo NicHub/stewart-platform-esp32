@@ -19,7 +19,6 @@
  */
 
 #include "Hexapod_Kinematics.h"
-#include "Hexapod_GPIO.h"
 
 /**
  *
@@ -369,15 +368,6 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo2(platform_t coord, angle_t *servo
  */
 int8_t Hexapod_Kinematics::calcServoAnglesAlgo3(platform_t coord, angle_t *servo_angles)
 {
-#define wait 100
-    digitalWrite(DEBUG_PIN_0, LOW);
-    delayMicroseconds(wait);
-    digitalWrite(DEBUG_PIN_0, HIGH);
-    // delayMicroseconds(wait);
-
-    digitalWrite(DEBUG_PIN_0, LOW);
-
-
     // Number of time the function was called.
     static uint64_t nb_call = 0;
     ++nb_call;
@@ -509,7 +499,7 @@ int8_t Hexapod_Kinematics::calcServoAnglesAlgo3(platform_t coord, angle_t *servo
         _coord.hx_b = coord.hx_b;
         _coord.hx_c = coord.hx_c;
     }
-    digitalWrite(DEBUG_PIN_0, HIGH);
+
     return movOK;
 }
 

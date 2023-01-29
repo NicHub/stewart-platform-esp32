@@ -19,7 +19,7 @@ This repository<br/>is archived in the<br/><em>GitHub Arctic Code Vault</em>.
 
 ## ABSTRACT
 
-This is an ESP32 implementation of a six degrees of freedom hexapod — also called _Stewart Platform_, _Gough-Stewart Platform_ or _Parallel manipulator_.
+This is an ESP32 implementation of a six-degree-of-freedom hexapod — also called _Stewart Platform_, _Gough-Stewart Platform_ or _Parallel manipulator_.
 The actuators are PWM rotary servo motors and the program is written in _Arduino C_ compiled with [_PlatformIO_](https://platformio.org/).
 This project is done in the frame of the _P19 project_ at the [Microclub](https://microclub.ch).
 
@@ -29,7 +29,7 @@ Currently the platform can be operated:
 -   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp)).
 -   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/gcode2serial/gcode2serial.py)).
 
-The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without operating the servos).
+The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without actuating the servos).
 I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_.
 See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
 
