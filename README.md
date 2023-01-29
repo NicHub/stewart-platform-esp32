@@ -27,7 +27,7 @@ Currently the platform can be operated:
 
 -   With a _Nunchuck_.
 -   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp)).
--   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py)).
+-   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/gcode2serial/gcode2serial.py)).
 
 The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without operating the servos).
 I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_.
@@ -143,7 +143,7 @@ The external libraries are installed automatically during the first build becaus
 
 -   San-José State University / Full Motion Dynamics:
     -   <https://www.youtube.com/watch?v=j4OmVLc_oDw>
-    -   <http://fullmotiondynamics.com>
+    -   ~~fullmotiondynamics.com~~
 
 ### Kinematics
 
@@ -152,7 +152,7 @@ The external libraries are installed automatically during the first build becaus
 -   He derived his implementation from the work of _Daniel Waters_:
     -   <https://www.youtube.com/watch?v=1jrP3_1ML9M>
 -   Kinematics calculation is also explained in this document by an unknown author from the _Wokingham U3A Math Group_:
-    -   <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
+    -   <https://memememememememe.me/assets/posts/stewart-platform-math/MathsOfStewartPlatformV5.pdf>
     -   <http://www.wokinghamu3a.org.uk/groups/mathematics/>
 -   The project _memememememememe_ was also an excellent source of inspiration.
     They share the code for _RPi_ and a simulator in the _Processing_ langage:
