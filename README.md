@@ -19,27 +19,33 @@ This repository<br/>is archived in the<br/><em>GitHub Arctic Code Vault</em>.
 
 ## ABSTRACT
 
-This is an implementation on the ESP32 of a 6-degrees of freedom hexapod — also called _Stewart Platform_, _Gough-Stewart Platform_ or _Parallel manipulator_. The actuators are PWM rotary servo motors and the program is written in _Arduino C_ for _PlatformIO Core 4.0_. This project is done in the frame of the _P19 project_ at the [Microclub](https://microclub.ch).
+This is an ESP32 implementation of a six degrees of freedom hexapod — also called _Stewart Platform_, _Gough-Stewart Platform_ or _Parallel manipulator_.
+The actuators are PWM rotary servo motors and the program is written in _Arduino C_ compiled with [_PlatformIO_](https://platformio.org/).
+This project is done in the frame of the _P19 project_ at the [Microclub](https://microclub.ch).
 
 Currently the platform can be operated:
 
--   with a _Nunchuck_
--   with _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
--   with _G-Code_ through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
+-   With a _Nunchuck_.
+-   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp)).
+-   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py)).
 
-The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_. See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
+The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without operating the servos).
+I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_.
+See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
 
 ## HOME PAGE OF THE PROJECT
 
-The home page is a work in progress, but the video shows what the platform can do. The original implementation used an analog joystick, but the current version uses a Wii Nunchuck.
+The home page is a work in progress, but the video shows what the platform can do.
+The original implementation used an analog joystick, but the current version uses a Wii Nunchuck.
 
 <https://ouilogique.com/plateforme-de-stewart-esp32/>
 
 ## GEOMETRY SETTINGS
 
-Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h). The meaning of the parameters is also explained in [`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
+Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
+The meaning of the parameters is explained in [`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
 
-## REQUIREMENTS
+## PREREQUISITES
 
 Create a file called `src/WifiSettings.h` containing:
 
@@ -77,9 +83,13 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 
 ### Servos
 
--   I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them. <https://fr.aliexpress.com/item//32636102294.html>
--   I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application. <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
--   In the future, I will probalbly use _Parallax 900-00005_ servos. It seems that these are the one used by _fullmotiondynamics_ in their videos. <https://www.parallax.com/product/900-00005>
+-   I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
+    <https://fr.aliexpress.com/item//32636102294.html>
+-   I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
+    <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
+-   In the future, I will probalbly use _Parallax 900-00005_ servos.
+    It seems that these are the one used by _fullmotiondynamics_ in their videos.
+    <https://www.parallax.com/product/900-00005>
 
 > Pins are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
 
@@ -144,7 +154,8 @@ The external libraries are installed automatically during the first build becaus
 -   Kinematics calculation is also explained in this document by an unknown author from the _Wokingham U3A Math Group_:
     -   <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
     -   <http://www.wokinghamu3a.org.uk/groups/mathematics/>
--   The project _memememememememe_ was also an excellent source of inspiration. They share the code for _RPi_ and a simulator in the _Processing_ langage:
+-   The project _memememememememe_ was also an excellent source of inspiration.
+    They share the code for _RPi_ and a simulator in the _Processing_ langage:
     -   <https://memememememememe.me/post/stewart-platform-math/>
     -   <https://github.com/thiagohersan/memememe>
 
