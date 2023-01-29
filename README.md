@@ -1,4 +1,14 @@
-# S T E W A R T    P L A T F O R M    O N    E S P 3 2
+# STEWART PLATFORM ON ESP32
+
+<a href="https://archiveprogram.github.com/arctic-vault/">
+<blockquote style="vertical-align: text-top;">
+<p>
+<img style="width:64px; float:left; margin-right:10px;" src="https://github.githubassets.com/images/modules/profile/achievements/arctic-code-vault-contributor-default.png" />
+This repository<br/>is archived in the<br/>
+GitHub Arctic Code Vault.
+</p>
+</blockquote>
+</a>
 
 <p align="center">
 <img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/stewart-plateform-ouilogique.jpg" />
@@ -10,9 +20,9 @@ This is an implementation on the ESP32 of a 6-degrees of freedom hexapod — als
 
 Currently the platform can be operated:
 
-- with a _Nunchuck_
-- with _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
-- with _G-Code_ through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
+-   with a _Nunchuck_
+-   with _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp))
+-   with _G-Code_ through serial (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/python/gcode2serial.py))
 
 The kinematics calculation is done in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross check calculations (i.e. without actuating the servos). I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_. See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
 
@@ -40,7 +50,7 @@ const char *ap_password = "";     // Password of the ESP32 WiFi network in soft-
                                   // Must be 8 char min or empty for no password.
 ```
 
-## COMPONANTS & WIRING
+## COMPONENTS & WIRING
 
 ### ESP32
 
@@ -52,7 +62,7 @@ WeMos ESP32 WROOM <https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Develo
 
 ### External power supply
 
-I currently use a 5 V / 10 A power supply, but 5 V is not enough. I need to upgrade to 7 V. <https://aliexpress.com/af/32810906485.html>
+5 V / 10 A power supply. <https://aliexpress.com/af/32810906485.html>
 
 ### Rods
 
@@ -64,9 +74,9 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 
 ### Servos
 
-- I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them. <https://fr.aliexpress.com/item//32636102294.html>
-- I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application. <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
-- In the future, I will probalbly use _Parallax 900-00005_ servos. It seems that these are the one used by _fullmotiondynamics_ in their videos. <https://www.parallax.com/product/900-00005>
+-   I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them. <https://fr.aliexpress.com/item//32636102294.html>
+-   I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application. <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
+-   In the future, I will probalbly use _Parallax 900-00005_ servos. It seems that these are the one used by _fullmotiondynamics_ in their videos. <https://www.parallax.com/product/900-00005>
 
 > Pins are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
 
@@ -81,8 +91,8 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 
 ### Nunchuck
 
-- Nunchuck <https://fr.aliexpress.com/item//32880983134.html>
-- Cable extension <https://fr.aliexpress.com/item//32841281892.html>
+-   Nunchuck <https://fr.aliexpress.com/item//32880983134.html>
+-   Cable extension <https://fr.aliexpress.com/item//32841281892.html>
 
 > The Nunchuck library uses `Wire.h` and standard I²C connections internaly.
 >
@@ -103,7 +113,7 @@ Tritanium color <https://aliexpress.com/af/32843432977.html>
 
 The external libraries are installed automatically during the first build because they are declared under `lib_deps` in `platformio.ini`.
 
-## I²C Addresses
+## I²C ADDRESSES
 
 | Default address | New address | Device              |
 | :-------------- | :---------- | :------------------ |
@@ -116,35 +126,35 @@ The external libraries are installed automatically during the first build becaus
 
 ## CREDITS
 
-### Primary source of inspiration
+### My sources of inspiration
 
-- San-José State University / Full Motion Dynamics:
-  - <https://www.youtube.com/watch?v=j4OmVLc_oDw>
-  - <http://fullmotiondynamics.com>
+-   San-José State University / Full Motion Dynamics:
+    -   <https://www.youtube.com/watch?v=j4OmVLc_oDw>
+    -   <http://fullmotiondynamics.com>
 
 ### Kinematics
 
-- Hexapod kinematics of this project was originaly based on _6dof-stewduino, by Philippe Desrosiers_, althought I reworked it in depth:
-  - <https://github.com/xoxota99/stewy>
-- He derived his implementation from the work of _Daniel Waters_:
-  - <https://www.youtube.com/watch?v=1jrP3_1ML9M>
-- Kinematics calculation is also explained in this document by an unknown author from the _Wokingham U3A Math Group_:
-  - <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
-  - <http://www.wokinghamu3a.org.uk/groups/mathematics/>
-- The project _memememememememe_ was also an excellent source of inspiration. They share the code for _RPi_ and a simulator in the _Processing_ langage:
-  - <https://memememememememe.me/post/stewart-platform-math/>
-  - <https://github.com/thiagohersan/memememe>
+-   Hexapod kinematics of this project was originaly based on _6dof-stewduino, by Philippe Desrosiers_, althought I reworked it in depth:
+    -   <https://github.com/xoxota99/stewy>
+-   He derived his implementation from the work of _Daniel Waters_:
+    -   <https://www.youtube.com/watch?v=1jrP3_1ML9M>
+-   Kinematics calculation is also explained in this document by an unknown author from the _Wokingham U3A Math Group_:
+    -   <https://web.archive.org/web/20130506134518/http://www.wokinghamu3a.org.uk/Maths%20of%20the%20Stewart%20Platform%20v5.pdf>
+    -   <http://www.wokinghamu3a.org.uk/groups/mathematics/>
+-   The project _memememememememe_ was also an excellent source of inspiration. They share the code for _RPi_ and a simulator in the _Processing_ langage:
+    -   <https://memememememememe.me/post/stewart-platform-math/>
+    -   <https://github.com/thiagohersan/memememe>
 
 ### Serial buffer for G-Code
 
-- Derived from _MarginallyClever_:
-  - <https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield>
+-   Derived from _MarginallyClever_:
+    -   <https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield>
 
-## FURTHER READING
+## FURTHER READINGS
 
-- PID Control System Analysis and Design, By YUN LI, KIAM HEONG ANG, and GREGORY C.Y. CHONG
-  - See Table 1, p.33 <http://eprints.gla.ac.uk/3815/1/IEEE_CS_PID_01580152.pdf>
-- Understanding PID Control, Part 1: What is PID Control?
-  - <https://www.youtube.com/watch?v=wkfEZmsQqiA>
-- Modern Robotics, Chapter 7: Kinematics of Closed Chains
-  - <https://youtu.be/5wCK6XGC3ig>
+-   PID Control System Analysis and Design, By YUN LI, KIAM HEONG ANG, and GREGORY C.Y. CHONG
+    -   See Table 1, p.33 <http://eprints.gla.ac.uk/3815/1/IEEE_CS_PID_01580152.pdf>
+-   Understanding PID Control, Part 1: What is PID Control?
+    -   <https://www.youtube.com/watch?v=wkfEZmsQqiA>
+-   Modern Robotics, Chapter 7: Kinematics of Closed Chains
+    -   <https://youtu.be/5wCK6XGC3ig>
