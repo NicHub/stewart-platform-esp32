@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Compilation of `hexapod_desktop_app`
-# Works on macOS Mojave
+# Works on macOS Ventura (13.1)
 
 EXEC_NAME=hexapod_desktop_app
 rm -f $EXEC_NAME
