@@ -89,8 +89,8 @@ The top plate is 3D-printed (right-click + save as):
 | 1    | [Breadboard adapter for PCA9685](https://www.aliexpress.com/item/1005004132188471.html)                                                                           |
 | 1    | [5 V / 10 A power supply](https://aliexpress.com/af/32810906485.html)                                                                                             |
 | 6    | [Rods M3x100mm (140mm total)](https://aliexpress.com/af/32775630549.html)                                                                                         |
-| 6    | [Tower Pro MG996R servo (clone)](https://fr.aliexpress.com/item/32636102294.html)                                                                                 |
-| 1    | [Nunchuck](https://fr.aliexpress.com/item/1005003050706988.html) <!-- https://fr.aliexpress.com/item//32880983134.html -->                                        |
+| 6    | ¹[Tower Pro MG996R servo (clone)](https://fr.aliexpress.com/item/32636102294.html)                                                                                 |
+| 1    | ²[Nunchuck](https://fr.aliexpress.com/item/1005003050706988.html) <!-- https://fr.aliexpress.com/item//32880983134.html -->                                        |
 | 1    | [Nunchuck cable extension](https://fr.aliexpress.com/item/32784720613.html) <!-- https://fr.aliexpress.com/item//32841281892.html -->                             |
 | 1    | [6 pin Dupont connector to connect Nunchuck to breadboard](https://www.aliexpress.com/item/32809965211.html)                                                      |
 | 1    | [Set of cable markers](https://fr.aliexpress.com/item/1005004255868271.html)                                                                                      |
@@ -104,16 +104,16 @@ The top plate is 3D-printed (right-click + save as):
 
 ### Notes
 
--   I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
+-   ¹ I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
     <https://fr.aliexpress.com/item/32636102294.html><br/>
     I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
     <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html><br/>
     In the future, I will probalbly use _Parallax 900-00005_ servos.
     It seems that these are the one used by _fullmotiondynamics_ in their videos.
     <https://www.parallax.com/product/900-00005>
--   Nice [Servo horn arm Tritanium color](https://aliexpress.com/af/32843432977.html) (not used).
--   The Nunchuck cable extension is not mandatory.
+-   ² The Nunchuck cable extension is not mandatory.
     The idea is not to have a longer cable but rather to use it as an adapter between the Nunchuck and the breadboard, that is to say that it allows to leave the Nunchunk cable uncut.
+-   Nice [Servo horn arm Tritanium color](https://aliexpress.com/af/32843432977.html) (not used).
 
 ## WIRING
 
