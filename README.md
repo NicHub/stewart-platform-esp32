@@ -75,9 +75,9 @@ The two base plates are identical and the DXF file to reproduce them is here (ri
 <img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.png" />
 </p>
 
-### Top plates
+### Top plate
 
-The top plate is 3D-printed:
+The top plate is 3D-printed (right-click + save as):
 [`doc/hexapod-top-plate.stl`](https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-top-plate.stl).
 
 ## PARTS TO BUY
