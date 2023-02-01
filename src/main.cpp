@@ -57,6 +57,7 @@ void setup()
     // Setup.
     hx_gpio.setupGPIO();
     hx_serial.setupSerial();
+    hx_serial.printSplashScreen();
     hx_servo.setupServo();
 
 #if ENABLE_NUNCHUCK_READ
