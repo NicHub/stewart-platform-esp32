@@ -75,20 +75,26 @@ The two base plates are identical and the DXF file to reproduce them is here (ri
 <img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.png" />
 </p>
 
+### Top plates
+
+The top plate is 3D-printed:
+[`doc/hexapod-top-plate.stl`](https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-top-plate.stl).
+
 ## PARTS TO BUY
 
 | QTY  | PART                                                                                                                                                              |
 | :--- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1    | [WeMos ESP32 WROOM](https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html) |
-| 1    | [PCA9685 16-Channel PWM Servo Driver I²C](https://www.mouser.ch/ProductDetail/adafruit/3416/?qs=F5EMLAvA7ICYzX4Av%252bhRHw==)                                     |
+| 1    | [Adafruit PCA9685 16-Channel Servo I²C Driver](https://www.mouser.ch/ProductDetail/adafruit/3416/?qs=F5EMLAvA7ICYzX4Av%252bhRHw==)                                |
 | 1    | [Breadboard adapter for PCA9685](https://www.aliexpress.com/item/1005004132188471.html)                                                                           |
 | 1    | [5 V / 10 A power supply](https://aliexpress.com/af/32810906485.html)                                                                                             |
 | 6    | [Rods M3x100mm (140mm total)](https://aliexpress.com/af/32775630549.html)                                                                                         |
 | 6    | [Tower Pro MG996R servo (clone)](https://fr.aliexpress.com/item/32636102294.html)                                                                                 |
 | 1    | [Nunchuck](https://fr.aliexpress.com/item/1005003050706988.html) <!-- https://fr.aliexpress.com/item//32880983134.html -->                                        |
 | 1    | [Nunchuck cable extension](https://fr.aliexpress.com/item/32784720613.html) <!-- https://fr.aliexpress.com/item//32841281892.html -->                             |
-| 1    | [6 pin Dupont connector to connect Nunchuck to breadboard ](https://www.aliexpress.com/item/32809965211.html)                                                     |
-| 6    | [M3×5×6 Brass Insert Nuts](https://www.aliexpress.com/item/32828848326.html)                                                                                      |
+| 1    | [6 pin Dupont connector to connect Nunchuck to breadboard](https://www.aliexpress.com/item/32809965211.html)                                                      |
+| 1    | [Cable markers](https://fr.aliexpress.com/item/1005004255868271.html)                                                                                             |
+| 6    | [M3×5×6 Brass insert nuts](https://www.aliexpress.com/item/32828848326.html)                                                                                      |
 | 12   | Small screws to hold the motors on the base plates                                                                                                                |
 | 6    | M3×12 screw                                                                                                                                                       |
 | 6    | M3×12 nut                                                                                                                                                         |
@@ -133,6 +139,9 @@ The two base plates are identical and the DXF file to reproduce them is here (ri
 The external libraries are installed automatically during the first build because they are declared under `lib_deps` in `platformio.ini`.
 
 ## I²C ADDRESSES
+
+> By default, the PCA9685 driver and the Nunchuck share the same I²C address `0x40`.
+> Fortunately, the address of the PCA9685 driver can easily be changed to `0x41` by shorting the A0 jumper next to the capacitor.
 
 | Default address | New address | Device              |
 | :-------------- | :---------- | :------------------ |
