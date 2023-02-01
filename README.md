@@ -40,21 +40,6 @@ The original implementation used an analog joystick, but the current version use
 
 <https://ouilogique.com/plateforme-de-stewart-esp32/>
 
-## GEOMETRY SETTINGS
-
-Geometry settings are defined in
-[`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
-
-The meaning of the parameters is explained in
-[`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
-
-The two base plates are identical and the DXF file to reproduce them is
-in [`doc/hexapod-base-plate.dxf`](https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.dxf).
-
-<p align="center">
-<img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.png" />
-</p>
-
 ## PREREQUISITES
 
 Create a file called `src/WifiSettings.h` containing:
@@ -69,53 +54,61 @@ const char *ap_password = "";     // Password of the ESP32 WiFi network in soft-
                                   // Must be 8 char min or empty for no password.
 ```
 
-## COMPONENTS & WIRING
+## GEOMETRY SETTINGS
 
-### ESP32
+Geometry settings are defined in
+[`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
 
-WeMos ESP32 WROOM <https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html>
+The meaning of the parameters is explained in
+[`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
 
-### PCA9685
+## PARTS TO BUILD
 
-<https://www.mouser.ch/ProductDetail/adafruit/3416/?qs=F5EMLAvA7ICYzX4Av%252bhRHw==>
+### Base plates
 
-### External power supply
+The two base plates are identical and the DXF file to reproduce them is here (right-click + save as):
+[`doc/hexapod-base-plate.dxf`](https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.dxf).
 
-5 V / 10 A power supply. <https://aliexpress.com/af/32810906485.html>
+<p align="center">
+<img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.png" />
+</p>
 
-### Rods
+## PARTS TO BUY
 
-M3x100mm (140mm total) <https://aliexpress.com/af/32775630549.html>
+| QTY  | PART                                                                                                                                                              |
+| :--- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | [WeMos ESP32 WROOM](https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html) |
+| 1    | [PCA9685](https://www.mouser.ch/ProductDetail/adafruit/3416/?qs=F5EMLAvA7ICYzX4Av%252bhRHw==)                                                                     |
+| 1    | [Breadboard adapter for PCA9685](https://www.aliexpress.com/item/1005004132188471.html)                                                                           |
+| 1    | [5 V / 10 A power supply](https://aliexpress.com/af/32810906485.html)                                                                                             |
+| 6    | [Rods M3x100mm (140mm total)](https://aliexpress.com/af/32775630549.html)                                                                                         |
+| 6    | [Tower Pro MG996R servo (clone)](https://fr.aliexpress.com/item/32636102294.html)                                                                                 |
+| 1    | [Nunchuck](https://fr.aliexpress.com/item//32880983134.html)                                                                                                      |
+| 1    | [Nunchuck cable extension](https://fr.aliexpress.com/item//32841281892.html)                                                                                      |
+| 6    | [M3×5×6 Brass Insert Nuts](https://www.aliexpress.com/item/32828848326.html)                                                                                      |
+| 12   | Small screws to hold the motors on the base plates                                                                                                                |
+| 6    | M3×12 screw                                                                                                                                                       |
+| 6    | M3×12 nut                                                                                                                                                         |
+| 1    | Breadboard                                                                                                                                                        |
+| some | Breadboard wires                                                                                                                                                  |
+| 2    | 4.7 kΩ resistor                                                                                                                                                   |
 
-### Servo horn arm
-
-Tritanium color <https://aliexpress.com/af/32843432977.html>
-
-### Servos
+### Notes
 
 -   I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
-    <https://fr.aliexpress.com/item//32636102294.html>
+    <https://fr.aliexpress.com/item/32636102294.html>
 -   I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
     <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
 -   In the future, I will probalbly use _Parallax 900-00005_ servos.
     It seems that these are the one used by _fullmotiondynamics_ in their videos.
     <https://www.parallax.com/product/900-00005>
+-   Nice [Servo horn arm Tritanium color](https://aliexpress.com/af/32843432977.html) (not used).
+-   The Nunchuck cable extension is not mandatory.
+    The idea is not to have a longer cable but rather to use it as an adapter between the Nunchuck and the breadboard, that is to say that it allows to leave the Nunchunk cable uncut.
 
-> Pins are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
-
-| servo | ESP32 pin |
-| :---- | :-------- |
-| 0     | 13        |
-| 1     | 15        |
-| 2     | 27        |
-| 3     | 14        |
-| 4     | 33        |
-| 5     | 25        |
+## WIRING
 
 ### Nunchuck
-
--   Nunchuck <https://fr.aliexpress.com/item//32880983134.html>
--   Cable extension <https://fr.aliexpress.com/item//32841281892.html>
 
 > The Nunchuck library uses `Wire.h` and standard I²C connections internaly.
 >
