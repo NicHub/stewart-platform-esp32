@@ -45,6 +45,12 @@ The original implementation used an analog joystick, but the current version use
 Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
 The meaning of the parameters is explained in [`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
 
+The two base plates are identical and the DXF file to reproduce them is here:
+
+<a align="center" src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.dxf">
+<img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.png" />
+</a>
+
 ## PREREQUISITES
 
 Create a file called `src/WifiSettings.h` containing:

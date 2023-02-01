@@ -46,14 +46,6 @@ void Hexapod_Serial::ready()
 void Hexapod_Serial::setupSerial()
 {
     Serial.begin(BAUD_RATE);
-    Serial.print("\n\n##########################");
-    Serial.print("\nCOMPILATION DATE AND TIME:\n");
-    Serial.print(__DATE__);
-    Serial.print("\n");
-    Serial.print(__TIME__);
-    Serial.print("\nHEXAPOD_CONFIG = ");
-    Serial.print(HEXAPOD_CONFIG);
-    Serial.print("\n##########################\n\n");
     ready();
 }
 
@@ -221,7 +213,7 @@ double Hexapod_Serial::parseNumber(const char code, double val)
 void Hexapod_Serial::M100()
 {
     Serial.print(F("# HEXAPOD G-CODE PARSER #"));
-    Serial.println(VERSION);
+    Serial.println(PROJECT_VERSION);
     Serial.println(F("## COMMANDS ##"));
     Serial.println(F("// G0 [X/Y/Z/A/B/C]; - Rapid linear motion. X, Y, Z in mm | A, B, C in degrees."));
     Serial.println(F("G4 P[seconds]; - Pause (dwell) in seconds"));
@@ -251,4 +243,31 @@ void Hexapod_Serial::serialRead()
             ready();
         }
     }
+}
+
+/**
+ *
+ */
+void Hexapod_Serial::printSplashScreen()
+{
+    Serial.println("\n\n##########################");
+    Serial.print(F("PROJECT NAME:     "));
+    Serial.println(PROJECT_NAME);
+    Serial.print(F("PROJECT VERSION:  "));
+    Serial.println(PROJECT_VERSION);
+    Serial.print(F("FILE NAME:        "));
+    Serial.println(__FILE__);
+    Serial.print(F("PROJECT PATH:     "));
+    Serial.println(PROJECT_PATH);
+    Serial.print(F("COMPILATION DATE: "));
+    Serial.println(COMPILATION_DATE);
+    Serial.print(F("COMPILATION TIME: "));
+    Serial.println(COMPILATION_TIME);
+    Serial.print(F("PYTHON VERSION:   "));
+    Serial.println(PYTHON_VERSION);
+    Serial.print(F("PYTHON PATH:      "));
+    Serial.println(PYTHON_PATH);
+    Serial.print(F("HEXAPOD_CONFIG:   "));
+    Serial.println(HEXAPOD_CONFIG);
+    Serial.println("##########################\n\n");
 }

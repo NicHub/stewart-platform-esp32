@@ -96,7 +96,7 @@ const double THETA_S[NB_SERVOS] = {
  * MIN/MAX COORDINATES
  * NOTE: The actual min and max for each DOF are interdependent. eg:
  * If the platform is pitched by some amount, the roll min/max will be physically
- * different than what's defined here. These are just the absolute maximums under
+ * different than what’s defined here. These are just the absolute maximums under
  * ideal conditions (eg: max for roll when pitch is zero).
  */
 const double HX_X_MIN = -24;
