@@ -42,14 +42,18 @@ The original implementation used an analog joystick, but the current version use
 
 ## GEOMETRY SETTINGS
 
-Geometry settings are defined in [`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
-The meaning of the parameters is explained in [`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
+Geometry settings are defined in
+[`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
 
-The two base plates are identical and the DXF file to reproduce them is here:
+The meaning of the parameters is explained in
+[`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
 
-<a align="center" src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.dxf">
+The two base plates are identical and the DXF file to reproduce them is
+in [`doc/hexapod-base-plate.dxf`](https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.dxf).
+
+<p align="center">
 <img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/hexapod-base-plate.png" />
-</a>
+</p>
 
 ## PREREQUISITES
 
