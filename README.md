@@ -45,7 +45,7 @@ The original implementation used an analog joystick, but the current version use
 -   Change the default I²C address of the PCA9685 driver from `0x40` to `0x41` by shorting the A0 jumper beside the capacitor.
 
 <p align="center">
-<img height=400px src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/PCA9685-jumper.jpg" />
+<img style="max-width:50%;" src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/PCA9685-jumper.jpg" />
 </p>
 
 -   Create a file called `src/WifiSettings.h` containing:
