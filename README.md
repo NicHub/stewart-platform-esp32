@@ -93,7 +93,7 @@ The top plate is 3D-printed (right-click + save as):
 | 1    | [Nunchuck](https://fr.aliexpress.com/item/1005003050706988.html) <!-- https://fr.aliexpress.com/item//32880983134.html -->                                        |
 | 1    | [Nunchuck cable extension](https://fr.aliexpress.com/item/32784720613.html) <!-- https://fr.aliexpress.com/item//32841281892.html -->                             |
 | 1    | [6 pin Dupont connector to connect Nunchuck to breadboard](https://www.aliexpress.com/item/32809965211.html)                                                      |
-| 1    | [Cable markers](https://fr.aliexpress.com/item/1005004255868271.html)                                                                                             |
+| 1    | [Set of cable markers](https://fr.aliexpress.com/item/1005004255868271.html)                                                                                      |
 | 6    | [M3×5×6 Brass insert nuts](https://www.aliexpress.com/item/32828848326.html)                                                                                      |
 | 12   | Small screws to hold the motors on the base plates                                                                                                                |
 | 6    | M3×12 screw                                                                                                                                                       |
@@ -105,10 +105,10 @@ The top plate is 3D-printed (right-click + save as):
 ### Notes
 
 -   I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
-    <https://fr.aliexpress.com/item/32636102294.html>
--   I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
-    <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html>
--   In the future, I will probalbly use _Parallax 900-00005_ servos.
+    <https://fr.aliexpress.com/item/32636102294.html><br/>
+    I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
+    <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html><br/>
+    In the future, I will probalbly use _Parallax 900-00005_ servos.
     It seems that these are the one used by _fullmotiondynamics_ in their videos.
     <https://www.parallax.com/product/900-00005>
 -   Nice [Servo horn arm Tritanium color](https://aliexpress.com/af/32843432977.html) (not used).
