@@ -85,8 +85,8 @@ The two base plates are identical and the DXF file to reproduce them is here (ri
 | 1    | [5 V / 10 A power supply](https://aliexpress.com/af/32810906485.html)                                                                                             |
 | 6    | [Rods M3x100mm (140mm total)](https://aliexpress.com/af/32775630549.html)                                                                                         |
 | 6    | [Tower Pro MG996R servo (clone)](https://fr.aliexpress.com/item/32636102294.html)                                                                                 |
-| 1    | [Nunchuck](https://fr.aliexpress.com/item//32880983134.html)                                                                                                      |
-| 1    | [Nunchuck cable extension](https://fr.aliexpress.com/item//32841281892.html)                                                                                      |
+| 1    | [Nunchuck](https://fr.aliexpress.com/item/1005003050706988.html) <!-- https://fr.aliexpress.com/item//32880983134.html -->                                        |
+| 1    | [Nunchuck cable extension](https://fr.aliexpress.com/item/32784720613.html) <!-- https://fr.aliexpress.com/item//32841281892.html -->                             |
 | 1    | [6 pin Dupont connector to connect Nunchuck to breadboard ](https://www.aliexpress.com/item/32809965211.html)                                                     |
 | 6    | [M3×5×6 Brass Insert Nuts](https://www.aliexpress.com/item/32828848326.html)                                                                                      |
 | 12   | Small screws to hold the motors on the base plates                                                                                                                |
