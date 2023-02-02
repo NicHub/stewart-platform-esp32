@@ -192,13 +192,16 @@ public:
     const double BP2_MAX = POW((ARM_LENGTH + ROD_LENGTH), 2);
 
     /*
-     * Square of the length of BP when the servo arm is perpendicular to BP.
+     * ARM^2, ARM^4, ROD^2, ROD^4,
      */
-    const double BP2_PERP = POW(ROD_LENGTH, 2) - POW(ARM_LENGTH, 2);
-
     double const
         ARM_LENGTH2 = POW(ARM_LENGTH, 2),
         ARM_LENGTH4 = POW(ARM_LENGTH, 4),
         ROD_LENGTH2 = POW(ROD_LENGTH, 2),
         ROD_LENGTH4 = POW(ROD_LENGTH, 4);
+
+    /*
+     * Square of the length of BP when the servo arm is perpendicular to BP.
+     */
+    const double BP2_PERP = ROD_LENGTH2 - ARM_LENGTH2;
 };

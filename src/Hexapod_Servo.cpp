@@ -153,7 +153,7 @@ void Hexapod_Servo::updateServos(int8_t movOK, unsigned long safetyWait_ms)
         }
         pwmController.setChannelsPWM(0, NB_SERVOS, pwms);
 
-#if false
+#if SEND_PWM_US_TO_SERIAL
         // Write servo angles to Serial for debug.
         for (uint8_t sid = 0; sid < NB_SERVOS; sid++)
         {
