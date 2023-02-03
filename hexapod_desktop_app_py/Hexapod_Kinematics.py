@@ -18,13 +18,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-
-import Hexapod_Config_1 as hc
+HEXAPOD_CONFIG = 1
+if HEXAPOD_CONFIG == 1:
+    import Hexapod_Config_1 as hc
 import numpy as np
 from pprint import pprint
-import sys
+from time import time
+import datetime
+
 SMALL_WIDTH = 7
 LARGE_WIDTH = 17
+START_DATE = datetime.datetime.now()
+
+CPU_TIME_USED = 0
+COUNTER = 0
+
 
 #
 # ======== PRECALCULATED GEOMETRY ==========
@@ -282,6 +290,9 @@ class Hexapod_Kinematics:
                     - b2 * c2
                 )
             )
+            if i1 < 0:
+                movOK = -5
+                break
             i1 = np.sqrt(i1)
             i1 = (2 * hc.ARM_LENGTH * c - i1) / (
                 ARM_LENGTH2 + 2 * hc.ARM_LENGTH * a - ROD_LENGTH2 + BP2
@@ -296,7 +307,6 @@ class Hexapod_Kinematics:
             # Convert radians to degrees.
             # (~2 µs)
             new_servo_angles[sid]["deg"] = np.rad2deg(new_servo_angles[sid]["rad"])
-
 
             # print(new_servo_angles[sid]["rad"])
             # print(hc.SERVO_CALIBRATION)
@@ -331,31 +341,38 @@ class Hexapod_Kinematics:
         return movOK, new_servo_angles
 
 
-
-def calcAndPrintResults(hk, coord = {"hx_x": 0, "hx_y": 0, "hx_z": 0, "hx_a": 0, "hx_b": 0, "hx_c": 0}):
+def calcAndPrintResults(
+    hk, coord={"hx_x": 0, "hx_y": 0, "hx_z": 0, "hx_a": 0, "hx_b": 0, "hx_c": 0}
+):
     """___"""
+    t1 = time()
     movOK, angles = hk.calcServoAngles(coord)
-    if False:
-        pprint(coord)
-        print("######")
-        pprint(angles)
-        return
+    t2 = time()
 
-    ans = (f'{coord["hx_x"]:{SMALL_WIDTH}.1f}'
+    global CPU_TIME_USED
+    global COUNTER
+    CPU_TIME_USED += (t2 - t1)
+    COUNTER += 1
+
+    ans = (
+        f'{coord["hx_x"]:{SMALL_WIDTH}.1f}'
         f'{coord["hx_y"]:{SMALL_WIDTH}.1f}'
         f'{coord["hx_z"]:{SMALL_WIDTH}.1f}'
         f'{np.rad2deg(coord["hx_a"]):{SMALL_WIDTH}.1f}'
         f'{np.rad2deg(coord["hx_b"]):{SMALL_WIDTH}.1f}'
         f'{np.rad2deg(coord["hx_c"]):{SMALL_WIDTH}.1f}'
-        f'{movOK:{SMALL_WIDTH}}'
-        f'{angles[0]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        f'{angles[1]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        f'{angles[2]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        f'{angles[3]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        f'{angles[4]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        f'{angles[5]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        "\n"
+        f"{movOK:{SMALL_WIDTH}}"
     )
+    if movOK == 0:
+        ans += (
+            f'{angles[0]["pwm_us"]:{LARGE_WIDTH}.0f}'
+            f'{angles[1]["pwm_us"]:{LARGE_WIDTH}.0f}'
+            f'{angles[2]["pwm_us"]:{LARGE_WIDTH}.0f}'
+            f'{angles[3]["pwm_us"]:{LARGE_WIDTH}.0f}'
+            f'{angles[4]["pwm_us"]:{LARGE_WIDTH}.0f}'
+            f'{angles[5]["pwm_us"]:{LARGE_WIDTH}.0f}'
+        )
+    ans += "\n"
     return ans
 
 
@@ -378,26 +395,59 @@ if __name__ == "__main__":
     HX_Xs = [-8, 8]
     HX_Ys = [-8, 8]
     HX_Zs = [-4, 4]
-    HX_As = [np.deg2rad(-12)/shrink, np.deg2rad(12)/shrink]
-    HX_Bs = [np.deg2rad(-12)/shrink, np.deg2rad(12)/shrink]
-    HX_Cs = [np.deg2rad(-43)/shrink, np.deg2rad(43)/shrink]
-
-
+    HX_As = [np.deg2rad(-12) / shrink, np.deg2rad(12) / shrink]
+    HX_Bs = [np.deg2rad(-12) / shrink, np.deg2rad(12) / shrink]
+    HX_Cs = [np.deg2rad(-43) / shrink, np.deg2rad(43) / shrink]
 
     ans = ""
     ans = "      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6\n"
 
-    ans += calcAndPrintResults(hk, {"hx_x": 0, "hx_y": 0, "hx_z": 0, "hx_a": 0, "hx_b": 0, "hx_c": 0})
-    ans += calcAndPrintResults(hk, {"hx_x": 0, "hx_y": 0, "hx_z": hc.HX_Z_MAX, "hx_a": 0, "hx_b": 0, "hx_c": 0})
-    ans += calcAndPrintResults(hk, {"hx_x": 0, "hx_y": 0, "hx_z": hc.HX_Z_MIN, "hx_a": 0, "hx_b": 0, "hx_c": 0})
-    ans += "\n"
+    ans = f"""
+STEWART PLATFORM
+
+COMPILATION DATE AND TIME
+{START_DATE.strftime("%Y-%m-%d")}
+{START_DATE.strftime("%H:%M:%S")}
+HEXAPOD_CONFIG = {HEXAPOD_CONFIG}
+ALGORITHM = {hc.ALGO}
+LANGAGE = Python
+
+      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6
+=======================================================================================================================================================
+"""
+
+    ans += calcAndPrintResults(
+        hk, {"hx_x": 0, "hx_y": 0, "hx_z": 0, "hx_a": 0, "hx_b": 0, "hx_c": 0}
+    )
+    ans += calcAndPrintResults(
+        hk, {"hx_x": 0, "hx_y": 0, "hx_z": hc.HX_Z_MAX, "hx_a": 0, "hx_b": 0, "hx_c": 0}
+    )
+    ans += calcAndPrintResults(
+        hk, {"hx_x": 0, "hx_y": 0, "hx_z": hc.HX_Z_MIN, "hx_a": 0, "hx_b": 0, "hx_c": 0}
+    )
+    ans += "=======================================================================================================================================================\n"
     for hx_x in HX_Xs:
         for hx_y in HX_Ys:
             for hx_z in HX_Zs:
                 for hx_a in HX_As:
                     for hx_b in HX_Bs:
                         for hx_c in HX_Cs:
-                            coord = {"hx_x": hx_x, "hx_y": hx_y, "hx_z": hx_z, "hx_a": hx_a, "hx_b": hx_b, "hx_c": hx_c}
+                            coord = {
+                                "hx_x": hx_x,
+                                "hx_y": hx_y,
+                                "hx_z": hx_z,
+                                "hx_a": hx_a,
+                                "hx_b": hx_b,
+                                "hx_c": hx_c,
+                            }
                             ans += calcAndPrintResults(hk, coord)
 
+    CPU_TIME_USED *= 1E6
+    ans += f"\nTotal time elapsed   (µs) = {CPU_TIME_USED:0.1f}"
+    ans += f"\nTime per calculation (µs) = {CPU_TIME_USED / COUNTER:0.2f}"
+    ans += f"\nCalculation count         = {COUNTER}"
     print(ans)
+
+    filename = f"angles_with_config_{HEXAPOD_CONFIG}_py.txt"
+    with open(file=filename, mode="wt", encoding="utf-8") as _f:
+        _f.write(ans)

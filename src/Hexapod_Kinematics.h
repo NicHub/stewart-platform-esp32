@@ -24,7 +24,7 @@
 #ifdef PLATFORMIO
 #include <Arduino.h>
 #else
-#include "../hexapod_desktop_app/hexapod_desktop_app.h"
+#include "../hexapod_desktop_app_cpp/hexapod_desktop_app.h"
 #endif
 
 // Choose configuration file.

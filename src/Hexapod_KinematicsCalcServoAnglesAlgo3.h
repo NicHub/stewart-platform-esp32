@@ -104,6 +104,11 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
                     2 * (ARM_LENGTH2 * (ROD_LENGTH2 + a2 - b2 + c2) +
                          ROD_LENGTH2 * a2 + ROD_LENGTH2 * (b2 + c2) -
                          a2 * (b2 + c2) - b2 * c2);
+        if (i1 < 0)
+        {
+            movOK = -5;
+            break;
+        }
         i1 = sqrt(i1);
         i1 = (2 * ARM_LENGTH * c - i1) /
              (ARM_LENGTH2 + 2 * ARM_LENGTH * a -
@@ -124,7 +129,7 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // that the odd and even arms are a reflection of each other.
         // (~5 µs)
         new_servo_angles[sid].pwm_us =
-            (uint16_t)round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
+            round(SERVO_CALIBRATION[sid].gain * new_servo_angles[sid].rad) +
             SERVO_CALIBRATION[sid].offset;
 
         // Check if the angle is in min/max.
