@@ -17,18 +17,32 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+##################
+
+Works on
+MicroPython v1.19.1 on 2022-06-18; ESP32 module with ESP32
+
+Doesn’t work on
+MicroPython v1.16-200-g1b87e1793 on 2021-08-12; LOLIN_S2_MINI with ESP32-S2FN4R2
+(no f-string support)
+
+| SYSTEM                       | TIME PER CALCULATION |
+| ---------------------------- | -------------------: |
+| MicroPython v1.19.1 on ESP32 |            ~ 4000 µs |
+| C++ on ESP32                 |             ~ 250 µs |
+| Python on Apple M1 Pro       |              ~ 12 µs |
+| C++ on Apple M1 Pro          |               ~ 2 µs |
+
 """
 HEXAPOD_CONFIG = 1
 if HEXAPOD_CONFIG == 1:
     import Hexapod_Config_1 as hc
-import numpy as np
-from pprint import pprint
-from time import time
-import datetime
+import math
+import time
 
 SMALL_WIDTH = 7
 LARGE_WIDTH = 17
-START_DATE = datetime.datetime.now()
+START_DATE = time.time()
 
 CPU_TIME_USED = 0
 COUNTER = 0
@@ -50,8 +64,8 @@ COUNTER = 0
 # We account for this by negating the value of x-coordinates generated based
 # on this axis later on. This is potentially messy, and should maybe be refactored.
 #
-AXIS1 = np.pi / 6  # 30 degrees.
-AXIS2 = -np.pi / 2  # -90 degrees.
+AXIS1 = math.pi / 6  # 30 degrees.
+AXIS2 = -math.pi / 2  # -90 degrees.
 AXIS3 = AXIS1
 
 
@@ -59,22 +73,22 @@ AXIS3 = AXIS1
 # Orientations of the servos arms relative to the X axis.
 #
 COS_THETA_S = (
-    np.cos(hc.THETA_S[0]),
-    np.cos(hc.THETA_S[1]),
-    np.cos(hc.THETA_S[2]),
-    np.cos(hc.THETA_S[3]),
-    np.cos(hc.THETA_S[4]),
-    np.cos(hc.THETA_S[5]),
+    math.cos(hc.THETA_S[0]),
+    math.cos(hc.THETA_S[1]),
+    math.cos(hc.THETA_S[2]),
+    math.cos(hc.THETA_S[3]),
+    math.cos(hc.THETA_S[4]),
+    math.cos(hc.THETA_S[5]),
 )
 
 
 SIN_THETA_S = (
-    np.sin(hc.THETA_S[0]),
-    np.sin(hc.THETA_S[1]),
-    np.sin(hc.THETA_S[2]),
-    np.sin(hc.THETA_S[3]),
-    np.sin(hc.THETA_S[4]),
-    np.sin(hc.THETA_S[5]),
+    math.sin(hc.THETA_S[0]),
+    math.sin(hc.THETA_S[1]),
+    math.sin(hc.THETA_S[2]),
+    math.sin(hc.THETA_S[3]),
+    math.sin(hc.THETA_S[4]),
+    math.sin(hc.THETA_S[5]),
 )
 
 # For algorithm 2
@@ -88,21 +102,21 @@ M_THETA_S = (
 )
 
 sinD = (
-    np.sin(M_THETA_S[0]),
-    np.sin(M_THETA_S[1]),
-    np.sin(M_THETA_S[2]),
-    np.sin(M_THETA_S[3]),
-    np.sin(M_THETA_S[4]),
-    np.sin(M_THETA_S[5]),
+    math.sin(M_THETA_S[0]),
+    math.sin(M_THETA_S[1]),
+    math.sin(M_THETA_S[2]),
+    math.sin(M_THETA_S[3]),
+    math.sin(M_THETA_S[4]),
+    math.sin(M_THETA_S[5]),
 )
 
 cosD = (
-    np.cos(M_THETA_S[0]),
-    np.cos(M_THETA_S[1]),
-    np.cos(M_THETA_S[2]),
-    np.cos(M_THETA_S[3]),
-    np.cos(M_THETA_S[4]),
-    np.cos(M_THETA_S[5]),
+    math.cos(M_THETA_S[0]),
+    math.cos(M_THETA_S[1]),
+    math.cos(M_THETA_S[2]),
+    math.cos(M_THETA_S[3]),
+    math.cos(M_THETA_S[4]),
+    math.cos(M_THETA_S[5]),
 )
 
 #
@@ -111,12 +125,12 @@ cosD = (
 # These coordinates are in the plane of the platform itself.
 #
 P_COORDS = (
-    (hc.P_RAD * np.cos(AXIS1 + hc.THETA_P), hc.P_RAD * np.sin(AXIS1 + hc.THETA_P)),
-    (hc.P_RAD * np.cos(AXIS1 - hc.THETA_P), hc.P_RAD * np.sin(AXIS1 - hc.THETA_P)),
-    (hc.P_RAD * np.cos(AXIS2 + hc.THETA_P), hc.P_RAD * np.sin(AXIS2 + hc.THETA_P)),
-    (-hc.P_RAD * np.cos(AXIS2 + hc.THETA_P), hc.P_RAD * np.sin(AXIS2 + hc.THETA_P)),
-    (-hc.P_RAD * np.cos(AXIS3 - hc.THETA_P), hc.P_RAD * np.sin(AXIS3 - hc.THETA_P)),
-    (-hc.P_RAD * np.cos(AXIS3 + hc.THETA_P), hc.P_RAD * np.sin(AXIS3 + hc.THETA_P)),
+    (hc.P_RAD * math.cos(AXIS1 + hc.THETA_P), hc.P_RAD * math.sin(AXIS1 + hc.THETA_P)),
+    (hc.P_RAD * math.cos(AXIS1 - hc.THETA_P), hc.P_RAD * math.sin(AXIS1 - hc.THETA_P)),
+    (hc.P_RAD * math.cos(AXIS2 + hc.THETA_P), hc.P_RAD * math.sin(AXIS2 + hc.THETA_P)),
+    (-hc.P_RAD * math.cos(AXIS2 + hc.THETA_P), hc.P_RAD * math.sin(AXIS2 + hc.THETA_P)),
+    (-hc.P_RAD * math.cos(AXIS3 - hc.THETA_P), hc.P_RAD * math.sin(AXIS3 - hc.THETA_P)),
+    (-hc.P_RAD * math.cos(AXIS3 + hc.THETA_P), hc.P_RAD * math.sin(AXIS3 + hc.THETA_P)),
 )
 
 #
@@ -125,12 +139,12 @@ P_COORDS = (
 # These coordinates are in the plane of the base itself.
 #
 B_COORDS = (
-    (hc.B_RAD * np.cos(AXIS1 + hc.THETA_B), hc.B_RAD * np.sin(AXIS1 + hc.THETA_B)),
-    (hc.B_RAD * np.cos(AXIS1 - hc.THETA_B), hc.B_RAD * np.sin(AXIS1 - hc.THETA_B)),
-    (hc.B_RAD * np.cos(AXIS2 + hc.THETA_B), hc.B_RAD * np.sin(AXIS2 + hc.THETA_B)),
-    (-hc.B_RAD * np.cos(AXIS2 + hc.THETA_B), hc.B_RAD * np.sin(AXIS2 + hc.THETA_B)),
-    (-hc.B_RAD * np.cos(AXIS3 - hc.THETA_B), hc.B_RAD * np.sin(AXIS3 - hc.THETA_B)),
-    (-hc.B_RAD * np.cos(AXIS3 + hc.THETA_B), hc.B_RAD * np.sin(AXIS3 + hc.THETA_B)),
+    (hc.B_RAD * math.cos(AXIS1 + hc.THETA_B), hc.B_RAD * math.sin(AXIS1 + hc.THETA_B)),
+    (hc.B_RAD * math.cos(AXIS1 - hc.THETA_B), hc.B_RAD * math.sin(AXIS1 - hc.THETA_B)),
+    (hc.B_RAD * math.cos(AXIS2 + hc.THETA_B), hc.B_RAD * math.sin(AXIS2 + hc.THETA_B)),
+    (-hc.B_RAD * math.cos(AXIS2 + hc.THETA_B), hc.B_RAD * math.sin(AXIS2 + hc.THETA_B)),
+    (-hc.B_RAD * math.cos(AXIS3 - hc.THETA_B), hc.B_RAD * math.sin(AXIS3 - hc.THETA_B)),
+    (-hc.B_RAD * math.cos(AXIS3 + hc.THETA_B), hc.B_RAD * math.sin(AXIS3 + hc.THETA_B)),
 )
 
 #
@@ -215,14 +229,14 @@ class Hexapod_Kinematics:
         )
         new_servo_angles = null_servo_angles
 
-        # Intermediate values, to avoid recalculating sin and cos.
+        # Intermediate values, to avoid recalculating sin math cos.
         # (3 µs).
-        cosA = np.cos(coord["hx_a"])
-        cosB = np.cos(coord["hx_b"])
-        cosC = np.cos(coord["hx_c"])
-        sinA = np.sin(coord["hx_a"])
-        sinB = np.sin(coord["hx_b"])
-        sinC = np.sin(coord["hx_c"])
+        cosA = math.cos(coord["hx_a"])
+        cosB = math.cos(coord["hx_b"])
+        cosC = math.cos(coord["hx_c"])
+        sinA = math.sin(coord["hx_a"])
+        sinB = math.sin(coord["hx_b"])
+        sinC = math.sin(coord["hx_c"])
 
         # Assume everything will be OK.
         movOK = 0
@@ -293,11 +307,11 @@ class Hexapod_Kinematics:
             if i1 < 0:
                 movOK = -5
                 break
-            i1 = np.sqrt(i1)
+            i1 = math.sqrt(i1)
             i1 = (2 * hc.ARM_LENGTH * c - i1) / (
                 ARM_LENGTH2 + 2 * hc.ARM_LENGTH * a - ROD_LENGTH2 + BP2
             )
-            i1 = 2 * np.arctan(i1)
+            i1 = 2 * math.atan(i1)
             new_servo_angles[sid]["rad"] = i1
 
             # Rotate the angle.
@@ -306,7 +320,7 @@ class Hexapod_Kinematics:
 
             # Convert radians to degrees.
             # (~2 µs)
-            new_servo_angles[sid]["deg"] = np.rad2deg(new_servo_angles[sid]["rad"])
+            new_servo_angles[sid]["deg"] = math.degrees(new_servo_angles[sid]["rad"])
 
             # print(new_servo_angles[sid]["rad"])
             # print(hc.SERVO_CALIBRATION)
@@ -318,9 +332,7 @@ class Hexapod_Kinematics:
             # that the odd and even arms are a reflection of each other.
             # (~5 µs)
             new_servo_angles[sid]["pwm_us"] = (
-                np.round(
-                    hc.SERVO_CALIBRATION[sid]["gain"] * new_servo_angles[sid]["rad"]
-                )
+                round(hc.SERVO_CALIBRATION[sid]["gain"] * new_servo_angles[sid]["rad"])
                 + hc.SERVO_CALIBRATION[sid]["offset"]
             )
 
@@ -345,33 +357,38 @@ def calcAndPrintResults(
     hk, coord={"hx_x": 0, "hx_y": 0, "hx_z": 0, "hx_a": 0, "hx_b": 0, "hx_c": 0}
 ):
     """___"""
-    t1 = time()
+
+    try:
+        t1 = time.ticks_us()
+    except AttributeError:
+        t1 = time.time() * 1e6
     movOK, angles = hk.calcServoAngles(coord)
-    t2 = time()
+    try:
+        t2 = time.ticks_us()
+    except AttributeError:
+        t2 = time.time() * 1e6
 
     global CPU_TIME_USED
     global COUNTER
-    CPU_TIME_USED += (t2 - t1)
+    CPU_TIME_USED += t2 - t1
     COUNTER += 1
 
-    ans = (
-        f'{coord["hx_x"]:{SMALL_WIDTH}.1f}'
-        f'{coord["hx_y"]:{SMALL_WIDTH}.1f}'
-        f'{coord["hx_z"]:{SMALL_WIDTH}.1f}'
-        f'{np.rad2deg(coord["hx_a"]):{SMALL_WIDTH}.1f}'
-        f'{np.rad2deg(coord["hx_b"]):{SMALL_WIDTH}.1f}'
-        f'{np.rad2deg(coord["hx_c"]):{SMALL_WIDTH}.1f}'
-        f"{movOK:{SMALL_WIDTH}}"
-    )
+    ans = f'{coord["hx_x"]:{SMALL_WIDTH}.1f}'
+    ans += f'{coord["hx_y"]:{SMALL_WIDTH}.1f}'
+    ans += f'{coord["hx_z"]:{SMALL_WIDTH}.1f}'
+    ans += f'{math.degrees(coord["hx_a"]):{SMALL_WIDTH}.1f}'
+    ans += f'{math.degrees(coord["hx_b"]):{SMALL_WIDTH}.1f}'
+    ans += f'{math.degrees(coord["hx_c"]):{SMALL_WIDTH}.1f}'
+    ans += f"{movOK:{SMALL_WIDTH}}"
+
     if movOK == 0:
-        ans += (
-            f'{angles[0]["pwm_us"]:{LARGE_WIDTH}.0f}'
-            f'{angles[1]["pwm_us"]:{LARGE_WIDTH}.0f}'
-            f'{angles[2]["pwm_us"]:{LARGE_WIDTH}.0f}'
-            f'{angles[3]["pwm_us"]:{LARGE_WIDTH}.0f}'
-            f'{angles[4]["pwm_us"]:{LARGE_WIDTH}.0f}'
-            f'{angles[5]["pwm_us"]:{LARGE_WIDTH}.0f}'
-        )
+        ans += f'{angles[0]["pwm_us"]:{LARGE_WIDTH}.0f}'
+        ans += f'{angles[1]["pwm_us"]:{LARGE_WIDTH}.0f}'
+        ans += f'{angles[2]["pwm_us"]:{LARGE_WIDTH}.0f}'
+        ans += f'{angles[3]["pwm_us"]:{LARGE_WIDTH}.0f}'
+        ans += f'{angles[4]["pwm_us"]:{LARGE_WIDTH}.0f}'
+        ans += f'{angles[5]["pwm_us"]:{LARGE_WIDTH}.0f}'
+
     ans += "\n"
     return ans
 
@@ -385,36 +402,25 @@ if __name__ == "__main__":
     shrink = 3
     nb_intervals = 1
 
-    # HX_Xs = np.arange(hc.HX_X_MIN / shrink, hc.HX_X_MAX / shrink, ((hc.HX_X_MAX - hc.HX_X_MIN) / nb_intervals / shrink))
-    # HX_Ys = np.arange(hc.HX_Y_MIN / shrink, hc.HX_Y_MAX / shrink, ((hc.HX_Y_MAX - hc.HX_Y_MIN) / nb_intervals / shrink))
-    # HX_Zs = np.arange(hc.HX_Z_MIN / shrink, hc.HX_Z_MAX / shrink, ((hc.HX_Z_MAX - hc.HX_Z_MIN) / nb_intervals / shrink))
-    # HX_As = np.arange(hc.HX_A_MIN / shrink, hc.HX_A_MAX / shrink, ((hc.HX_A_MAX - hc.HX_A_MIN) / nb_intervals / shrink))
-    # HX_Bs = np.arange(hc.HX_B_MIN / shrink, hc.HX_B_MAX / shrink, ((hc.HX_B_MAX - hc.HX_B_MIN) / nb_intervals / shrink))
-    # HX_Cs = np.arange(hc.HX_C_MIN / shrink, hc.HX_C_MAX / shrink, ((hc.HX_C_MAX - hc.HX_C_MIN) / nb_intervals / shrink))
-
     HX_Xs = [-8, 8]
     HX_Ys = [-8, 8]
     HX_Zs = [-4, 4]
-    HX_As = [np.deg2rad(-12) / shrink, np.deg2rad(12) / shrink]
-    HX_Bs = [np.deg2rad(-12) / shrink, np.deg2rad(12) / shrink]
-    HX_Cs = [np.deg2rad(-43) / shrink, np.deg2rad(43) / shrink]
+    HX_As = [math.radians(-12) / shrink, math.radians(12) / shrink]
+    HX_Bs = [math.radians(-12) / shrink, math.radians(12) / shrink]
+    HX_Cs = [math.radians(-43) / shrink, math.radians(43) / shrink]
 
     ans = ""
-    ans = "      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6\n"
-
-    ans = f"""
-STEWART PLATFORM
-
-COMPILATION DATE AND TIME
-{START_DATE.strftime("%Y-%m-%d")}
-{START_DATE.strftime("%H:%M:%S")}
-HEXAPOD_CONFIG = {HEXAPOD_CONFIG}
-ALGORITHM = {hc.ALGO}
-LANGAGE = Python
-
-      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6
-=======================================================================================================================================================
-"""
+    ans += "STEWART PLATFORM\n"
+    # ans += "COMPILATION DATE AND TIME\n"
+    # ans += f"{START_DATE}\n"
+    # ans += f"{time.time()}\n"
+    # ans += '{START_DATE.strftime("%H:%M:%S")}\n'
+    ans += f"HEXAPOD_CONFIG = {HEXAPOD_CONFIG}\n"
+    ans += f"ALGORITHM = {hc.ALGO}\n"
+    ans += f"LANGAGE = Python\n"
+    ans += "\n"
+    ans += "      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6\n"
+    ans += "=======================================================================================================================================================\n"
 
     ans += calcAndPrintResults(
         hk, {"hx_x": 0, "hx_y": 0, "hx_z": 0, "hx_a": 0, "hx_b": 0, "hx_c": 0}
@@ -442,7 +448,6 @@ LANGAGE = Python
                             }
                             ans += calcAndPrintResults(hk, coord)
 
-    CPU_TIME_USED *= 1E6
     ans += f"\nTotal time elapsed   (µs) = {CPU_TIME_USED:0.1f}"
     ans += f"\nTime per calculation (µs) = {CPU_TIME_USED / COUNTER:0.2f}"
     ans += f"\nCalculation count         = {COUNTER}"

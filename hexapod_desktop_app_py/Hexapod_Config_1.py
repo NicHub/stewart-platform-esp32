@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
 
-import numpy as np
+import math
 #
 # ======== SERVO SETTINGS ========
 #
@@ -31,7 +31,7 @@ NB_SERVOS = 6
 # These values should not be used to restrict servo movements.
 # Use MIN/MAX COORDINATES below for that.
 #
-SERVO_FULL_ANGULAR_RANGE = np.radians(180)
+SERVO_FULL_ANGULAR_RANGE = math.radians(180)
 SERVO_HALF_ANGULAR_RANGE = SERVO_FULL_ANGULAR_RANGE / 2
 SERVO_MIN_PWM = 183
 SERVO_MAX_PWM = 467
@@ -86,12 +86,12 @@ SERVO_CALIBRATION = (
 # Orientations of the servos arms relative to the X axis.
 #
 THETA_S = (
-    np.radians(-60),
-    np.radians(120),
-    np.radians(180),
-    np.radians(0),
-    np.radians(60),
-    np.radians(-120)
+    math.radians(-60),
+    math.radians(120),
+    math.radians(180),
+    math.radians(0),
+    math.radians(60),
+    math.radians(-120)
 )
 
 #
@@ -116,23 +116,23 @@ HX_Z_MAX = 12.0
 HX_Z_MID = (HX_Z_MAX + HX_Z_MIN) / 2
 HX_Z_BAND = HX_Z_MAX - HX_Z_MIN
 
-HX_A_MIN = np.radians(-12.0)
-HX_A_MAX = np.radians(12.0)
+HX_A_MIN = math.radians(-12.0)
+HX_A_MAX = math.radians(12.0)
 HX_A_MID = (HX_A_MAX + HX_A_MIN) / 2
 HX_A_BAND = HX_A_MAX - HX_A_MIN
 
-HX_B_MIN = np.radians(-12.0)
-HX_B_MAX = np.radians(12.0)
+HX_B_MIN = math.radians(-12.0)
+HX_B_MAX = math.radians(12.0)
 HX_B_MID = (HX_B_MAX + HX_B_MIN) / 2
 HX_B_BAND = HX_B_MAX - HX_B_MIN
 
-HX_C_MIN = np.radians(-43.0)
-HX_C_MAX = np.radians(43.0)
+HX_C_MIN = math.radians(-43.0)
+HX_C_MAX = math.radians(43.0)
 HX_C_MID = (HX_C_MAX + HX_C_MIN) / 2
 HX_C_BAND = HX_C_MAX - HX_C_MIN
 
-THETA_P = np.radians(48.4099) # Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
-THETA_B = np.radians(22.9492) # Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
+THETA_P = math.radians(48.4099) # Platform joint angle (radians) offset from AXIS[1|2|3]. A value of zero puts these joints directly on the axes.
+THETA_B = math.radians(22.9492) # Base Servo pinion angle (radians) offset from AXIS[1|2|3]. A value of zero puts the servo pinion directly on the axes.
 P_RAD = 99.61 / 2          # Platform radius (mm). The distance from the center of the platform to the center of one platform / pushrod "joint". This should be the same for all six pushrods.
 B_RAD = 153.99 / 2         # Base radius (mm). Distance from the center of the base plate to the center of one servo pinion gear. Again, this should be the same for all six servos.
 ARM_LENGTH = 15.0          # Servo arm length (mm). Distance from the center of the servo pivot to the center of the pushrod pivot on the servo arm.

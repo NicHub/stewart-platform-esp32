@@ -20,9 +20,13 @@
 
 #include "Hexapod_Kinematics.h"
 
-// Algorithm 1 takes ~279 µs / movement.
-// Algorithm 2 takes ~474 µs / movement.
-// Algorithm 3 takes ~271 µs / movement.
+/**
+ * Algorithm 1 takes ~279 µs / movement.
+ * Algorithm 2 takes ~474 µs / movement.
+ * Algorithm 3 takes ~271 µs / movement.
+ * The slowdown starts to be noticeable for values > 10 ms.
+ * So we have a safety margin of ~40 ×.
+*/
 #if ALGO == 1
 #include <Hexapod_KinematicsCalcServoAnglesAlgo1.h>
 #elif ALGO == 2
