@@ -46,7 +46,7 @@ double counter = 0;
 // Print dimensions
 const uint8_t SMALL_WIDTH = 7;
 const uint8_t LARGE_WIDTH = 17;
-const uint8_t ALL_WIDTH = 151;
+const uint8_t ALL_WIDTH = 151; // 168;
 
 time_t rawtime;
 struct tm *timeinfo;
@@ -54,13 +54,16 @@ char buffer[80];
 
 void calcAndPrintResults(platform_t coords)
 {
-    clock_t T1 = clock();
-    movOK = hk.calcServoAngles(coords, servo_angles);
-    // movOK = hk.calcServoAnglesAlgo1(coords, servo_angles);
-    // movOK = hk.calcServoAnglesAlgo2(coords, servo_angles);
-    // movOK = hk.calcServoAnglesAlgo3(coords, servo_angles);
-    clock_t T2 = clock();
-    cpu_time_used += (double)(T2 - T1);
+    const uint16_t averaging_count = 1000;
+    clock_t T0 = clock();
+    for (size_t _i = 0; _i < averaging_count; _i++)
+    {
+        // On mac M1, the computation takes about 1 µs which is hard to measure.
+        // So we loop several times to average the time.
+        movOK = hk.calcServoAngles(coords, servo_angles);
+    }
+    double deltaT = difftime(clock(), T0) / averaging_count;
+    cpu_time_used += deltaT;
     counter++;
 
     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << coords.hx_x;
@@ -70,6 +73,7 @@ void calcAndPrintResults(platform_t coords)
     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.hx_b);
     angle_file << fixed << setprecision(1) << setw(SMALL_WIDTH) << setfill(' ') << degrees(coords.hx_c);
     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << movOK;
+    // angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << deltaT;
 
     if (movOK >= 0)
     {
@@ -100,21 +104,6 @@ int main()
     char *fname = &file_name_str[0u];
     angle_file.open(fname);
 
-    // Write file header.
-    angle_file << "\nSTEWART PLATFORM\n\n";
-    angle_file << "COMPILATION DATE AND TIME\n";
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    strftime(buffer, 80, "%Y-%m-%d", timeinfo);
-    angle_file << buffer << endl;
-    strftime(buffer, 80, "%H:%M:%S", timeinfo);
-    angle_file << buffer << endl;
-
-    angle_file << "HEXAPOD_CONFIG = " << HEXAPOD_CONFIG << endl;
-    angle_file << "ALGORITHM = " << ALGO << endl;
-    angle_file << "LANGAGE = C++" << endl;
-    angle_file << endl;
-
     // Print column titles.
     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "X";
     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "Y";
@@ -123,6 +112,7 @@ int main()
     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "B";
     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "C";
     angle_file << fixed << setw(SMALL_WIDTH) << setfill(' ') << "movOK";
+    // angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "dT (us)";
     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 1";
     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 2";
     angle_file << fixed << setw(LARGE_WIDTH) << setfill(' ') << "ANGLE 3";
@@ -161,14 +151,26 @@ int main()
         }
     }
 
+    angle_file << "\n\nSTEWART PLATFORM\n";
+    // angle_file << "COMPILATION DATE AND TIME\n";
+    // time(&rawtime);
+    // timeinfo = localtime(&rawtime);
+    // strftime(buffer, 80, "%Y-%m-%d", timeinfo);
+    // angle_file << buffer << endl;
+    // strftime(buffer, 80, "%H:%M:%S", timeinfo);
+    // angle_file << buffer << endl;
+    angle_file << "HEXAPOD_CONFIG            : " << HEXAPOD_CONFIG << endl;
+    angle_file << "ALGORITHM                 : " << ALGO << endl;
+    angle_file << "LANGAGE                   : C++" << endl;
     cpu_time_used = cpu_time_used * 1.0E6 / CLOCKS_PER_SEC;
     angle_file << fixed;
     angle_file.precision(1);
-    angle_file << "\nTotal time elapsed   (µs) = " << cpu_time_used;
+    angle_file << "Total time elapsed   (µs) : " << cpu_time_used << endl;
     angle_file.precision(3);
-    angle_file << "\nTime per calculation (µs) = " << cpu_time_used / counter;
+    angle_file << "Time per calculation (µs) : " << cpu_time_used / counter << endl;
     angle_file.precision(0);
-    angle_file << "\nCalculation count         = " << counter;
+    angle_file << "Calculation count         : " << counter << endl;
+    angle_file << endl;
 
     // Done.
     angle_file.close();

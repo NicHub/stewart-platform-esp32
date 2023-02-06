@@ -1,8 +1,3 @@
-STEWART PLATFORM
-HEXAPOD_CONFIG = 1
-ALGORITHM = 3
-LANGAGE = Python
-
       X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6
 =======================================================================================================================================================
     0.0    0.0    0.0    0.0    0.0    0.0      0              325              325              325              325              325              325
@@ -74,6 +69,12 @@ LANGAGE = Python
     8.0    8.0    4.0    4.0    4.0  -14.3      0              314              326              332              392              307              438
     8.0    8.0    4.0    4.0    4.0   14.3      0              275              288              271              340              262              367
 
-Total time elapsed   (µs) = 812.0
-Time per calculation (µs) = 12.12
-Calculation count         = 67
+
+STEWART PLATFORM
+HEXAPOD_CONFIG            : 1
+ALGORITHM                 : 3
+LANGAGE                   : Python
+Total time elapsed   (µs) : 861.5
+Time per calculation (µs) : 12.86
+Calculation count         : 67
+

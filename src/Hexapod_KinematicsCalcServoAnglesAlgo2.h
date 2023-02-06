@@ -36,7 +36,7 @@
  * Returns < 0 if Error
  *
  */
-int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angles)
+int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t servo_angles[])
 {
     double BP_x, BP_y, BP_z,            // Platform joint coordinates relative to servo pivot.
         BP2,                            // Distance^2 between platform joint and servo pivot.
@@ -107,6 +107,11 @@ int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t *servo_angl
         // (~49 µs)
         i3 = -(BP_z2 * (POW(ARM_LENGTH_2, 2) + POW(i1, 2) - 2 * ARM_LENGTH_2 * i2));
 
+        if (i3 < 0)
+        {
+            movOK = -5;
+            break;
+        }
         // (~51 µs)
         i4 = sqrt(i3);
 

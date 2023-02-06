@@ -18,4 +18,6 @@ if [ $status -ne 0 ]; then
     exit $status
 fi
 
-./$EXEC_NAME
+for _i in {1..1}; do
+    ./$EXEC_NAME
+done

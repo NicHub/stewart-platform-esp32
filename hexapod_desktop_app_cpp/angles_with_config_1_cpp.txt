@@ -1,13 +1,3 @@
-
-STEWART PLATFORM
-
-COMPILATION DATE AND TIME
-2023-02-03
-13:38:28
-HEXAPOD_CONFIG = 1
-ALGORITHM = 3
-LANGAGE = C++
-
       X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6
 =======================================================================================================================================================
     0.0    0.0    0.0    0.0    0.0    0.0      0              325              325              325              325              325              325
@@ -79,6 +69,12 @@ LANGAGE = C++
     8.0    8.0    4.0    4.0    4.0  -14.3      0              314              326              332              392              307              438
     8.0    8.0    4.0    4.0    4.0   14.3      0              275              288              271              340              262              367
 
-Total time elapsed   (µs) = 110.0
-Time per calculation (µs) = 1.642
-Calculation count         = 67
+
+STEWART PLATFORM
+HEXAPOD_CONFIG            : 1
+ALGORITHM                 : 3
+LANGAGE                   : C++
+Total time elapsed   (µs) : 36.0
+Time per calculation (µs) : 0.537
+Calculation count         : 67
+

@@ -410,15 +410,6 @@ if __name__ == "__main__":
     HX_Cs = [math.radians(-43) / shrink, math.radians(43) / shrink]
 
     ans = ""
-    ans += "STEWART PLATFORM\n"
-    # ans += "COMPILATION DATE AND TIME\n"
-    # ans += f"{START_DATE}\n"
-    # ans += f"{time.time()}\n"
-    # ans += '{START_DATE.strftime("%H:%M:%S")}\n'
-    ans += f"HEXAPOD_CONFIG = {HEXAPOD_CONFIG}\n"
-    ans += f"ALGORITHM = {hc.ALGO}\n"
-    ans += f"LANGAGE = Python\n"
-    ans += "\n"
     ans += "      X      Y      Z      A      B      C  movOK          ANGLE 1          ANGLE 2          ANGLE 3          ANGLE 4          ANGLE 5          ANGLE 6\n"
     ans += "=======================================================================================================================================================\n"
 
@@ -448,9 +439,18 @@ if __name__ == "__main__":
                             }
                             ans += calcAndPrintResults(hk, coord)
 
-    ans += f"\nTotal time elapsed   (µs) = {CPU_TIME_USED:0.1f}"
-    ans += f"\nTime per calculation (µs) = {CPU_TIME_USED / COUNTER:0.2f}"
-    ans += f"\nCalculation count         = {COUNTER}"
+    ans += "\n\nSTEWART PLATFORM\n"
+    # ans += "COMPILATION DATE AND TIME\n"
+    # ans += f"{START_DATE}\n"
+    # ans += f"{time.time()}\n"
+    # ans += '{START_DATE.strftime("%H:%M:%S")}\n'
+    ans += f"HEXAPOD_CONFIG            : {HEXAPOD_CONFIG}\n"
+    ans += f"ALGORITHM                 : {hc.ALGO}\n"
+    ans += f"LANGAGE                   : Python\n"
+    ans += f"Total time elapsed   (µs) : {CPU_TIME_USED:0.1f}\n"
+    ans += f"Time per calculation (µs) : {CPU_TIME_USED / COUNTER:0.2f}\n"
+    ans += f"Calculation count         : {COUNTER}\n"
+    ans += "\n"
     print(ans)
 
     filename = f"angles_with_config_{HEXAPOD_CONFIG}_py.txt"
