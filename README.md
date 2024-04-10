@@ -128,14 +128,14 @@ The top plate is 3D-printed (right-click + save as):
 >
 > Cut the cable extension to connect to the ESP32.
 
-| color  | signal | ESP32 pin                                              |
-| :----- | :----- | :----------------------------------------------------- |
-| white  | SCL    | IO22                                                   |
-| NC     |        |                                                        |
-| red    | GND    | GND                                                    |
-| green  | VCC    | VCC                                                    |
-| black  | ATT    | IO4 (Not required, gives VCC if Nunchuck is connected) |
-| yellow | SDA    | IO21                                                   |
+| color  | signal | ESP32 pin                                            |
+| :----- | :----- | :--------------------------------------------------- |
+| white  | SCL    | IO22                                                 |
+| NC     |        |                                                      |
+| red    | GND    | GND                                                  |
+| green  | VCC    | VCC                                                  |
+| black  | ATT    | IO4 (or connect to 3.3V to force Nunchunk detection) |
+| yellow | SDA    | IO21                                                 |
 
 ## EXTERNAL LIBRARIES
 
@@ -190,4 +190,3 @@ The external libraries are installed automatically during the first build becaus
     -   <https://www.youtube.com/watch?v=wkfEZmsQqiA>
 -   Modern Robotics, Chapter 7: Kinematics of Closed Chains
     -   <https://youtu.be/5wCK6XGC3ig>
-
