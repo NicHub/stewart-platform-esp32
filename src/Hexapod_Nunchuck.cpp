@@ -73,14 +73,16 @@ Hexapod_Nunchuck::Hexapod_Nunchuck() : Accessory()
  */
 void Hexapod_Nunchuck::stopIfNotConnected()
 {
-    if (!digitalRead(NUNCHUCK_ATT_PIN))
-    {
-        Serial.println("\nNUNCHUCK NOT CONNECTED!\nABORTING");
-        while (true)
-        {
-            yield();
-        }
-    }
+    if (digitalRead(NUNCHUCK_ATT_PIN))
+        return;
+
+    Serial.println(F(
+        "\nNUNCHUCK NOT CONNECTED!"
+        "\nENSURE THAT ESP32 IO4 PIN IS CONNECTED TO NUNCHUCK ATT PIN OR TO VCC."
+        "\nABORTING."));
+
+    while (true)
+        yield();
 }
 
 /**
@@ -89,12 +91,11 @@ void Hexapod_Nunchuck::stopIfNotConnected()
 int Hexapod_Nunchuck::setupNunchuck()
 {
     pinMode(NUNCHUCK_ATT_PIN, INPUT_PULLDOWN);
-    // Abort if the Nunchuck is not connected
     stopIfNotConnected();
     begin();
     type = NUNCHUCK;
-    readData();    // Read inputs and update maps
-    printInputs(); // Print all inputs
+    readData();
+    printInputs();
     return 0;
 }
 
@@ -124,14 +125,6 @@ int Hexapod_Nunchuck::readNunchuck(nunchuck_t *nck)
  */
 void Hexapod_Nunchuck::nunchuckControl()
 {
-    // Don’t check the nunchuck states too fast.
-    static unsigned long T1 = micros();
-    static unsigned long dT = micros() - T1;
-    if (dT < 1)
-        return;
-    else
-        T1 = micros();
-
     static nunchuck_t nck;
     readNunchuck(&nck);
 
@@ -202,8 +195,6 @@ void Hexapod_Nunchuck::nunchuckControl()
             delay(20);
         }
         delay(200);
-
-        return;
     }
 
     // Move according to joyMode.

@@ -96,6 +96,7 @@ The top plate is 3D-printed (right-click + save as):
 | 6    | ¹ [Tower Pro MG996R servo (clone)](https://fr.aliexpress.com/item/32636102294.html)                                                                               |
 | 1    | [Nunchuck](https://fr.aliexpress.com/item/1005003050706988.html) <!-- https://fr.aliexpress.com/item//32880983134.html -->                                        |
 | 1    | ² [Nunchuck cable extension](https://fr.aliexpress.com/item/32784720613.html) <!-- https://fr.aliexpress.com/item//32841281892.html -->                           |
+| 1    | ³ [Adafruit Wii Nunchuck Breakout Adapter](https://www.adafruit.com/product/4836)                                                                                 |
 | 1    | [6 pin Dupont connector to connect Nunchuck to breadboard](https://www.aliexpress.com/item/32809965211.html)                                                      |
 | 1    | [Set of cable markers](https://fr.aliexpress.com/item/1005004255868271.html)                                                                                      |
 | 6    | [M3×5×6 Brass insert nuts](https://www.aliexpress.com/item/32828848326.html)                                                                                      |
@@ -117,6 +118,8 @@ The top plate is 3D-printed (right-click + save as):
     <https://www.parallax.com/product/900-00005>
 -   ² The Nunchuck cable extension is not mandatory.
     The idea is not to have a longer cable but rather to use the extension as an adapter between the Nunchuck and the breadboard, that is to say that it allows to leave the Nunchunk cable uncut.
+-   ³ This breakout adapter is not mandatory, but it could simplify wiring.
+    I haven’t used it myself.
 
 ## WIRING
 
@@ -146,14 +149,14 @@ The external libraries are installed automatically during the first build becaus
 > By default, the PCA9685 driver and the Nunchuck share the same I²C address `0x40`.
 > Fortunately, the address of the PCA9685 driver can easily be changed to `0x41` by shorting the A0 jumper next to the capacitor.
 
-| Default address | New address | Device              |
-| :-------------- | :---------- | :------------------ |
-| 0x40            | 0x41        | PCA9685             |
-| 0x70            | =           | PCA9685 (broadcast) |
-| 0x40            | =           | Nunchuck (accel)    |
-| 0x52            | =           | Nunchuck (joystick) |
-| 0x68            | =           | GY-91 (MPU9250)     |
-| 0x76            | =           | GY-91 (BMP280)      |
+| Default address | New address | Device                                                                    |
+| :-------------- | :---------- | :------------------------------------------------------------------------ |
+| 0x40            | 0x41        | PCA9685                                                                   |
+| 0x70            | =           | PCA9685 (broadcast)                                                       |
+| 0x40            | =           | Nunchuck ([IMU](https://en.wikipedia.org/wiki/Inertial_measurement_unit)) |
+| 0x52            | =           | Nunchuck (joystick)                                                       |
+| 0x68            | =           | GY-91 (MPU9250)                                                           |
+| 0x76            | =           | GY-91 (BMP280)                                                            |
 
 ## CREDITS
 
