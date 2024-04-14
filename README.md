@@ -26,17 +26,23 @@ This project is done in the frame of the _P19 project_ at the [Microclub](https:
 Currently the platform can be operated:
 
 -   With a _Nunchuck_.
--   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Demo.cpp)).
--   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](https://github.com/NicHub/stewart-platform-esp32/blob/master/gcode2serial/gcode2serial.py)).
+-   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](./blob/master/src/Hexapod_Demo.cpp)).
+-   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](./blob/master/gcode2serial/gcode2serial.py)).
 
-The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without actuating the servos).
+The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](./blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without actuating the servos).
 I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_.
-See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](https://github.com/NicHub/stewart-platform-esp32/blob/master/hexapod_desktop_app/hexapod_desktop_app.cpp).
+See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](./blob/master/hexapod_desktop_app_cpp/hexapod_desktop_app.cpp).
 
 ## HOME PAGE OF THE PROJECT
 
 The home page is a work in progress, but the video shows what the platform can do.
 The original implementation used an analog joystick, but the current version uses a Wii Nunchuck.
+
+The automatic translation in English can be read here:
+
+<https://ouilogique-com.translate.goog/plateforme-de-stewart-esp32/?_x_tr_sl=fr&_x_tr_tl=en>
+
+The original version in French is here:
 
 <https://ouilogique.com/plateforme-de-stewart-esp32/>
 
@@ -63,10 +69,10 @@ const char *ap_password = "";     // Password of the ESP32 WiFi network in soft-
 ## GEOMETRY SETTINGS
 
 Geometry settings are defined in
-[`Hexapod_Config_1.h`](https://github.com/NicHub/stewart-platform-esp32/blob/master/src/Hexapod_Config_1.h).
+[`Hexapod_Config_1.h`](./blob/master/src/Hexapod_Config_1.h).
 
 The meaning of the parameters is explained in
-[`doc/hexapod-parameters.pdf`](https://github.com/NicHub/stewart-platform-esp32/blob/master/doc/hexapod-parameters.pdf).
+[`doc/hexapod-parameters.pdf`](./blob/master/doc/hexapod-parameters.pdf).
 
 ## PARTS TO BUILD
 
