@@ -128,8 +128,8 @@ void Hexapod_Nunchuck::nunchuckControl()
     static nunchuck_t nck;
     readNunchuck(&nck);
 
+#define JOYMODEMAX 4
     static int8_t joyMode = 0;
-    static const int8_t nbJoyMode = 5;
 
     // Change nunchuck mode if button C or Z are pressed.
     // Button C increments joyMode.
@@ -140,10 +140,10 @@ void Hexapod_Nunchuck::nunchuckControl()
             ++joyMode;
         else if (nck.btn_z != 0)
             --joyMode;
-        if (joyMode == nbJoyMode)
+        if (joyMode > JOYMODEMAX)
             joyMode = 0;
         else if (joyMode < 0)
-            joyMode = nbJoyMode - 1;
+            joyMode = JOYMODEMAX;
         Serial.print("JOYSTICK MODE = ");
         Serial.println(joyMode);
 
@@ -213,7 +213,7 @@ void Hexapod_Nunchuck::nunchuckControl()
                                           0, 0, 0},
                                          servo_angles);
     else if (joyMode == 2)
-        // tiltZ
+        // tilt Z
         movOK = hx_servo.calcServoAngles({0, 0, 0,
                                           0, 0, nck.joy_x},
                                          servo_angles);
