@@ -131,14 +131,14 @@ The top plate is 3D-printed (right-click + save as):
 >
 > Cut the cable extension to connect to the ESP32.
 
-| color  | signal | ESP32 pin                                            |
-| :----- | :----- | :--------------------------------------------------- |
-| white  | SCL    | IO22                                                 |
-| NC     |        |                                                      |
-| red    | GND    | GND                                                  |
-| green  | VCC    | VCC                                                  |
-| black  | ATT    | IO4 (or connect to 3.3V to force Nunchunk detection) |
-| yellow | SDA    | IO21                                                 |
+| color  | signal | ESP32 pin                                             |
+| :----- | :----- | :---------------------------------------------------- |
+| white  | SCL    | IO22                                                  |
+| NC     |        |                                                       |
+| red    | GND    | GND                                                   |
+| green  | VCC    | VCC                                                   |
+| black  | ATT    | IO35 (or connect to 3.3V to force Nunchunk detection) |
+| yellow | SDA    | IO21                                                  |
 
 ## EXTERNAL LIBRARIES
 
