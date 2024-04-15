@@ -26,12 +26,12 @@ This project is done in the frame of the _P19 project_ at the [Microclub](https:
 Currently the platform can be operated:
 
 -   With a _Nunchuck_.
--   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](./blob/master/src/Hexapod_Demo.cpp)).
--   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](./blob/master/gcode2serial/gcode2serial.py)).
+-   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](./src/Hexapod_Demo.cpp)).
+-   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](./gcode2serial/gcode2serial.py)).
 
-The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](./blob/master/src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without actuating the servos).
+The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](./src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without actuating the servos).
 I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_.
-See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](./blob/master/hexapod_desktop_app_cpp/hexapod_desktop_app.cpp).
+See [`hexapod_desktop_app/hexapod_desktop_app.cpp`](./hexapod_desktop_app_cpp/hexapod_desktop_app.cpp).
 
 ## HOME PAGE OF THE PROJECT
 
@@ -69,10 +69,10 @@ const char *ap_password = "";     // Password of the ESP32 WiFi network in soft-
 ## GEOMETRY SETTINGS
 
 Geometry settings are defined in
-[`Hexapod_Config_1.h`](./blob/master/src/Hexapod_Config_1.h).
+[`Hexapod_Config_1.h`](./src/Hexapod_Config_1.h).
 
 The meaning of the parameters is explained in
-[`doc/hexapod-parameters.pdf`](./blob/master/doc/hexapod-parameters.pdf).
+[`doc/hexapod-parameters.pdf`](./doc/hexapod-parameters.pdf).
 
 ## PARTS TO BUILD
 
