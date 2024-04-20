@@ -143,7 +143,7 @@ The top plate is 3D-printed (right-click + save as):
 | NC     |        |                                                       |
 | red    | GND    | GND                                                   |
 | green  | VCC    | VCC                                                   |
-| black  | ATT    | IO35 (or connect to 3.3V to force Nunchunk detection) |
+| black  | ATT    | IO32 (or connect to 3.3V to force Nunchunk detection) |
 | yellow | SDA    | IO21                                                  |
 
 ## EXTERNAL LIBRARIES

@@ -27,7 +27,7 @@ extern Hexapod_Servo hx_servo;
 extern Hexapod_GPIO hx_gpio;
 
 // The ATT pin is used to check if the Nunchuck is connected.
-#define NUNCHUCK_ATT_PIN 35
+#define NUNCHUCK_ATT_PIN 32
 
 /**
  * General stuff.
