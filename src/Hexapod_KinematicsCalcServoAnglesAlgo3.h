@@ -18,8 +18,6 @@
  *
  */
 
-// #include "Hexapod_Kinematics.h"
-
 /**
  * Calculation of the servo angles in radians, degrees and in microseconds (PWM)
  * given the desired target platform coordinates.
@@ -36,9 +34,11 @@
  * Returns < 0 if Error
  *
  */
-int8_t Hexapod_Kinematics::calcServoAngles(platform_t coord, angle_t servo_angles[])
+int8_t Hexapod_Kinematics::calcServoAngles(
+    platform_t coord,
+    angle_t servo_angles[])
 {
-    // Number of time the function was called.
+    // Number of times the function was called.
     static uint64_t nb_call = 0;
     ++nb_call;
 
