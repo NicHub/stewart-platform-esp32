@@ -193,6 +193,10 @@ The external libraries are installed automatically during the first build becaus
 
 ## FURTHER READINGS
 
+-   The code for this project was used by Jakob Frabosilio for his Master’s thesis, which he presented in September 2024 at Cal Poly (Faculty of California Polytechnic State University), San Luis Obispo.
+    -   [Design and Implementation of an Inverted Short Baseline Acoustic Positioning System](https://digitalcommons.calpoly.edu/theses/2914/)
+    -   Some images and videos of his work are available here:
+        <https://github.com/NicHub/stewart-platform-esp32/issues/5>
 -   PID Control System Analysis and Design, By YUN LI, KIAM HEONG ANG, and GREGORY C.Y. CHONG
     -   See Table 1, p.33 <http://eprints.gla.ac.uk/3815/1/IEEE_CS_PID_01580152.pdf>
 -   Understanding PID Control, Part 1: What is PID Control?
