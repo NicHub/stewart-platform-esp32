@@ -25,9 +25,9 @@ This project is done in the frame of the _P19 project_ at the [Microclub](https:
 
 Currently the platform can be operated:
 
--   With a _Nunchuck_.
--   With _Arduino C_ code (see [`Hexapod_Demo.cpp`](./src/Hexapod_Demo.cpp)).
--   With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](./gcode2serial/gcode2serial.py)).
+- With a _Nunchuck_.
+- With _Arduino C_ code (see [`Hexapod_Demo.cpp`](./src/Hexapod_Demo.cpp)).
+- With _G-Code_ sent by a computer to the ESP through the serial port (see [`python/gcode2serial.py`](./gcode2serial/gcode2serial.py)).
 
 The calculation of the kinematics is performed in [`Hexapod_Kinematics.cpp`](./src/Hexapod_Kinematics.cpp) and can be also be compiled in a desktop C++ program to cross-check calculations (i.e. without actuating the servos).
 I managed to compile it with `g++` on _macOS Mojave_ and _macOS Monterey_.
@@ -48,13 +48,13 @@ The original version in French is here:
 
 ## PREREQUISITES
 
--   Change the default I²C address of the PCA9685 driver from `0x40` to `0x41` by shorting the A0 jumper beside the capacitor.
+- Change the default I²C address of the PCA9685 driver from `0x40` to `0x41` by shorting the A0 jumper beside the capacitor.
 
 <p align="center">
 <img width="50%;" src="https://raw.githubusercontent.com/NicHub/stewart-platform-esp32/master/doc/PCA9685-jumper.jpg" />
 </p>
 
--   Create a file called `src/WifiSettings.h` containing:
+- Create a file called `src/WifiSettings.h` containing:
 
 ```C++
 #pragma once
@@ -115,17 +115,17 @@ The top plate is 3D-printed (right-click + save as):
 
 ### Notes
 
--   ¹ I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
-    <https://fr.aliexpress.com/item/32636102294.html><br/>
-    I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
-    <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html><br/>
-    In the future, I will probalbly use _Parallax 900-00005_ servos.
-    It seems that these are the one used by _fullmotiondynamics_ in their videos.
-    <https://www.parallax.com/product/900-00005>
--   ² The Nunchuck cable extension is not mandatory.
-    The idea is not to have a longer cable but rather to use the extension as an adapter between the Nunchuck and the breadboard, that is to say that it allows to leave the Nunchunk cable uncut.
--   ³ This breakout adapter is not mandatory, but it could simplify wiring.
-    I haven’t used it myself.
+- ¹ I currently use clones of the _Tower Pro MG996R_ servos, but they are bad and I don’t recommend them.
+  <https://fr.aliexpress.com/item/32636102294.html><br/>
+  I formerly used clones of the _Tower Pro MG90s_ Servos, but they were also bad and too small for this application.
+  <https://www.banggood.com/6X-Towerpro-MG90S-Metal-Gear-RC-Micro-Servo-p-1072260.html><br/>
+  In the future, I will probalbly use _Parallax 900-00005_ servos.
+  It seems that these are the one used by _fullmotiondynamics_ in their videos.
+  <https://www.parallax.com/product/900-00005>
+- ² The Nunchuck cable extension is not mandatory.
+  The idea is not to have a longer cable but rather to use the extension as an adapter between the Nunchuck and the breadboard, that is to say that it allows to leave the Nunchunk cable uncut.
+- ³ This breakout adapter is not mandatory, but it could simplify wiring.
+  I haven’t used it myself.
 
 ## WIRING
 
@@ -168,38 +168,38 @@ The external libraries are installed automatically during the first build becaus
 
 ### My sources of inspiration
 
--   San-José State University / Full Motion Dynamics:
-    -   <https://www.youtube.com/watch?v=j4OmVLc_oDw>
-    -   ~~fullmotiondynamics.com~~
+- San-José State University / Full Motion Dynamics:
+    - <https://www.youtube.com/watch?v=j4OmVLc_oDw>
+    - ~~fullmotiondynamics.com~~
 
 ### Kinematics
 
--   Hexapod kinematics of this project was originaly based on _6dof-stewduino, by Philippe Desrosiers_, althought I reworked it in depth:
-    -   <https://github.com/xoxota99/stewy>
--   He derived his implementation from the work of _Daniel Waters_:
-    -   <https://www.youtube.com/watch?v=1jrP3_1ML9M>
--   Kinematics calculation is also explained in this document by an unknown author from the _Wokingham U3A Math Group_:
-    -   <https://memememememememe.me/assets/posts/stewart-platform-math/MathsOfStewartPlatformV5.pdf>
-    -   <http://www.wokinghamu3a.org.uk/groups/mathematics/>
--   The project _memememememememe_ was also an excellent source of inspiration.
-    They share the code for _RPi_ and a simulator in the _Processing_ langage:
-    -   <https://memememememememe.me/post/stewart-platform-math/>
-    -   <https://github.com/thiagohersan/memememe>
+- Hexapod kinematics of this project was originaly based on _6dof-stewduino, by Philippe Desrosiers_, althought I reworked it in depth:
+    - <https://github.com/xoxota99/stewy>
+- He derived his implementation from the work of _Daniel Waters_:
+    - <https://www.youtube.com/watch?v=1jrP3_1ML9M>
+- Kinematics calculation is also explained in this document by an unknown author from the _Wokingham U3A Math Group_:
+    - <https://memememememememe.me/assets/posts/stewart-platform-math/MathsOfStewartPlatformV5.pdf>
+    - <http://www.wokinghamu3a.org.uk/groups/mathematics/>
+- The project _memememememememe_ was also an excellent source of inspiration.
+  They share the code for _RPi_ and a simulator in the _Processing_ langage:
+    - <https://memememememememe.me/post/stewart-platform-math/>
+    - <https://github.com/thiagohersan/memememe>
 
 ### Serial buffer for G-Code
 
--   Derived from _MarginallyClever_:
-    -   <https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield>
+- Derived from _MarginallyClever_:
+    - <https://github.com/MarginallyClever/GcodeCNCDemo/tree/master/GcodeCNCDemo4AxisCNCShield>
 
 ## FURTHER READINGS
 
--   The code for this project was used by Jakob Frabosilio for his Master’s thesis, which he presented in September 2024 at Cal Poly (Faculty of California Polytechnic State University), San Luis Obispo.
-    -   [Design and Implementation of an Inverted Short Baseline Acoustic Positioning System](https://digitalcommons.calpoly.edu/theses/2914/)
-    -   Some images and videos of his work are available here:
-        <https://github.com/NicHub/stewart-platform-esp32/issues/5>
--   PID Control System Analysis and Design, By YUN LI, KIAM HEONG ANG, and GREGORY C.Y. CHONG
-    -   See Table 1, p.33 <http://eprints.gla.ac.uk/3815/1/IEEE_CS_PID_01580152.pdf>
--   Understanding PID Control, Part 1: What is PID Control?
-    -   <https://www.youtube.com/watch?v=wkfEZmsQqiA>
--   Modern Robotics, Chapter 7: Kinematics of Closed Chains
-    -   <https://youtu.be/5wCK6XGC3ig>
+- The code for this project was used by Jakob Frabosilio for his Master’s thesis, which he presented in September 2024 at Cal Poly (Faculty of California Polytechnic State University), San Luis Obispo.
+    - [Design and Implementation of an Inverted Short Baseline Acoustic Positioning System](https://digitalcommons.calpoly.edu/theses/2914/)
+    - Some images and videos of his work are available here:
+      <https://github.com/NicHub/stewart-platform-esp32/issues/5>
+- PID Control System Analysis and Design, By YUN LI, KIAM HEONG ANG, and GREGORY C.Y. CHONG
+    - See Table 1, p.33 <http://eprints.gla.ac.uk/3815/1/IEEE_CS_PID_01580152.pdf>
+- Understanding PID Control, Part 1: What is PID Control?
+    - <https://www.youtube.com/watch?v=wkfEZmsQqiA>
+- Modern Robotics, Chapter 7: Kinematics of Closed Chains
+    - <https://youtu.be/5wCK6XGC3ig>
