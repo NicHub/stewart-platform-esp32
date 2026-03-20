@@ -94,7 +94,7 @@ The top plate is 3D-printed (right-click + save as):
 
 | QTY  | PART                                                                                                                                                              |
 | :--- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | [WeMos ESP32 WROOM](https://www.banggood.com/fr/WeMos-ESP32-WiFi-Bluetooth-Development-Board-Ultra-Low-Power-Consumption-Dual-Core-ESP-32-ESP-32S-p-1175488.html) |
+| 1    | [WeMos ESP32 WROOM](https://www.banggood.com/ESP32-Development-Board-WiFi%2Bbluetooth-Ultra-Low-Power-Consumption-Dual-Cores-ESP-32-ESP-32S-Board-Geekcreit-for-Arduino-products-that-work-with-official-Arduino-boards-p-1109512.html) (original Banggood link in this README now returns 404) |
 | 1    | [Adafruit PCA9685 16-Channel Servo I²C Driver](https://www.mouser.ch/ProductDetail/adafruit/3416/?qs=F5EMLAvA7ICYzX4Av%252bhRHw==)                                |
 | 1    | [Breadboard adapter for PCA9685](https://www.aliexpress.com/item/1005004132188471.html)                                                                           |
 | 1    | [5 V / 10 A power supply](https://aliexpress.com/af/32810906485.html)                                                                                             |
