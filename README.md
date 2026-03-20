@@ -40,11 +40,11 @@ The original implementation used an analog joystick, but the current version use
 
 The automatic translation in English can be read here:
 
-<https://ouilogique-com.translate.goog/plateforme-de-stewart-esp32/?_x_tr_sl=fr&_x_tr_tl=en>
+<https://ouilogique-com.translate.goog/posts/2019-03-27-plateforme-de-stewart-esp32/?_x_tr_sl=fr&_x_tr_tl=en&_x_tr_hl=fr&_x_tr_pto=wapp>
 
 The original version in French is here:
 
-<https://ouilogique.com/plateforme-de-stewart-esp32/>
+<https://ouilogique.com/posts/2019-03-27-plateforme-de-stewart-esp32/>
 
 ## PREREQUISITES
 
